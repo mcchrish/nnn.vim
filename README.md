@@ -2,6 +2,10 @@
 
 ### Install
 
+You must install nnn itself. Instructions [here](https://github.com/jarun/nnn#installation).
+
+Then install using your favorite plugin manager:
+
 ```vim
 " using vim-plug
 Plug 'mcchrish/nnn.vim'
