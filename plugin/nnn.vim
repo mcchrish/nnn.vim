@@ -29,7 +29,7 @@ endfun
 
 fun! s:evaluate_temp()
     if !filereadable(s:temp)
-        echoerr 'Temp file ' . s:temp . 'not readable!'
+        " When exiting without any selection
         redraw!
         " Nothing to read.
         return
