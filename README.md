@@ -6,14 +6,21 @@
 " using vim-plug
 Plug 'mcchrish/nnn.vim'
 ```
+
 ### Usage
 
-Copy this file to the vim/neovim plugin directory.
 To open nnn as a file picker in vim/neovim, use the command `:NnnPicker` or
-`:Np` or the key-binding `<leader>n`. Once you select one or more files and
-quit nnn, vim/neovim will open the first selected file and add the remaining
-files to the arg list/buffer list.  If no file is explicitly selected, the
-last selected entry is picked.
+`:Np` or the key-binding `<leader>n`. Once you select one or more files and quit
+nnn, vim/neovim will open the first selected file and add the remaining files to
+the arg list/buffer list. If no file is explicitly selected, the last selected
+entry is picked.
+
+#### Custom mappings
+
+```vim
+let g:nnn#set_default_mappings = 0
+nnoremap <leader>nn :NnnPicker<CR>
+```
 
 #### Notes
 
@@ -23,4 +30,3 @@ last selected entry is picked.
 ### Credits
 
 Main nnn program: https://github.com/jarun/nnn
-

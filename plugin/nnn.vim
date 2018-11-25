@@ -8,6 +8,10 @@
 
 let s:temp = ""
 
+if !(exists("g:nnn#set_default_mappings"))
+    let g:nnn#set_default_mappings = 1
+endif
+
 fun! s:T_OnExit(job_id, code, event) dict
     if a:code == 0
         bd!
@@ -54,5 +58,8 @@ function! NnnPicker()
 endfunction
 
 command! -bar NnnPicker call NnnPicker()
-nnoremap <leader>n :<C-U>NnnPicker<CR>
 command! -nargs=* -complete=file Np :call NnnPicker()
+
+if g:nnn#set_default_mappings
+    nnoremap <leader>n :<C-U>NnnPicker<CR>
+endif
