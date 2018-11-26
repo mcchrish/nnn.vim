@@ -41,9 +41,10 @@ fun! s:evaluate_temp()
     redraw!
 endfun
 
-function! NnnPicker()
+function! NnnPicker(...)
+    let l:directory = get(a:, 1, '')
     let s:temp = tempname()
-    let l:cmd = 'nnn -p ' . shellescape(s:temp)
+    let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
 
     if has("nvim")
       enew
@@ -57,8 +58,8 @@ function! NnnPicker()
     endif
 endfunction
 
-command! -bar NnnPicker call NnnPicker()
-command! -nargs=* -complete=file Np :call NnnPicker()
+command! -bar -nargs=? -complete=dir NnnPicker call NnnPicker(<f-args>)
+command! -bar -nargs=? -complete=dir Np :call NnnPicker(<f-args>)
 
 if g:nnn#set_default_mappings
     nnoremap <leader>n :<C-U>NnnPicker<CR>
