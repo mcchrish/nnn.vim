@@ -44,6 +44,17 @@ nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 let g:nnn#layout = 'split' " vsplit, etab etc.
 ```
 
+#### Advance configuration
+
+The `NnnPicker()` function can be called with custom directory and additional
+options such as opening file in splits or tabs. Basically a more configurable
+version of `:NnnPicker` command.
+
+```vim
+call NnnPicker('~/some-files', { 'edit': 'vertical split' })
+" Then you can do all kinds of mappings if you want
+```
+
 #### Notes
 
 1. To discard selection and exit, press `^G`.

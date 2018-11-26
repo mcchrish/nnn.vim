@@ -12,14 +12,22 @@ if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
 endif
 
-fun! s:T_OnExit(job_id, code, event) dict
-    if a:code == 0
+fun! s:Create_on_exit_callback(opts)
+    let s:On_exit = {}
+    let s:eval_opts = a:opts
+    fun! s:On_exit.Callback(job_id, code, event) dict
+        if a:code != 0
+            echoerr 'nnn exited with non-zero.'
+            return
+        endif
+
         bd!
-        call s:evaluate_temp()
-    endif
+        call s:evaluate_temp(s:eval_opts)
+    endfun
+    return s:On_exit
 endfun
 
-fun! s:evaluate_temp()
+fun! s:evaluate_temp(opts)
     if !filereadable(s:temp)
         " When exiting without any selection
         redraw!
@@ -33,7 +41,7 @@ fun! s:evaluate_temp()
         return
     endif
     " Edit the first item.
-    exec 'edit ' . fnameescape(names[0])
+    exec a:opts.edit . ' ' . fnameescape(names[0])
     " Add any remaining items to the arg list/buffer list.
     for name in names[1:]
         exec 'argadd ' . fnameescape(name)
@@ -42,7 +50,8 @@ fun! s:evaluate_temp()
 endfun
 
 function! NnnPicker(...)
-    let l:directory = expand(get(a:, 1, ''))
+    let l:directory = expand(get(a:, 1, ""))
+    let l:opts = get(a:, 2, { 'edit': 'edit' })
     let s:temp = tempname()
     let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
 
@@ -51,15 +60,16 @@ function! NnnPicker(...)
     endif
 
     if has("nvim")
-      enew
-      call termopen(l:cmd, {'on_exit': function('s:T_OnExit')})
-      startinsert
+        let l:on_exit = s:Create_on_exit_callback(l:opts)
+        enew
+        call termopen(l:cmd, {'on_exit': function(l:on_exit.Callback) })
+        startinsert
     elseif has("gui_running")
         exec 'silent !xterm -e ' . l:cmd
-        call s:evaluate_temp()
+        call s:evaluate_temp(l:opts)
     else
         exec 'silent !' . l:cmd
-        call s:evaluate_temp()
+        call s:evaluate_temp(l:opts)
     endif
 endfunction
 
