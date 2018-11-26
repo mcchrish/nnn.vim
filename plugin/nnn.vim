@@ -15,7 +15,7 @@ endif
 fun! s:Create_on_exit_callback(opts)
     let s:On_exit = {}
     let s:eval_opts = a:opts
-    fun! s:On_exit.Callback(job_id, code, event) dict
+    fun! s:On_exit.Callback(id, code, ...)
         if a:code != 0
             echoerr 'nnn exited with non-zero.'
             return
@@ -59,17 +59,17 @@ function! NnnPicker(...)
         exec g:nnn#layout
     endif
 
+    let l:on_exit = s:Create_on_exit_callback(l:opts)
+
     if has("nvim")
-        let l:on_exit = s:Create_on_exit_callback(l:opts)
         enew
         call termopen(l:cmd, {'on_exit': function(l:on_exit.Callback) })
         startinsert
-    elseif has("gui_running")
-        exec 'silent !xterm -e ' . l:cmd
-        call s:evaluate_temp(l:opts)
     else
-        exec 'silent !' . l:cmd
-        call s:evaluate_temp(l:opts)
+        let l:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:on_exit.Callback)})
+        if !has('patch-8.0.1261') && !has('nvim')
+            call term_wait(l:term_buff, 20)
+        endif
     endif
 endfunction
 
