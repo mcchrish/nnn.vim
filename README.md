@@ -50,7 +50,7 @@ nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 let g:nnn#layout = 'split' " vsplit, etab etc.
 ```
 
-#### Advance configuration
+#### Advanced configuration
 
 The `NnnPicker()` function can be called with custom directory and additional
 options such as opening file in splits or tabs. Basically a more configurable
