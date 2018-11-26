@@ -42,7 +42,7 @@ fun! s:evaluate_temp()
 endfun
 
 function! NnnPicker(...)
-    let l:directory = get(a:, 1, expand('%:p:h'))
+    let l:directory = get(a:, 1, '')
     let s:temp = tempname()
     let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
 
