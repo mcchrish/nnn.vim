@@ -1,5 +1,7 @@
 # nnn.vim
 
+nnn and vim/neovim integration.
+
 ### Install
 
 You must install nnn itself. Instructions
@@ -18,15 +20,15 @@ To open nnn as a file picker in vim/neovim, use the command `:NnnPicker` or
 `:Np` or the key-binding `<leader>n`. You can pass a directory to `:NnnPicker`
 command and opens nnn from there e.g. `:NnnPicker path/to/somewhere`.
 
-Once you [select](https://github.com/jarun/nnn#selection) one or more files
-and quit nnn, vim/neovim will open the first selected file and add the
-remaining files to the arg list/buffer list. If no file is explicitly
-selected, the last highlighted (in reverse-video) entry is picked.
+Once you [select](https://github.com/jarun/nnn#selection) one or more files and
+quit nnn, vim/neovim will open the first selected file and add the remaining
+files to the arg list/buffer list. If no file is explicitly selected, the last
+highlighted (in reverse-video) entry is picked.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
-The default behaviour of nnn as a file manager is retained. Pressing <kbd>Enter</kbd>
-on a file in nnn will open the file instead if picking.
+The default behaviour of nnn as a file manager is retained. Pressing
+<kbd>Enter</kbd> on a file in nnn will open the file instead if picking.
 
 #### Custom mappings
 
