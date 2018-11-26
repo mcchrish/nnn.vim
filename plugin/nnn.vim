@@ -42,13 +42,18 @@ fun! s:evaluate_temp()
 endfun
 
 function! NnnPicker(...)
-    let l:directory = get(a:, 1, '')
+    let l:directory = expand(get(a:, 1, ''))
     let s:temp = tempname()
     let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
 
+    if exists("g:nnn#layout")
+        exec g:nnn#layout
+    endif
+
     if has("nvim")
       enew
-      call termopen(l:cmd, {'on_exit': function('s:T_OnExit')}) | startinsert
+      call termopen(l:cmd, {'on_exit': function('s:T_OnExit')})
+      startinsert
     elseif has("gui_running")
         exec 'silent !xterm -e ' . l:cmd
         call s:evaluate_temp()
@@ -59,8 +64,8 @@ function! NnnPicker(...)
 endfunction
 
 command! -bar -nargs=? -complete=dir NnnPicker call NnnPicker(<f-args>)
-command! -bar -nargs=? -complete=dir Np :call NnnPicker(<f-args>)
+command! -bar -nargs=? -complete=dir Np call NnnPicker(<f-args>)
 
 if g:nnn#set_default_mappings
-    nnoremap <leader>n :<C-U>NnnPicker<CR>
+    nnoremap <leader>n :NnnPicker<CR>
 endif
