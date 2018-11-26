@@ -37,6 +37,13 @@ nnoremap <leader>nn :NnnPicker<CR>
 nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 ```
 
+#### Layout
+
+```vim
+" Opens the nnn window in a split
+let g:nnn#layout = 'split' " vsplit, etab etc.
+```
+
 #### Notes
 
 1. To discard selection and exit, press `^G`.
