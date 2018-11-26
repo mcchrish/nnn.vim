@@ -18,9 +18,15 @@ To open nnn as a file picker in vim/neovim, use the command `:NnnPicker` or
 `:Np` or the key-binding `<leader>n`. You can pass a directory to `:NnnPicker`
 command and opens nnn from there e.g. `:NnnPicker path/to/somewhere`.
 
-Once you select one or more files and quit nnn, vim/neovim will open the first
-selected file and add the remaining files to the arg list/buffer list. If no
-file is explicitly selected, the last selected entry is picked.
+Once you [select](https://github.com/jarun/nnn#selection) one or more files
+and quit nnn, vim/neovim will open the first selected file and add the
+remaining files to the arg list/buffer list. If no file is explicitly
+selected, the last highlighted (in reverse-video) entry is picked.
+
+To discard selection and exit, press <kbd>^G</kbd>.
+
+The default behaviour of nnn as a file manager is retained. Pressing <kbd>Enter</kbd>
+on a file in nnn will open the file instead if picking.
 
 #### Custom mappings
 
@@ -44,7 +50,7 @@ nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 let g:nnn#layout = 'split' " vsplit, etab etc.
 ```
 
-#### Advance configuration
+#### Advanced configuration
 
 The `NnnPicker()` function can be called with custom directory and additional
 options such as opening file in splits or tabs. Basically a more configurable
@@ -54,11 +60,6 @@ version of `:NnnPicker` command.
 call NnnPicker('~/some-files', { 'edit': 'vertical split' })
 " Then you can do all kinds of mappings if you want
 ```
-
-#### Notes
-
-1. To discard selection and exit, press `^G`.
-2. Pressing `Enter` on a file in `nnn` will open the file instead if picking.
 
 ### Credits
 
