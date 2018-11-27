@@ -12,19 +12,18 @@ if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
 endif
 
-fun! s:Create_on_exit_callback(opts)
-    let s:On_exit = {}
-    let s:eval_opts = a:opts
-    fun! s:On_exit.Callback(id, code, ...)
+fun! s:create_on_exit_callback(opts)
+    let l:opts = a:opts
+    fun! s:callback(id, code, ...) closure
         if a:code != 0
             echoerr 'nnn exited with non-zero.'
             return
         endif
 
         bd!
-        call s:evaluate_temp(s:eval_opts)
+        call s:evaluate_temp(l:opts)
     endfun
-    return s:On_exit
+    return function('s:callback')
 endfun
 
 fun! s:evaluate_temp(opts)
@@ -59,14 +58,14 @@ function! NnnPicker(...)
         exec g:nnn#layout
     endif
 
-    let l:on_exit = s:Create_on_exit_callback(l:opts)
+    let l:On_exit = s:create_on_exit_callback(l:opts)
 
     if has("nvim")
         enew
-        call termopen(l:cmd, {'on_exit': function(l:on_exit.Callback) })
+        call termopen(l:cmd, {'on_exit': function(l:On_exit) })
         startinsert
     else
-        let l:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:on_exit.Callback)})
+        let l:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
         if !has('patch-8.0.1261') && !has('nvim')
             call term_wait(l:term_buff, 20)
         endif
