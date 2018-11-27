@@ -70,11 +70,14 @@ function! NnnPicker(...)
             call term_wait(l:term_buff, 20)
         endif
     endif
+
+    setlocal nospell bufhidden=wipe nobuflisted nonumber
+    setf nnn
 endfunction
 
 command! -bar -nargs=? -complete=dir NnnPicker call NnnPicker(<f-args>)
 command! -bar -nargs=? -complete=dir Np call NnnPicker(<f-args>)
 
 if g:nnn#set_default_mappings
-    nnoremap <leader>n :NnnPicker<CR>
+    nnoremap <silent> <leader>n :NnnPicker<CR>
 endif

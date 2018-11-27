@@ -37,7 +37,7 @@ The default behaviour of nnn as a file manager is retained. Pressing
 let g:nnn#set_default_mappings = 0
 
 " Then set your own
-nnoremap <leader>nn :NnnPicker<CR>
+nnoremap <silent> <leader>nn :NnnPicker<CR>
 
 
 " Or override
