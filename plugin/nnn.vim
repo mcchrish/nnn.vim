@@ -33,17 +33,17 @@ fun! s:evaluate_temp(opts)
         " Nothing to read.
         return
     endif
-    let names = readfile(s:temp)
-    if empty(names)
+    let l:names = filter(readfile(s:temp), '!isdirectory(v:val)')
+    if empty(l:names)
         redraw!
         " Nothing to open.
         return
     endif
     " Edit the first item.
-    exec a:opts.edit . ' ' . fnameescape(names[0])
+    exec a:opts.edit . ' ' . fnameescape(l:names[0])
     " Add any remaining items to the arg list/buffer list.
-    for name in names[1:]
-        exec 'argadd ' . fnameescape(name)
+    for l:name in l:names[1:]
+        exec 'argadd ' . fnameescape(l:name)
     endfor
     redraw!
 endfun
