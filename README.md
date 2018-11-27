@@ -53,7 +53,7 @@ nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 
 ```vim
 " Opens the nnn window in a split
-let g:nnn#layout = 'split' " vsplit, etab etc.
+let g:nnn#layout = 'split' " or vertical split, tabedit etc.
 ```
 
 #### Advanced configuration
