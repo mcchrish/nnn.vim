@@ -3,7 +3,7 @@
 nnn and vim/neovim integration.
 
 <p align="center"> 
-  <img src="https://user-images.githubusercontent.com/7200153/49082961-224fe180-f286-11e8-982d-7465332e61ec.png">
+  <img src="https://user-images.githubusercontent.com/7200153/49083382-5ed00d00-f287-11e8-9f94-77fa548deb72.png">
 </p>
 
 ### Install
