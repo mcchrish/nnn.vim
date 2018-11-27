@@ -2,6 +2,10 @@
 
 nnn and vim/neovim integration.
 
+<p align="center"> 
+  <img src="https://user-images.githubusercontent.com/7200153/49082961-224fe180-f286-11e8-982d-7465332e61ec.png">
+</p>
+
 ### Install
 
 You must install nnn itself. Instructions
