@@ -54,6 +54,9 @@ nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 ```vim
 " Opens the nnn window in a split
 let g:nnn#layout = 'split' " or vertical split, tabedit etc.
+
+" Or pass a dictionary with window size
+let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 ```
 
 #### Advanced configuration
