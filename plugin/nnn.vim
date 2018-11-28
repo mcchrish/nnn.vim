@@ -25,7 +25,6 @@ fun! nnn#select_action(action)
     if has("nvim")
         call feedkeys('iq')
     else
-        call feedkeys('i')
         call term_sendkeys(s:term_buff, 'q')
     endif
 endfun

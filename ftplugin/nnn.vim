@@ -10,7 +10,7 @@ if !(exists("g:nnn#action"))
 endif
 
 for key in keys(g:nnn#action)
-    exec 'tnoremap 's:nowait.'<buffer><silent> '.key.'  <c-\><c-n>:<c-u>call nnn#select_action("'.g:nnn#action[key].'")<cr>'
+    exec 'tnoremap '.s:nowait.'<buffer><silent> '.key.'  <c-\><c-n>:<c-u>call nnn#select_action("'.g:nnn#action[key].'")<cr>'
 endfor
 
 " vim: set sts=4 sw=4 ts=4 et :

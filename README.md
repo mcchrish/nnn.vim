@@ -63,8 +63,8 @@ let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
 ### Action
 
-You can set extra key-bindings for opening files in different ways. No are set
-by default to not override nnn's own key-bindings.
+You can set extra key-bindings for opening files in different ways. Nothing is
+set by default to not override nnn's own key-bindings.
 
 ```vim
 let g:nnn#action = {
