@@ -8,7 +8,7 @@ nnn and vim/neovim integration.
 
 ### Install
 
-You must install nnn itself. Instructions
+You must install nnn itself (minimum v2.2). Instructions
 [here](https://github.com/jarun/nnn#installation).
 
 Then install using your favorite plugin manager:
