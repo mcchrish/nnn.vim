@@ -32,21 +32,21 @@ fun! s:create_on_exit_callback(opts)
 endfun
 
 function! s:present(dict, ...)
-  for key in a:000
-    if !empty(get(a:dict, key, ''))
-      return 1
-    endif
-  endfor
-  return 0
+    for key in a:000
+        if !empty(get(a:dict, key, ''))
+            return 1
+        endif
+    endfor
+    return 0
 endfunction
 
 fun! s:calc_size(val, max)
-  let l:val = substitute(a:val, '^\~', '', '')
-  if val =~ '%$'
-    return a:max * str2nr(val[:-2]) / 100
-  else
-    return min([a:max, str2nr(val)])
-  endif
+    let l:val = substitute(a:val, '^\~', '', '')
+    if val =~ '%$'
+        return a:max * str2nr(val[:-2]) / 100
+    else
+        return min([a:max, str2nr(val)])
+    endif
 endfun
 
 fun! s:eval_layout(layout)
@@ -124,3 +124,5 @@ command! -bar -nargs=? -complete=dir Np call NnnPicker(<f-args>)
 if g:nnn#set_default_mappings
     nnoremap <silent> <leader>n :NnnPicker<CR>
 endif
+
+" vim: set sts=4 sw=4 ts=4 et :
