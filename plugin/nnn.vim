@@ -1,5 +1,6 @@
 " vim/neovim plugin to use nnn as a file picker
-" Closely follows and inspired by the vim_file_chooser plugin for ranger.
+" Closely follows and inspired by the vim_file_chooser plugin for ranger and
+" some from fzf.vim.
 "
 " Author: Arun Prakash Jana
 " Email: engineerarun@gmail.com
