@@ -9,6 +9,7 @@
 
 let s:temp = ""
 let s:action = ""
+let s:term_buff = 0
 
 if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
@@ -20,7 +21,13 @@ endif
 
 fun! nnn#select_action(action)
     let s:action = a:action
-    call feedkeys('iq') " quit nnn
+    " quit nnn
+    if has("nvim")
+        call feedkeys('iq')
+    else
+        call feedkeys('i')
+        call term_sendkeys(s:term_buff, 'q')
+    endif
 endfun
 
 fun! s:create_on_exit_callback(opts)
@@ -31,7 +38,7 @@ fun! s:create_on_exit_callback(opts)
             return
         endif
 
-        bd!
+        bdelete!
         call s:eval_temp(l:opts)
     endfun
     return function('s:callback')
@@ -116,9 +123,9 @@ fun! NnnPicker(...) abort
         call termopen(l:cmd, {'on_exit': function(l:On_exit) })
         startinsert
     else
-        let l:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
+        let s:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
         if !has('patch-8.0.1261') && !has('nvim')
-            call term_wait(l:term_buff, 20)
+            call term_wait(s:term_buff, 20)
         endif
     endif
 
