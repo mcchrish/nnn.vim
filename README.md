@@ -61,7 +61,7 @@ let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
 #### Advanced configuration
 
-The `NnnPicker()` function can be called with custom directory and additional
+The `NnnPicker([<dir>][,<opts>])` function can be called with custom directory and additional
 options such as opening file in splits or tabs. Basically a more configurable
 version of `:NnnPicker` command.
 
@@ -69,6 +69,11 @@ version of `:NnnPicker` command.
 call NnnPicker('~/some-files', { 'edit': 'vertical split' })
 " Then you can do all kinds of mappings if you want
 ```
+
+`opts` can be:
+
+- `edit` - type of window the select file will be open.
+- `layout` - same as `g:nnn#layout` and overrides it if specified.
 
 ### Credits
 

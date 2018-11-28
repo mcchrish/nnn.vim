@@ -93,11 +93,13 @@ endfun
 
 fun! NnnPicker(...) abort
     let l:directory = expand(get(a:, 1, ""))
-    let l:opts = get(a:, 2, { 'edit': 'edit' })
+    let l:default_opts = { 'edit': 'edit' }
+    let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp = tempname()
     let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
+    let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
-    exec s:eval_layout(g:nnn#layout)
+    exec s:eval_layout(l:layout)
 
     let l:On_exit = s:create_on_exit_callback(l:opts)
 
