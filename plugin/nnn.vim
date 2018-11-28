@@ -8,6 +8,7 @@
 " Copyright © 2018 Arun Prakash Jana
 
 let s:temp = ""
+let s:action = ""
 
 if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
@@ -16,6 +17,11 @@ endif
 if !(exists("g:nnn#layout"))
     let g:nnn#layout = 'enew'
 endif
+
+fun! nnn#select_action(action)
+    let s:action = a:action
+    call feedkeys('iq') " quit nnn
+endfun
 
 fun! s:create_on_exit_callback(opts)
     let l:opts = a:opts
@@ -84,11 +90,13 @@ fun! s:eval_temp(opts)
         return
     endif
     " Edit the first item.
-    exec a:opts.edit . ' ' . fnameescape(l:names[0])
+    let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
+    exec l:cmd . ' ' . fnameescape(l:names[0])
     " Add any remaining items to the arg list/buffer list.
     for l:name in l:names[1:]
         exec 'argadd ' . fnameescape(l:name)
     endfor
+    let s:action = "" " reset action
     redraw!
 endfun
 
