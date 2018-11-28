@@ -6,9 +6,14 @@ nnn and vim/neovim integration.
   <img src="https://user-images.githubusercontent.com/7200153/49083382-5ed00d00-f287-11e8-9f94-77fa548deb72.png">
 </p>
 
+### Requirements
+
+1. nnn (minimum version 2.2)
+2. Neovim or Vim 8 with terminal support
+
 ### Install
 
-You must install nnn itself (minimum v2.2). Instructions
+You must install nnn itself. Instructions
 [here](https://github.com/jarun/nnn#installation).
 
 Then install using your favorite plugin manager:
