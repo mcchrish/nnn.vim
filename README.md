@@ -39,6 +39,8 @@ To discard selection and exit, press <kbd>^G</kbd>.
 The default behaviour of nnn as a file manager is retained. Pressing
 <kbd>Enter</kbd> on a file in nnn will open the file instead if picking.
 
+### Configurations
+
 #### Custom mappings
 
 ```vim
@@ -64,11 +66,23 @@ let g:nnn#layout = 'split' " or vertical split, tabedit etc.
 let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 ```
 
-#### Advanced configuration
+### Action
 
-The `NnnPicker([<dir>][,<opts>])` function can be called with custom directory and additional
-options such as opening file in splits or tabs. Basically a more configurable
-version of `:NnnPicker` command.
+You can set extra key-bindings for opening files in different ways. Nothing is
+set by default to not override nnn's own key-bindings.
+
+```vim
+let g:nnn#action = {
+      \ '<c-t>': 'tab split',
+      \ '<c-x>': 'split',
+      \ '<c-v>': 'vsplit' }
+```
+
+#### NnnPicker()
+
+The `NnnPicker([<dir>][,<opts>])` function can be called with custom directory
+and additional options such as opening file in splits or tabs. Basically a more
+configurable version of `:NnnPicker` command.
 
 ```vim
 call NnnPicker('~/some-files', { 'edit': 'vertical split' })
