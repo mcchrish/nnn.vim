@@ -66,7 +66,7 @@ let g:nnn#layout = 'split' " or vertical split, tabedit etc.
 let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 ```
 
-### Action
+#### Action
 
 You can set extra key-bindings for opening files in different ways. Nothing is
 set by default to not override nnn's own key-bindings.
