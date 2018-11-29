@@ -2,7 +2,7 @@
 
 nnn and vim/neovim integration.
 
-<p align="center"> 
+<p align="center">
   <img src="https://user-images.githubusercontent.com/7200153/49083382-5ed00d00-f287-11e8-9f94-77fa548deb72.png">
 </p>
 
@@ -31,13 +31,12 @@ command and opens nnn from there e.g. `:NnnPicker path/to/somewhere`.
 
 Once you [select](https://github.com/jarun/nnn#selection) one or more files and
 quit nnn, vim/neovim will open the first selected file and add the remaining
-files to the arg list/buffer list. If no file is explicitly selected, the last
-highlighted (in reverse-video) entry is picked.
+files to the arg list/buffer list.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
-The default behaviour of nnn as a file manager is retained. Pressing
-<kbd>Enter</kbd> on a file in nnn will open the file instead if picking.
+Pressing <kbd>Enter</kbd> on a file in nnn will clear any earlier selection, pick
+the file and exit nnn.
 
 ### Configurations
 
