@@ -10,6 +10,11 @@ if !(exists("g:nnn#action"))
     let g:nnn#action = {}
 endif
 
+" Breaking change notice
+fun! NnnPicker(...) abort
+    throw 'NnnPicker() is renamed to nnn#pick()'
+endfun
+
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
 command! -bar -nargs=? -complete=dir Np call nnn#pick(<f-args>)
 
