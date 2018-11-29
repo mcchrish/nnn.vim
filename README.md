@@ -80,6 +80,13 @@ call NnnPicker('~/some-files', { 'edit': 'vertical split' })
 - `edit` - type of window the select file will be open.
 - `layout` - same as `g:nnn#layout` and overrides it if specified.
 
+#### Environment variables
+
+You can define env variables in `vimrc` and nnn will detect it.
+
+```vim
+let $DISABLE_FILE_OPEN_ON_NAV=1
+```
 ### Credits
 
 Main nnn program: https://github.com/jarun/nnn
