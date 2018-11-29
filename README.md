@@ -78,14 +78,16 @@ let g:nnn#action = {
       \ '<c-v>': 'vsplit' }
 ```
 
-#### NnnPicker()
+#### `nnn#pick()`
 
-The `NnnPicker([<dir>][,<opts>])` function can be called with custom directory
+The `nnn#pick([<dir>][,<opts>])` function can be called with custom directory
 and additional options such as opening file in splits or tabs. Basically a more
 configurable version of `:NnnPicker` command.
 
+**Note**: `NnnPicker()` was removed in favor of `nnn#pick()`
+
 ```vim
-call NnnPicker('~/some-files', { 'edit': 'vertical split' })
+call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 " Then you can do all kinds of mappings if you want
 ```
 
