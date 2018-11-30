@@ -65,14 +65,14 @@ fun! s:eval_layout(layout)
     throw 'Invalid layout'
 endfun
 
-fun! s:eval_temp(opts)
+fun! s:eval_temp(opts) abort
     if !filereadable(s:temp)
         " When exiting without any selection
         redraw!
         " Nothing to read.
         return
     endif
-    let l:names = filter(readfile(s:temp), '!isdirectory(v:val)')
+    let l:names = filter(split(readfile(s:temp)[0], "\\n"), '!isdirectory(v:val)')
     if empty(l:names)
         redraw!
         " Nothing to open.
