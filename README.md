@@ -77,6 +77,11 @@ let g:nnn#action = {
       \ '<c-v>': 'vsplit' }
 ```
 
+For example, when inside an nnn window, pressing <kbd>ctrl-t</kbd> will open the
+selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
+open in a split an so on. Meanwhile for multi selected files will be loaded in the
+buffer list.
+
 #### `nnn#pick()`
 
 The `nnn#pick([<dir>][,<opts>])` function can be called with custom directory
