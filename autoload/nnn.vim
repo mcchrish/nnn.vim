@@ -72,12 +72,21 @@ fun! s:eval_temp(opts) abort
         " Nothing to read.
         return
     endif
-    let l:names = filter(split(readfile(s:temp)[0], "\\n"), '!isdirectory(v:val)')
+
+    let l:file = readfile(s:temp)
+    if empty(l:file)
+        redraw!
+        " Nothing to open.
+        return
+    endif
+
+    let l:names = filter(split(l:file[0], "\\n"), '!isdirectory(v:val)')
     if empty(l:names)
         redraw!
         " Nothing to open.
         return
     endif
+
     " Edit the first item.
     let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
     exec l:cmd . ' ' . fnameescape(l:names[0])
