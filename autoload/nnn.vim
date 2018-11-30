@@ -6,9 +6,9 @@ fun! nnn#select_action(action)
     let s:action = a:action
     " quit nnn
     if has("nvim")
-        call feedkeys('iq')
+        call feedkeys("i\<cr>")
     else
-        call term_sendkeys(s:term_buff, 'q')
+        call term_sendkeys(s:term_buff, "\<cr>")
     endif
 endfun
 
