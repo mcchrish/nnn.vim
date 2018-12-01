@@ -103,7 +103,7 @@ fun! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp = tempname()
-    let l:cmd = 'nnn -p ' . shellescape(s:temp) . ' ' . l:directory
+    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp).' '.expand(l:directory)
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     exec s:eval_layout(l:layout)
