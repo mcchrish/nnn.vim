@@ -10,6 +10,10 @@ if !(exists("g:nnn#action"))
     let g:nnn#action = {}
 endif
 
+if !(exists("g:nnn#command"))
+    let g:nnn#command = 'nnn'
+endif
+
 " Breaking change notice
 fun! NnnPicker(...) abort
     throw 'NnnPicker() is renamed to nnn#pick()'

@@ -82,6 +82,18 @@ selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
 open in a split an so on. Meanwhile for multi selected files will be loaded in the
 buffer list.
 
+#### Command override
+
+When you want to override the default nnn command and add some extra flags.
+Example you want to start nnn in light mode.
+
+```vim
+let g:nnn#command = 'nnn -l'
+
+" or pass some env variables
+let g:nnn#command = 'DISABLE_FILE_OPEN_ON_NAV=1 nnn -l'
+```
+
 #### `nnn#pick()`
 
 The `nnn#pick([<dir>][,<opts>])` function can be called with custom directory
