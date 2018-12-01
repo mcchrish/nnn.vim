@@ -33,10 +33,10 @@ Once you [select](https://github.com/jarun/nnn#selection) one or more files and
 quit nnn, vim/neovim will open the first selected file and add the remaining
 files to the arg list/buffer list.
 
-To discard selection and exit, press <kbd>^G</kbd>.
-
-Pressing <kbd>Enter</kbd> on a file in nnn will clear any earlier selection, pick
+Pressing <kbd>Enter</kbd> on a file in nnn will pick any earlier selection, pick
 the file and exit nnn.
+
+To discard selection and exit, press <kbd>^G</kbd>.
 
 ### Configurations
 
