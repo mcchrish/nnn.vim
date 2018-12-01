@@ -1,5 +1,8 @@
 # nnn.vim
 
+**Work in Progress**: For this to work as expected, you may need to build nnn
+from source as it needs some functionalities that are not yet released.
+
 nnn and vim/neovim integration.
 
 <p align="center">
