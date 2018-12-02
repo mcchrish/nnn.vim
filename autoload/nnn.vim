@@ -16,7 +16,7 @@ fun! s:create_on_exit_callback(opts)
     let l:opts = a:opts
     fun! s:callback(id, code, ...) closure
         if a:code != 0
-            echoerr 'nnn exited with non-zero.'
+            echohl ErrorMsg | echo 'nnn exited with '.a:code | echohl None
             return
         endif
 
