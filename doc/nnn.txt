@@ -143,6 +143,10 @@ nnn#pick([{dir}][,{opts}])                             *nnn#pick()*
                     layout: same as |g:nnn#layout| and overrides it if
                              specified.
 
+                  Example:
+>
+                  call nnn#pick('~/some-files', { 'edit': 'vertical split' })
+<
 
 =============================================================================
 Miscellaneous                                          *nnn-misc*
