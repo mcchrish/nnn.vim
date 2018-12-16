@@ -33,10 +33,10 @@ To open nnn as a file picker in vim/neovim, use the command `:NnnPicker` or
 command and opens nnn from there e.g. `:NnnPicker path/to/somewhere`.
 
 Once you [select](https://github.com/jarun/nnn#selection) one or more files and
-quit nnn, vim/neovim will open the first selected file and add the remaining
-files to the arg list/buffer list.
+press <kbd>enter</kbd>, vim quits the nnn window and opens the first selected
+file and add the remaining files to the arg list/buffer list.
 
-Pressing <kbd>Enter</kbd> on a file in nnn will pick any earlier selection, pick
+Pressing <kbd>enter</kbd> on a file in nnn will pick any earlier selection, pick
 the file and exit nnn.
 
 To discard selection and exit, press <kbd>^G</kbd>.
@@ -82,8 +82,8 @@ let g:nnn#action = {
 
 For example, when inside an nnn window, pressing <kbd>ctrl-t</kbd> will open the
 selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
-open in a split an so on. Meanwhile for multi selected files will be loaded in the
-buffer list.
+open in a split an so on. Meanwhile for multi selected files will be loaded in
+the buffer list.
 
 #### Command override
 
@@ -103,8 +103,6 @@ The `nnn#pick([<dir>][,<opts>])` function can be called with custom directory
 and additional options such as opening file in splits or tabs. Basically a more
 configurable version of `:NnnPicker` command.
 
-**Note**: `NnnPicker()` was removed in favor of `nnn#pick()`
-
 ```vim
 call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 " Then you can do all kinds of mappings if you want
@@ -122,6 +120,7 @@ You can define env variables in `vimrc` and nnn will detect it.
 ```vim
 let $DISABLE_FILE_OPEN_ON_NAV=1
 ```
+
 ### Credits
 
 Main nnn program: https://github.com/jarun/nnn
