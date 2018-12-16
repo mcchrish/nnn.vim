@@ -41,6 +41,8 @@ the file and exit nnn.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
+Please visit the complete documentation by running `:help nnn`.
+
 ### Configurations
 
 #### Custom mappings
