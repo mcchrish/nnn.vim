@@ -6,7 +6,7 @@ from source as it needs some functionalities that are not yet released.
 nnn and vim/neovim integration.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/7200153/49083382-5ed00d00-f287-11e8-9f94-77fa548deb72.png">
+  <img src="https://user-images.githubusercontent.com/7200153/50052826-4015b580-0165-11e9-9221-db088fb8e055.png">
 </p>
 
 ### Requirements
