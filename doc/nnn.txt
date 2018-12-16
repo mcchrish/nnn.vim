@@ -1,0 +1,169 @@
+*nnn.vim* nnn file manager plugin for vim/neovim.
+*nnn*
+>
+ __   __     __   __     __   __     __   __   __     __    __    
+ /\ "-.\ \   /\ "-.\ \   /\ "-.\ \   /\ \ / /  /\ \   /\ "-./  \   
+ \ \ \-.  \  \ \ \-.  \  \ \ \-.  \  \ \ \'/   \ \ \  \ \ \-./\ \  
+  \ \_\\"\_\  \ \_\\"\_\  \ \_\\"\_\  \ \__|    \ \_\  \ \_\ \ \_\ 
+   \/_/ \/_/   \/_/ \/_/   \/_/ \/_/   \/_/      \/_/   \/_/  \/_/ 
+<                                                                  
+
+=============================================================================
+CONTENTS *nnn-help*
+
+  Introduction .......................... |nnn-intro|
+    Requirements ........................ |nnn-req|
+  Usage ................................. |nnn-usage|
+    Commands ............................ |nnn-commands|
+    Mappings ............................ |nnn-mappings|
+    Configurations ...................... |nnn-config|
+    Functions ........................... |nnn-func|
+  Miscellaneous ......................... |nnn-misc|
+  Credits ............................... |nnn-credits|
+
+=============================================================================
+Introduction                                            *nnn-intro*
+
+This plugins attempts to make nnn the file manager companion for vim. Use it
+to create, remove, move files or to quickly select files in nnn and open them
+in vim all without leaving vim. It achieves these but utilizing the built-in
+terminal feature of vim and neovim.
+
+-----------------------------------------------------------------------------
+Requirements                                            *nnn-req*
+
+1. nnn (minimum version 2.2)
+2. Neovim or Vim 8 with terminal support
+
+=============================================================================
+Usage                                                   *nnn-usage*
+
+By running |:NnnPicker| or calling the |nnn#pick()| function, a new terminal
+buffer opens running an nnn process in picker mode.
+
+Once you select (see https://github.com/jarun/nnn#selection) one or more
+files and press enter, vim quits the nnn window and opens the first selected
+file and add the remaining files to the arg list/buffer list.
+
+Pressing enter on a file in nnn will pick any earlier selection, pick
+the file and exit nnn.
+
+To discard selection and exit, press <C-^G>.
+
+-----------------------------------------------------------------------------
+Commands                                                *nnn-commands*
+
+:NnnPicker                                              *:NnnPicker*
+                  Opens an nnn window.
+:Np                                                     *:Np*
+                  Does the same as :NnnPicker.
+
+-----------------------------------------------------------------------------
+Mappings                                                *nnn-mappings*
+
+Defaults mappings. Can be disabled by setting |g:nnn#set_default_mappings| to
+0.
+
+<leader>n
+                  Runs |:NnnPicker|.
+
+-----------------------------------------------------------------------------
+Configurations                                          *nnn-config*
+
+g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
+                  Default: 1
+                  Enable default mappings.
+                  Examples:
+>
+                  " Disable default mappings
+                  let g:nnn#set_default_mappings = 0
+
+                  " Set your own
+                  nnoremap <silent> <leader>nn :NnnPicker<CR>
+
+
+                  " Or override
+                  " Start nnn in the current file's directory
+                  nnoremap <leader>n :NnnPicker '%:p:h'<CR>
+<
+
+g:nnn#layout                                            *g:nnn#layout*
+                  Default: 'enew'
+                  Display type for the nnn buffer.
+                  Examples:
+>
+                  " Opens the nnn window in a split
+                  let g:nnn#layout = 'split' " or vertical split, tabedit etc.
+
+                  " Or pass a dictionary with window size
+                  let g:nnn#layout = { 'left': '~20%' } " or right, up, down
+<
+
+g:nnn#action                                            *g:nnn#action*
+                  Default: {}
+                  Additional key-binding set for the nnn buffer for opening
+                  files in different ways. Nothing is set by default to not
+                  override nnn's own key-bindings.
+                  Examples:
+>
+                  let g:nnn#action = {
+                        \ '<c-t>': 'tab split',
+                        \ '<c-x>': 'split',
+                        \ '<c-v>': 'vsplit' }
+
+                  For example, when inside an nnn window, pressing <C-t> will
+                  open the selected file in a tab, instead of the current
+                  window. <C-x> will open in a split an so on. Meanwhile for
+                  multi selected files will be loaded in the buffer list.
+<
+
+g:nnn#command                                           *g:nnn#command*
+                  Default: 'nnn'
+                  When you want to override the default nnn command and add
+                  some extra flags.
+                  Example you want to start nnn in light mode.
+>
+                  let g:nnn#command = 'nnn -l'
+
+                  " or pass some env variables
+                  let g:nnn#command = 'DISABLE_FILE_OPEN_ON_NAV=1 nnn -l'
+<
+
+-----------------------------------------------------------------------------
+Functions                                              *nnn-func*
+
+nnn#pick([{dir}][,{opts}])                             *nnn#pick()*
+                  Can be called with custom directory and additional options
+                  such as opening file in splits or tabs. Basically a more
+                  configurable version of |:NnnPicker| command.
+
+                  {dir} : (string) a directory.
+                  {opts}: (dict) can be:
+                    edit  : type of window the select file will be open.
+                    layout: same as |g:nnn#layout| and overrides it if
+                             specified.
+
+
+=============================================================================
+Miscellaneous                                          *nnn-misc*
+
+You can define env variables in `vimrc` and nnn will detect it.
+>
+                  let $DISABLE_FILE_OPEN_ON_NAV=1
+<
+
+=============================================================================
+Credits                                                *nnn-credits*
+
+Main nnn program by Arun Prakash Jana
+github: https://github.com/jarun
+
+Vim/neovim plugin maintained by Michael Chris Lopez
+gitub: https://github.com/mcchrish
+
+Source codes:
+nnn: https://github.com/jarun/nnn
+vim plugin: https://github.com/mcchrish/nnn.vim
+
+=============================================================================
+vim:tw=78:ts=2:et:ft=help:norl:
