@@ -48,7 +48,7 @@ file and add the remaining files to the arg list/buffer list.
 Pressing enter on a file in nnn will pick any earlier selection, pick
 the file and exit nnn.
 
-To discard selection and exit, press <C-^G>.
+To discard selection and exit, press ^G.
 
 -----------------------------------------------------------------------------
 Commands                                                *nnn-commands*
