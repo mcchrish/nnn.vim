@@ -6,20 +6,26 @@ labels: bug
 assignees: ''
 ---
 
-**Describe the bug** A clear and concise description of what the bug is.
+**Describe the bug**
 
-**To Reproduce** Steps to reproduce the behavior:
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+
+Steps to reproduce the behavior:
 
 1. Open vim
 2. Run command '....'
 3. Press key '....'
 4. See error
 
-**Expected behavior** A clear and concise description of what you expected to
-happen.
+**Expected behavior**
 
-**Screenshots** If applicable, add screenshots/gifs/videos to help explain your
-problem.
+A clear and concise description of what you expected to happen.
+
+**Screenshots**
+
+If applicable, add screenshots/gifs/videos to help explain your problem.
 
 **Environment:**
 
@@ -31,4 +37,6 @@ problem.
 - Plugin version [e.g. master, commit sha, tag]
 - Nnn version [e.g. 2.1]
 
-**Additional context** Add any other context about the problem here.
+**Additional context**
+
+Add any other context about the problem here.
