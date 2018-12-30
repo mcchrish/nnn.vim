@@ -119,8 +119,6 @@ fun! nnn#pick(...) abort
             call term_wait(s:term_buff, 20)
         endif
     endif
-
-    setlocal nospell bufhidden=wipe nobuflisted nonumber
     setf nnn
 endfun
 
