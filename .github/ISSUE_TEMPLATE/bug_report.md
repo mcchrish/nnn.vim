@@ -12,7 +12,8 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 
-Steps to reproduce the behavior:
+Steps to reproduce the behavior and with the **most minimal configuration**.
+With only nnn.vim installed and additional configurations/plugins that helps reproduce the bug:
 
 1. Open vim
 2. Run command '....'
