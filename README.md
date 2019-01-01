@@ -9,7 +9,7 @@ nnn and vim/neovim integration.
 ### Requirements
 
 1. nnn (minimum version 2.2)
-2. Neovim or Vim 8 with terminal support
+2. Neovim or Vim 8.1 with terminal support
 
 ### Install
 
