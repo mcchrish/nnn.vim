@@ -1,16 +1,22 @@
-fun! s:init_config_var(var, value)
-    if !exists(a:var)
-        exec 'let ' . a:var . ' = ' . "'" . substitute(a:value, "'", "''", "g") . "'"
-        return 1
-    endif
-    return 0
-endfun
+if !(exists("g:nnn#set_default_mappings"))
+    let g:nnn#set_default_mappings = 1
+endif
 
-call s:init_config_var("g:nnn#layout", "enew")
-call s:init_config_var("g:nnn#action", {})
-call s:init_config_var("g:nnn#command", "nnn")
-call s:init_config_var("g:nnn#set_default_mappings", 1)
-call s:init_config_var("g:nnn#replace_netrw", 0)
+if !(exists("g:nnn#layout"))
+    let g:nnn#layout = 'enew'
+endif
+
+if !(exists("g:nnn#action"))
+    let g:nnn#action = {}
+endif
+
+if !(exists("g:nnn#command"))
+    let g:nnn#command = 'nnn'
+endif
+
+if !(exists("g:nnn#replace_netrw"))
+    let g:nnn#replace_netrw = 0
+endif
 
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
 command! -bar -nargs=? -complete=dir Np call nnn#pick(<f-args>)
