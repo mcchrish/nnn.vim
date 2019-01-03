@@ -129,6 +129,10 @@ g:nnn#command                                                   *g:nnn#command*
                   let g:nnn#command = 'DISABLE_FILE_OPEN_ON_NAV=1 nnn -l'
 <
 
+g:nnn#replace_netrw                                       *g:nnn#replace_netrw*
+                  Default: 0
+                  Open nnn instead of netrw when opening a directory.
+
 -----------------------------------------------------------------------------
 Functions                                                            *nnn-func*
 
