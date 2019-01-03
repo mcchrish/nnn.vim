@@ -12,17 +12,17 @@
 CONTENTS *nnn-help*
 
   Introduction .......................... |nnn-intro|
-    Requirements ........................ |nnn-req|
+    Requirements .......................... |nnn-req|
   Usage ................................. |nnn-usage|
-    Commands ............................ |nnn-commands|
-    Mappings ............................ |nnn-mappings|
-    Configurations ...................... |nnn-config|
-    Functions ........................... |nnn-func|
+    Commands .............................. |nnn-commands|
+    Mappings .............................. |nnn-mappings|
+    Configurations ........................ |nnn-config|
+    Functions ............................. |nnn-func|
   Miscellaneous ......................... |nnn-misc|
   Credits ............................... |nnn-credits|
 
 =============================================================================
-Introduction                                            *nnn-intro*
+Introduction                                                        *nnn-intro*
 
 This plugins attempts to make nnn the file manager companion for vim. Use it
 to create, remove, move files or to quickly select files in nnn and open them
@@ -30,13 +30,13 @@ in vim all without leaving vim. It achieves these but utilizing the built-in
 terminal feature of vim and neovim.
 
 -----------------------------------------------------------------------------
-Requirements                                            *nnn-req*
+Requirements                                                          *nnn-req*
 
 1. nnn (minimum version 2.2)
 2. Neovim or Vim 8.1 with terminal support
 
 =============================================================================
-Usage                                                   *nnn-usage*
+Usage                                                               *nnn-usage*
 
 By running |:NnnPicker| or calling the |nnn#pick()| function, a new terminal
 buffer opens running an nnn process in picker mode.
@@ -51,15 +51,15 @@ the file and exit nnn.
 To discard selection and exit, press ^G.
 
 -----------------------------------------------------------------------------
-Commands                                                *nnn-commands*
+Commands                                                         *nnn-commands*
 
-:NnnPicker                                              *:NnnPicker*
+:NnnPicker                                                         *:NnnPicker*
                   Opens an nnn window.
-:Np                                                     *:Np*
+:Np                                                                       *:Np*
                   Does the same as :NnnPicker.
 
 -----------------------------------------------------------------------------
-Mappings                                                *nnn-mappings*
+Mappings                                                         *nnn-mappings*
 
 Defaults mappings. Can be disabled by setting |g:nnn#set_default_mappings| to
 0.
@@ -68,7 +68,7 @@ Defaults mappings. Can be disabled by setting |g:nnn#set_default_mappings| to
                   Runs |:NnnPicker|.
 
 -----------------------------------------------------------------------------
-Configurations                                          *nnn-config*
+Configurations                                                     *nnn-config*
 
 g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
                   Default: 1
@@ -87,7 +87,7 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
                   nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 <
 
-g:nnn#layout                                            *g:nnn#layout*
+g:nnn#layout                                                     *g:nnn#layout*
                   Default: 'enew'
                   Display type for the nnn buffer.
                   Examples:
@@ -99,7 +99,7 @@ g:nnn#layout                                            *g:nnn#layout*
                   let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 <
 
-g:nnn#action                                            *g:nnn#action*
+g:nnn#action                                                     *g:nnn#action*
                   Default: {}
                   Additional key-binding set for the nnn buffer for opening
                   files in different ways. Nothing is set by default to not
@@ -117,7 +117,7 @@ g:nnn#action                                            *g:nnn#action*
                   multi selected files will be loaded in the buffer list.
 <
 
-g:nnn#command                                           *g:nnn#command*
+g:nnn#command                                                   *g:nnn#command*
                   Default: 'nnn'
                   When you want to override the default nnn command and add
                   some extra flags.
@@ -130,9 +130,9 @@ g:nnn#command                                           *g:nnn#command*
 <
 
 -----------------------------------------------------------------------------
-Functions                                              *nnn-func*
+Functions                                                            *nnn-func*
 
-nnn#pick([{dir}][,{opts}])                             *nnn#pick()*
+nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
                   Can be called with custom directory and additional options
                   such as opening file in splits or tabs. Basically a more
                   configurable version of |:NnnPicker| command.
@@ -149,7 +149,7 @@ nnn#pick([{dir}][,{opts}])                             *nnn#pick()*
 <
 
 =============================================================================
-Miscellaneous                                          *nnn-misc*
+Miscellaneous                                                        *nnn-misc*
 
 You can define env variables in `vimrc` and nnn will detect it.
 >
@@ -157,7 +157,7 @@ You can define env variables in `vimrc` and nnn will detect it.
 <
 
 =============================================================================
-Credits                                                *nnn-credits*
+Credits                                                           *nnn-credits*
 
 Main nnn program by Arun Prakash Jana
 github: https://github.com/jarun
