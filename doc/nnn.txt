@@ -133,6 +133,12 @@ g:nnn#replace_netrw                                       *g:nnn#replace_netrw*
                   Default: 0
                   Open nnn instead of netrw when opening a directory.
 
+
+g:nnn#statusline                                             *g:nnn#statusline*
+                  Default: 1
+                  The nnn statusline. Set to 0 to disable.
+
+
 -----------------------------------------------------------------------------
 Functions                                                            *nnn-func*
 

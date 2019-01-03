@@ -18,6 +18,10 @@ if !(exists("g:nnn#replace_netrw"))
     let g:nnn#replace_netrw = 0
 endif
 
+if !(exists("g:nnn#statusline"))
+    let g:nnn#statusline = 1
+endif
+
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
 command! -bar -nargs=? -complete=dir Np call nnn#pick(<f-args>)
 

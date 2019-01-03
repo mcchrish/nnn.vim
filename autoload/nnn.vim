@@ -98,6 +98,10 @@ fun! s:eval_temp(opts) abort
     redraw!
 endfun
 
+fun! s:statusline()
+    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
+endfun
+
 fun! nnn#pick(...) abort
     let l:directory = expand(get(a:, 1, ""))
     let l:default_opts = { 'edit': 'edit' }
@@ -120,6 +124,9 @@ fun! nnn#pick(...) abort
         endif
     endif
     setf nnn
+    if g:nnn#statusline
+        call s:statusline()
+    endif
 endfun
 
 " vim: set sts=4 sw=4 ts=4 et :
