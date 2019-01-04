@@ -1,3 +1,8 @@
+if exists('g:nnn#loaded')
+  finish
+endif
+let g:nnn#loaded = 1
+
 if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
 endif
