@@ -87,6 +87,9 @@ fun! s:eval_temp(opts) abort
         return
     endif
 
+    execute 'tabnext' a:opts.ppos.tab
+    execute a:opts.ppos.win.'wincmd w'
+
     " Edit the first item.
     let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
     exec l:cmd . ' ' . fnameescape(l:names[0])
@@ -110,6 +113,7 @@ fun! nnn#pick(...) abort
     let l:cmd = g:nnn#command.' -p '.shellescape(s:temp).' '.expand(l:directory)
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
+    let l:opts.ppos = { 'win': winnr(), 'tab': tabpagenr() }
     exec s:eval_layout(l:layout)
 
     let l:On_exit = s:create_on_exit_callback(l:opts)
