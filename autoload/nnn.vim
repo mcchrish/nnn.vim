@@ -2,7 +2,7 @@ let s:temp = ""
 let s:action = ""
 let s:term_buff = 0
 
-fun! nnn#select_action(action)
+function! nnn#select_action(action)
     let s:action = a:action
     " quit nnn
     if has("nvim")
@@ -10,20 +10,20 @@ fun! nnn#select_action(action)
     else
         call term_sendkeys(s:term_buff, "\<cr>")
     endif
-endfun
+endfunction
 
-fun! s:create_on_exit_callback(opts)
+function! s:create_on_exit_callback(opts)
     let l:opts = a:opts
-    fun! s:callback(id, code, ...) closure
+    function! s:callback(id, code, ...) closure
         if a:code != 0
             echohl ErrorMsg | echo 'nnn exited with '.a:code | echohl None
             return
         endif
 
         call s:eval_temp(l:opts)
-    endfun
+    endfunction
     return function('s:callback')
-endfun
+endfunction
 
 function! s:present(dict, ...)
     for key in a:000
@@ -34,16 +34,16 @@ function! s:present(dict, ...)
     return 0
 endfunction
 
-fun! s:calc_size(val, max)
+function! s:calc_size(val, max)
     let l:val = substitute(a:val, '^\~', '', '')
     if val =~ '%$'
         return a:max * str2nr(val[:-2]) / 100
     else
         return min([a:max, str2nr(val)])
     endif
-endfun
+endfunction
 
-fun! s:eval_layout(layout)
+function! s:eval_layout(layout)
     if type(a:layout) == 1
         return a:layout
     endif
@@ -62,32 +62,36 @@ fun! s:eval_layout(layout)
         endif
     endfor
     throw 'Invalid layout'
-endfun
+endfunction
 
-fun! s:switch_back(buf)
-    if bufexists(a:buf)
-        exec 'keepalt b' a:buf
+function! s:switch_back(opts)
+    let l:buf = a:opts.ppos.buf
+    if bufexists(l:buf) && a:opts.layout != 'enew'
+        execute 'keepalt b' l:buf
+    elseif a:opts.layout == 'enew'
+        bdelete!
+        enew!
     else
         enew!
     endif
-endfun
+endfunction
 
-fun! s:eval_temp(opts) abort
+function! s:eval_temp(opts) abort
     " When exiting without any selection
     if !filereadable(s:temp)
-        call s:switch_back(a:opts.ppos.buf)
+        call s:switch_back(a:opts)
         return
     endif
 
     let l:file = readfile(s:temp)
     if empty(l:file)
-        call s:switch_back(a:opts.ppos.buf)
+        call s:switch_back(a:opts)
         return
     endif
 
     let l:names = filter(split(l:file[0], "\\n"), '!isdirectory(v:val)')
     if empty(l:names) || strlen(l:names[0]) <= 0
-        call s:switch_back(a:opts.ppos.buf)
+        call s:switch_back(a:opts)
         return
     endif
 
@@ -96,20 +100,20 @@ fun! s:eval_temp(opts) abort
 
     " Edit the first item.
     let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
-    exec l:cmd . ' ' . fnameescape(l:names[0])
+    execute l:cmd . ' ' . fnameescape(l:names[0])
     " Add any remaining items to the arg list/buffer list.
     for l:name in l:names[1:]
-        exec 'argadd ' . fnameescape(l:name)
+        execute 'argadd ' . fnameescape(l:name)
     endfor
     let s:action = "" " reset action
     redraw!
-endfun
+endfunction
 
-fun! s:statusline()
+function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
-endfun
+endfunction
 
-fun! nnn#pick(...) abort
+function! nnn#pick(...) abort
     let l:directory = expand(get(a:, 1, ""))
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
@@ -118,7 +122,7 @@ fun! nnn#pick(...) abort
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
-    exec s:eval_layout(l:layout)
+    execute s:eval_layout(l:layout)
 
     let l:On_exit = s:create_on_exit_callback(l:opts)
 
@@ -135,6 +139,6 @@ fun! nnn#pick(...) abort
     if g:nnn#statusline
         call s:statusline()
     endif
-endfun
+endfunction
 
 " vim: set sts=4 sw=4 ts=4 et :

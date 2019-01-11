@@ -36,11 +36,11 @@ endif
 
 " To open nnn when vim load a directory
 if g:nnn#replace_netrw
-    fun! s:nnn_pick_on_load_dir(argv_path)
+    function! s:nnn_pick_on_load_dir(argv_path)
         let l:path = expand(a:argv_path)
         bdelete!
         call nnn#pick(l:path)
-    endfun
+    endfunction
 
     augroup ReplaceNetrwByNnnVim
         autocmd VimEnter * silent! autocmd! FileExplorer
