@@ -20,7 +20,6 @@ fun! s:create_on_exit_callback(opts)
             return
         endif
 
-        bdelete!
         call s:eval_temp(l:opts)
     endfun
     return function('s:callback')
@@ -65,25 +64,30 @@ fun! s:eval_layout(layout)
     throw 'Invalid layout'
 endfun
 
+fun! s:switch_back(buf)
+    if bufexists(a:buf)
+        exec 'keepalt b' a:buf
+    else
+        enew!
+    endif
+endfun
+
 fun! s:eval_temp(opts) abort
+    " When exiting without any selection
     if !filereadable(s:temp)
-        " When exiting without any selection
-        redraw!
-        " Nothing to read.
+        call s:switch_back(a:opts.ppos.buf)
         return
     endif
 
     let l:file = readfile(s:temp)
     if empty(l:file)
-        redraw!
-        " Nothing to open.
+        call s:switch_back(a:opts.ppos.buf)
         return
     endif
 
     let l:names = filter(split(l:file[0], "\\n"), '!isdirectory(v:val)')
-    if empty(l:names)
-        redraw!
-        " Nothing to open.
+    if empty(l:names) || strlen(l:names[0]) <= 0
+        call s:switch_back(a:opts.ppos.buf)
         return
     endif
 
@@ -113,7 +117,7 @@ fun! nnn#pick(...) abort
     let l:cmd = g:nnn#command.' -p '.shellescape(s:temp).' '.expand(l:directory)
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
-    let l:opts.ppos = { 'win': winnr(), 'tab': tabpagenr() }
+    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
     exec s:eval_layout(l:layout)
 
     let l:On_exit = s:create_on_exit_callback(l:opts)
