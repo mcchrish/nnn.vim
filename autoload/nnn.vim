@@ -66,17 +66,22 @@ endfunction
 
 function! s:switch_back(opts)
     let l:buf = a:opts.ppos.buf
-    if bufexists(l:buf) && a:opts.layout != 'enew'
+    let l:layout = a:opts.layout
+    let l:tbuf = bufnr('')
+    if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
+        execute 'tabnext' a:opts.ppos.tab
+        execute a:opts.ppos.win.'wincmd w'
+    elseif l:layout == 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
-    elseif a:opts.layout == 'enew'
-        bdelete!
-        enew!
-    else
-        enew!
+    endif
+    if bufexists(l:tbuf)
+        execute 'bdelete! '.l:tbuf
     endif
 endfunction
 
 function! s:eval_temp(opts) abort
+    let l:buf = a:opts.ppos.buf
+    let l:layout = a:opts.layout
     " When exiting without any selection
     if !filereadable(s:temp)
         call s:switch_back(a:opts)
@@ -95,6 +100,11 @@ function! s:eval_temp(opts) abort
         return
     endif
 
+    let l:tbuf = bufnr('')
+    if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
+        " Close the term window first before moving to the prev window
+        execute 'bdelete! '.l:tbuf
+    endif
     execute 'tabnext' a:opts.ppos.tab
     execute a:opts.ppos.win.'wincmd w'
 
@@ -106,6 +116,10 @@ function! s:eval_temp(opts) abort
         execute 'argadd ' . fnameescape(l:name)
     endfor
     let s:action = "" " reset action
+
+    if bufexists(l:tbuf)
+        execute 'bdelete! '.l:tbuf
+    endif
     redraw!
 endfunction
 
@@ -121,6 +135,7 @@ function! nnn#pick(...) abort
     let l:cmd = g:nnn#command.' -p '.shellescape(s:temp).' '.expand(l:directory)
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
+    let l:opts.layout = l:layout
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
     execute s:eval_layout(l:layout)
 
