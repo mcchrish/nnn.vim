@@ -1,4 +1,4 @@
-let s:temp = ""
+let s:temp_file = ""
 let s:action = ""
 let s:term_buff = 0
 
@@ -20,7 +20,8 @@ function! s:create_on_exit_callback(opts)
             return
         endif
 
-        call s:eval_temp(l:opts)
+        let l:opts.tbuf = bufnr('')
+        call s:eval_temp_file(l:opts)
     endfunction
     return function('s:callback')
 endfunction
@@ -67,40 +68,51 @@ endfunction
 function! s:switch_back(opts)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
-    let l:tbuf = bufnr('')
+    let l:tbuf = a:opts.tbuf
     if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
+        if bufexists(l:tbuf)
+            execute 'bdelete! '.l:tbuf
+        endif
         execute 'tabnext' a:opts.ppos.tab
         execute a:opts.ppos.win.'wincmd w'
     elseif l:layout == 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
-    endif
-    if bufexists(l:tbuf)
-        execute 'bdelete! '.l:tbuf
+        if bufexists(l:tbuf)
+            execute 'bdelete! '.l:tbuf
+        endif
     endif
 endfunction
 
-function! s:eval_temp(opts) abort
-    let l:buf = a:opts.ppos.buf
-    let l:layout = a:opts.layout
-    " When exiting without any selection
-    if !filereadable(s:temp)
-        call s:switch_back(a:opts)
-        return
+function! s:extract_filenames()
+    if !filereadable(s:temp_file)
+        return []
     endif
 
-    let l:file = readfile(s:temp)
+    let l:file = readfile(s:temp_file)
     if empty(l:file)
-        call s:switch_back(a:opts)
-        return
+        return []
     endif
 
     let l:names = filter(split(l:file[0], "\\n"), '!isdirectory(v:val)')
     if empty(l:names) || strlen(l:names[0]) <= 0
+        return []
+    endif
+
+    return l:names
+endfunction
+
+function! s:eval_temp_file(opts) abort
+    let l:buf = a:opts.ppos.buf
+    let l:layout = a:opts.layout
+    let l:tbuf = a:opts.tbuf
+
+    let l:names = s:extract_filenames()
+    " When exiting without any selection
+    if empty(l:names)
         call s:switch_back(a:opts)
         return
     endif
 
-    let l:tbuf = bufnr('')
     if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
         " Close the term window first before moving to the prev window
         execute 'bdelete! '.l:tbuf
@@ -131,8 +143,8 @@ function! nnn#pick(...) abort
     let l:directory = expand(get(a:, 1, ""))
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
-    let s:temp = tempname()
-    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp).' '.expand(l:directory)
+    let s:temp_file = tempname()
+    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp_file).' '.expand(l:directory)
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.layout = l:layout
