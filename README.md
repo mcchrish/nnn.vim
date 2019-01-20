@@ -4,7 +4,7 @@ Fast and featureful file manager in vim/neovim powered by nnn.
 
 <p align="center">
   <img width="934" src="https://user-images.githubusercontent.com/7200153/50667041-7458f500-0ff2-11e9-887a-6443ee5d9344.png">
-  <small>colorsheme <a href="https://github.com/nightsense/snow">snow</a></small>
+  <small>colorscheme <a href="https://github.com/nightsense/snow">snow</a></small>
 </p>
 
 ### Requirements
