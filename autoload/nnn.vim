@@ -102,23 +102,20 @@ function! s:extract_filenames()
 endfunction
 
 function! s:eval_temp_file(opts) abort
-    let l:buf = a:opts.ppos.buf
-    let l:layout = a:opts.layout
     let l:tbuf = a:opts.tbuf
 
     let l:names = s:extract_filenames()
+    let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
+
+    if l:cmd != 'edit'
+        call s:switch_back(a:opts)
+    endif
+
     " When exiting without any selection
     if empty(l:names)
         call s:switch_back(a:opts)
         return
     endif
-
-    if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
-        " Close the term window first before moving to the prev window
-        execute 'bdelete! '.l:tbuf
-    endif
-    execute 'tabnext' a:opts.ppos.tab
-    execute a:opts.ppos.win.'wincmd w'
 
     " Edit the first item.
     let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
