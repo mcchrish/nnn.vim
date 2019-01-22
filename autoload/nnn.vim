@@ -65,21 +65,27 @@ function! s:eval_layout(layout)
     throw 'Invalid layout'
 endfunction
 
-function! s:switch_back(opts)
+function! s:switch_back(opts, cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
     let l:tbuf = a:opts.tbuf
-    if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
+
+    " when split explorer
+    if type(l:layout) == 1 && l:layout == 'enew' && bufexists(l:buf)
+        execute 'keepalt b' l:buf
         if bufexists(l:tbuf)
-            execute 'bdelete! '.l:tbuf
+            execute 'bdelete!' l:tbuf
+        endif
+    endif
+
+    " don't switch when action = 'edit' and just retain the window
+    " don't switch when layout = 'enew' for split explorer feature
+    if a:cmd != 'edit' || (type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew'))
+        if bufexists(l:tbuf)
+            execute 'bdelete!' l:tbuf
         endif
         execute 'tabnext' a:opts.ppos.tab
         execute a:opts.ppos.win.'wincmd w'
-    elseif l:layout == 'enew' && bufexists(l:buf)
-        execute 'keepalt b' l:buf
-        if bufexists(l:tbuf)
-            execute 'bdelete! '.l:tbuf
-        endif
     endif
 endfunction
 
@@ -102,35 +108,27 @@ function! s:extract_filenames()
 endfunction
 
 function! s:eval_temp_file(opts) abort
-    let l:buf = a:opts.ppos.buf
-    let l:layout = a:opts.layout
     let l:tbuf = a:opts.tbuf
+    let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
+
+    call s:switch_back(a:opts, l:cmd)
 
     let l:names = s:extract_filenames()
     " When exiting without any selection
     if empty(l:names)
-        call s:switch_back(a:opts)
         return
     endif
 
-    if type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
-        " Close the term window first before moving to the prev window
-        execute 'bdelete! '.l:tbuf
-    endif
-    execute 'tabnext' a:opts.ppos.tab
-    execute a:opts.ppos.win.'wincmd w'
-
     " Edit the first item.
-    let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
-    execute l:cmd . ' ' . fnameescape(l:names[0])
+    execute 'silent' l:cmd fnameescape(l:names[0])
     " Add any remaining items to the arg list/buffer list.
     for l:name in l:names[1:]
-        execute 'argadd ' . fnameescape(l:name)
+        execute 'silent argadd' fnameescape(l:name)
     endfor
     let s:action = "" " reset action
 
     if bufexists(l:tbuf)
-        execute 'bdelete! '.l:tbuf
+        execute 'bdelete!' l:tbuf
     endif
     redraw!
 endfunction
