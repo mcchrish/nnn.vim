@@ -69,20 +69,23 @@ function! s:switch_back(opts, cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
     let l:tbuf = a:opts.tbuf
+
+    " when split explorer
+    if type(l:layout) == 1 && l:layout == 'enew' && bufexists(l:buf)
+        execute 'keepalt b' l:buf
+        if bufexists(l:tbuf)
+            execute 'bdelete!' l:tbuf
+        endif
+    endif
+
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
-    if a:cmd != 'edit' || type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew')
+    if a:cmd != 'edit' || (type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew'))
         if bufexists(l:tbuf)
             execute 'bdelete!' l:tbuf
         endif
         execute 'tabnext' a:opts.ppos.tab
         execute a:opts.ppos.win.'wincmd w'
-    " when split explorer
-    elseif l:layout == 'enew' && bufexists(l:buf)
-        execute 'keepalt b' l:buf
-        if bufexists(l:tbuf)
-            execute 'bdelete!' l:tbuf
-        endif
     endif
 endfunction
 
