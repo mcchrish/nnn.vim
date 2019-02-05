@@ -65,7 +65,7 @@ function! s:eval_layout(layout)
     throw 'Invalid layout'
 endfunction
 
-function! s:switch_back(opts, cmd)
+function! s:switch_back(opts, Cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
     let l:tbuf = a:opts.tbuf
@@ -80,7 +80,9 @@ function! s:switch_back(opts, cmd)
 
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
-    if a:cmd != 'edit' || (type(l:layout) != 1 || (type(l:layout) == 1 && l:layout != 'enew'))
+    if (type(a:Cmd) == 1 && a:Cmd != 'edit')
+                \ || (type(l:layout) != 1
+                \ || (type(l:layout) == 1 && l:layout != 'enew'))
         if bufexists(l:tbuf)
             execute 'bdelete!' l:tbuf
         endif
@@ -99,7 +101,7 @@ function! s:extract_filenames()
         return []
     endif
 
-    let l:names = filter(split(l:file[0], "\\n"), '!isdirectory(v:val)')
+    let l:names = uniq(filter(split(l:file[0], "\\n"), '!isdirectory(v:val)'))
     if empty(l:names) || strlen(l:names[0]) <= 0
         return []
     endif
@@ -109,9 +111,9 @@ endfunction
 
 function! s:eval_temp_file(opts) abort
     let l:tbuf = a:opts.tbuf
-    let l:cmd = strlen(s:action) > 0 ? s:action : a:opts.edit
+    let l:Cmd = type(s:action) == 2 || strlen(s:action) > 0 ? s:action : a:opts.edit
 
-    call s:switch_back(a:opts, l:cmd)
+    call s:switch_back(a:opts, l:Cmd)
 
     let l:names = s:extract_filenames()
     " When exiting without any selection
@@ -119,12 +121,18 @@ function! s:eval_temp_file(opts) abort
         return
     endif
 
-    " Edit the first item.
-    execute 'silent' l:cmd fnameescape(l:names[0])
-    " Add any remaining items to the arg list/buffer list.
-    for l:name in l:names[1:]
-        execute 'silent argadd' fnameescape(l:name)
-    endfor
+    " Action passed is function
+    if (type(l:Cmd) == 2)
+        call l:Cmd(l:names)
+    else
+        " Edit the first item.
+        execute 'silent' l:Cmd fnameescape(l:names[0])
+        " Add any remaining items to the arg list/buffer list.
+        for l:name in l:names[1:]
+            execute 'silent argadd' fnameescape(l:name)
+        endfor
+    endif
+
     let s:action = "" " reset action
 
     if bufexists(l:tbuf)

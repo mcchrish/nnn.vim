@@ -112,12 +112,25 @@ g:nnn#action                                                     *g:nnn#action*
                   let g:nnn#action = {
                         \ '<c-t>': 'tab split',
                         \ '<c-x>': 'split',
-                        \ '<c-v>': 'vsplit' }
+                        \ '<c-v>': 'vsplit',
+                        \ '<c-o>': function('CopyLinestoRegister') }
 
                   For example, when inside an nnn window, pressing <C-t> will
                   open the selected file in a tab, instead of the current
                   window. <C-x> will open in a split an so on. Meanwhile for
                   multi selected files will be loaded in the buffer list.
+
+                  And finally you can pass a FuncRef and the array of selected
+                  lines will be passed to that function.
+
+                  function! CopyLinestoRegister(lines)
+                    let joined_lines = join(a:lines, "\n")
+                    if len(a:lines) > 1
+                      let joined_lines .= "\n"
+                    endif
+                    echom joined_lines
+                    let @+ = joined_lines
+                  endfunction
 <
 
 g:nnn#command                                                   *g:nnn#command*
@@ -152,7 +165,9 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
 
                   {dir} : (string) a directory.
                   {opts}: (dict) can be:
-                    edit  : type of window the select file will be open.
+                    edit  : type of window the select file will be open. Or
+                            pass a FuncRef and array of selected files will be
+                            passed to that function.
                     layout: same as |g:nnn#layout| and overrides it if
                              specified.
 
