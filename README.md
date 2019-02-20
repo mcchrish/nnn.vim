@@ -94,7 +94,7 @@ Example you want to start nnn in light mode.
 let g:nnn#command = 'nnn -l'
 
 " or pass some env variables
-let g:nnn#command = 'DISABLE_FILE_OPEN_ON_NAV=1 nnn -l'
+let g:nnn#command = 'NNN_RESTRICT_NAV_OPEN=1 nnn -l'
 ```
 
 #### `nnn#pick()`
@@ -118,7 +118,7 @@ call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 You can define env variables in `vimrc` and nnn will detect it.
 
 ```vim
-let $DISABLE_FILE_OPEN_ON_NAV=1
+let $NNN_RESTRICT_NAV_OPEN=1
 ```
 
 ### Credits
