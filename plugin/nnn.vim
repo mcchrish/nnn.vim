@@ -39,7 +39,7 @@ if g:nnn#replace_netrw
     function! s:nnn_pick_on_load_dir(argv_path)
         let l:path = expand(a:argv_path)
         bdelete!
-        call nnn#pick(l:path)
+        call nnn#pick(l:path, {'layout': 'enew'})
     endfunction
 
     augroup ReplaceNetrwByNnnVim
