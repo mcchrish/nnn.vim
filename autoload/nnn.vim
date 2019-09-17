@@ -20,7 +20,6 @@ function! s:create_on_exit_callback(opts)
             return
         endif
 
-        let l:opts.tbuf = bufnr('')
         call s:eval_temp_file(l:opts)
     endfunction
     return function('s:callback')
@@ -45,8 +44,8 @@ function! s:calc_size(val, max)
 endfunction
 
 function! s:eval_layout(layout)
-    if type(a:layout) == 1
-        return a:layout
+    if type(a:layout) == v:t_string
+        return 'keepalt ' . a:layout
     endif
 
     let l:directions = {
@@ -62,6 +61,7 @@ function! s:eval_layout(layout)
             return l:cmd . s:calc_size(l:size, l:max) . 'new'
         endif
     endfor
+
     throw 'Invalid layout'
 endfunction
 
@@ -71,7 +71,7 @@ function! s:switch_back(opts, Cmd)
     let l:tbuf = a:opts.tbuf
 
     " when split explorer
-    if type(l:layout) == 1 && l:layout == 'enew' && bufexists(l:buf)
+    if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
         if bufexists(l:tbuf)
             execute 'bdelete!' l:tbuf
@@ -80,9 +80,9 @@ function! s:switch_back(opts, Cmd)
 
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
-    if (type(a:Cmd) == 1 && a:Cmd != 'edit')
-                \ || (type(l:layout) != 1
-                \ || (type(l:layout) == 1 && l:layout != 'enew'))
+    if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
+                \ || (type(l:layout) != v:t_string
+                \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
         if bufexists(l:tbuf)
             execute 'bdelete!' l:tbuf
         endif
@@ -101,7 +101,7 @@ function! s:extract_filenames()
         return []
     endif
 
-    let l:names = uniq(filter(split(l:file[0], "\\n"), '!isdirectory(v:val)'))
+    let l:names = uniq(filter(split(l:file[0], "\\n"), '!isdirectory(v:val) && filereadable(v:val)'))
     if empty(l:names) || strlen(l:names[0]) <= 0
         return []
     endif
@@ -111,7 +111,7 @@ endfunction
 
 function! s:eval_temp_file(opts) abort
     let l:tbuf = a:opts.tbuf
-    let l:Cmd = type(s:action) == 2 || strlen(s:action) > 0 ? s:action : a:opts.edit
+    let l:Cmd = type(s:action) == v:t_func || strlen(s:action) > 0 ? s:action : a:opts.edit
 
     call s:switch_back(a:opts, l:Cmd)
 
@@ -161,9 +161,11 @@ function! nnn#pick(...) abort
 
     if has("nvim")
         call termopen(l:cmd, {'on_exit': function(l:On_exit) })
+        let l:opts.tbuf = bufnr('')
         startinsert
     else
         let s:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
+        let l:opts.tbuf = s:term_buff
         if !has('patch-8.0.1261') && !has('nvim')
             call term_wait(s:term_buff, 20)
         endif
