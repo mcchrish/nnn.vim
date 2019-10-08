@@ -113,7 +113,7 @@ Example you want to start nnn in detail mode.
 let g:nnn#command = 'nnn -d'
 
 " or pass some env variables
-let g:nnn#command = 'NNN_RESTRICT_NAV_OPEN=1 nnn -d'
+let g:nnn#command = 'NNN_TRASH=1 nnn -d'
 ```
 
 #### `nnn#pick()`
@@ -137,7 +137,7 @@ call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 You can define env variables in `vimrc` and nnn will detect it.
 
 ```vim
-let $NNN_RESTRICT_NAV_OPEN=1
+let $NNN_TRASH=1
 ```
 
 ### Credits

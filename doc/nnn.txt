@@ -161,7 +161,7 @@ g:nnn#command                                                   *g:nnn#command*
                   let g:nnn#command = 'nnn -d'
 
                   " or pass some env variables
-                  let g:nnn#command = 'NNN_RESTRICT_NAV_OPEN=1 nnn -d'
+                  let g:nnn#command = 'NNN_TRASH=1 nnn -d'
 <
 
 g:nnn#replace_netrw                                       *g:nnn#replace_netrw*
@@ -200,7 +200,7 @@ Miscellaneous                                                        *nnn-misc*
 
 You can define env variables in `vimrc` and nnn will detect it.
 >
-                  let $NNN_RESTRICT_NAV_OPEN=1
+                  let $NNN_TRASH=1
 <
 
 =============================================================================
