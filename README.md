@@ -107,13 +107,13 @@ the buffer list.
 #### Command override
 
 When you want to override the default nnn command and add some extra flags.
-Example you want to start nnn in light mode.
+Example you want to start nnn in detail mode.
 
 ```vim
-let g:nnn#command = 'nnn -l'
+let g:nnn#command = 'nnn -d'
 
 " or pass some env variables
-let g:nnn#command = 'NNN_RESTRICT_NAV_OPEN=1 nnn -l'
+let g:nnn#command = 'NNN_RESTRICT_NAV_OPEN=1 nnn -d'
 ```
 
 #### `nnn#pick()`
