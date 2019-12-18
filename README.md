@@ -37,6 +37,9 @@ file and add the remaining files to the arg list/buffer list.
 Pressing <kbd>enter</kbd> on a file in nnn will pick any earlier selection, pick
 the file and exit nnn.
 
+Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
+instead of picking.
+
 To discard selection and exit, press <kbd>^G</kbd>.
 
 Please visit the complete documentation by running `:help nnn`.
