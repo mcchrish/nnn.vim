@@ -143,24 +143,25 @@ function! s:eval_layout(layout)
     endif
 
     if s:present(a:layout, 'window')
-      if type(a:layout.window) == type({})
-        if !has('nvim') && !has('patch-8.2.191')
-          throw 'Vim 8.2.191 or later is required for pop-up window'
-        end
-        call s:popup(a:layout.window)
-        " Since we already created the floating window, we don't need to run any
-        " command
-        return
-      else
-        throw 'Invalid layout'
-      endif
+        if type(a:layout.window) == type({})
+            if !has('nvim')
+                " && !has('patch-8.2.191')
+                throw 'Neovim is required for floating window'
+            end
+            call s:popup(a:layout.window)
+            " Since we already created the floating window, we don't need to run any
+            " command
+            return
+        else
+            throw 'Invalid layout'
+        endif
     endif
 
     let l:directions = {
-        \ 'up':    ['topleft', 'resize', &lines],
-        \ 'down':  ['botright', 'resize', &lines],
-        \ 'left':  ['vertical topleft', 'vertical resize', &columns],
-        \ 'right': ['vertical botright', 'vertical resize', &columns] }
+                \ 'up':    ['topleft', 'resize', &lines],
+                \ 'down':  ['botright', 'resize', &lines],
+                \ 'left':  ['vertical topleft', 'vertical resize', &columns],
+                \ 'right': ['vertical botright', 'vertical resize', &columns] }
 
     for key in ['up', 'down', 'left', 'right']
         if s:present(a:layout, key)
