@@ -3,8 +3,8 @@
 Fast and featureful file manager in vim/neovim powered by nnn.
 
 <p align="center">
-  <img width="934" src="https://user-images.githubusercontent.com/7200153/50667041-7458f500-0ff2-11e9-887a-6443ee5d9344.png">
-  <small>colorscheme <a href="https://github.com/nightsense/snow">snow</a></small>
+  <img width="934" src="https://user-images.githubusercontent.com/7200153/77138110-8dd94600-6aab-11ea-925f-8e159b8f0ad4.png">
+  <small>colorscheme <a href="https://github.com/pgdouyon/vim-yin-yang">yin</a></small>
 </p>
 
 ### Requirements
@@ -70,24 +70,8 @@ let g:nnn#layout = 'new' " or vnew, tabnew etc.
 " Or pass a dictionary with window size
 let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
-" Floating window (neovim)
-function! s:layout()
-  let buf = nvim_create_buf(v:false, v:true)
-
-  let height = &lines - (float2nr(&lines / 3))
-  let width = float2nr(&columns - (&columns * 2 / 3))
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': 2,
-        \ 'col': 8,
-        \ 'width': width,
-        \ 'height': height
-        \ }
-
-  call nvim_open_win(buf, v:true, opts)
-endfunction
-let g:nnn#layout = 'call ' . string(function('<SID>layout')) . '()'
+" Floating window (neovim only for now)
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 ```
 
 #### Action

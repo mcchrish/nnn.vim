@@ -34,6 +34,100 @@ function! s:present(dict, ...)
     return 0
 endfunction
 
+if has('nvim')
+    function s:create_popup(hl, opts) abort
+        let buf = nvim_create_buf(v:false, v:true)
+        let opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
+        let border = has_key(opts, 'border') ? remove(opts, 'border') : []
+        let win = nvim_open_win(buf, v:true, opts)
+        call setwinvar(win, '&winhighlight', 'NormalFloat:'..a:hl)
+        call setwinvar(win, '&colorcolumn', '')
+        if !empty(border)
+            call nvim_buf_set_lines(buf, 0, -1, v:true, border)
+        endif
+        return buf
+    endfunction
+else
+    function! s:create_popup(hl, opts) abort
+        let is_frame = has_key(a:opts, 'border')
+        let buf = is_frame ? '' : term_start(&shell, #{hidden: 1})
+        let id = popup_create(buf, #{
+                    \ line: a:opts.row,
+                    \ col: a:opts.col,
+                    \ minwidth: a:opts.width,
+                    \ minheight: a:opts.height,
+                    \ zindex: 50 - is_frame,
+                    \ })
+
+        if is_frame
+            call setwinvar(id, '&wincolor', a:hl)
+            call setbufline(winbufnr(id), 1, a:opts.border)
+            execute 'autocmd BufWipeout * ++once call popup_close('..id..')'
+        else
+            execute 'autocmd BufWipeout * ++once bwipeout! '..buf
+        endif
+        return winbufnr(id)
+    endfunction
+endif
+
+function! s:popup(opts) abort
+    " Support ambiwidth == 'double'
+    let ambidouble = &ambiwidth == 'double' ? 2 : 1
+
+    " Size and position
+    let width = min([max([0, float2nr(&columns * a:opts.width)]), &columns])
+    let width += width % ambidouble
+    let height = min([max([0, float2nr(&lines * a:opts.height)]), &lines - has('nvim')])
+    let row = float2nr(get(a:opts, 'yoffset', 0.5) * (&lines - height))
+    let col = float2nr(get(a:opts, 'xoffset', 0.5) * (&columns - width))
+
+    " Managing the differences
+    let row = min([max([0, row]), &lines - has('nvim') - height])
+    let col = min([max([0, col]), &columns - width])
+    let row += !has('nvim')
+    let col += !has('nvim')
+
+    " Border style
+    let style = tolower(get(a:opts, 'border', 'rounded'))
+    if !has_key(a:opts, 'border') && !get(a:opts, 'rounded', 1)
+        let style = 'sharp'
+    endif
+
+    if style =~ 'vertical\|left\|right'
+        let mid = style == 'vertical' ? '│' .. repeat(' ', width - 2 * ambidouble) .. '│' :
+                    \ style == 'left'     ? '│' .. repeat(' ', width - 1 * ambidouble)
+                    \                     :        repeat(' ', width - 1 * ambidouble) .. '│'
+        let border = repeat([mid], height)
+        let shift = { 'row': 0, 'col': style == 'right' ? 0 : 2, 'width': style == 'vertical' ? -4 : -2, 'height': 0 }
+    elseif style =~ 'horizontal\|top\|bottom'
+        let hor = repeat('─', width / ambidouble)
+        let mid = repeat(' ', width)
+        let border = style == 'horizontal' ? [hor] + repeat([mid], height - 2) + [hor] :
+                    \ style == 'top'        ? [hor] + repeat([mid], height - 1)
+                    \                       :         repeat([mid], height - 1) + [hor]
+        let shift = { 'row': style == 'bottom' ? 0 : 1, 'col': 0, 'width': 0, 'height': style == 'horizontal' ? -2 : -1 }
+    else
+        let edges = style == 'sharp' ? ['┌', '┐', '└', '┘'] : ['╭', '╮', '╰', '╯']
+        let bar = repeat('─', width / ambidouble - 2)
+        let top = edges[0] .. bar .. edges[1]
+        let mid = '│' .. repeat(' ', width - 2 * ambidouble) .. '│'
+        let bot = edges[2] .. bar .. edges[3]
+        let border = [top] + repeat([mid], height - 2) + [bot]
+        let shift = { 'row': 1, 'col': 2, 'width': -4, 'height': -2 }
+    endif
+
+    let highlight = get(a:opts, 'highlight', 'Comment')
+    let frame = s:create_popup(highlight, {
+                \ 'row': row, 'col': col, 'width': width, 'height': height, 'border': border
+                \ })
+    call s:create_popup('Normal', {
+                \ 'row': row + shift.row, 'col': col + shift.col, 'width': width + shift.width, 'height': height + shift.height
+                \ })
+    if has('nvim')
+        execute 'autocmd BufWipeout <buffer> bwipeout '..frame
+    endif
+endfunction
+
 function! s:calc_size(val, max)
     let l:val = substitute(a:val, '^\~', '', '')
     if val =~ '%$'
@@ -48,11 +142,26 @@ function! s:eval_layout(layout)
         return 'keepalt ' . a:layout
     endif
 
+    if s:present(a:layout, 'window')
+        if type(a:layout.window) == type({})
+            if !has('nvim')
+                " && !has('patch-8.2.191')
+                throw 'Neovim is required for floating window'
+            end
+            call s:popup(a:layout.window)
+            " Since we already created the floating window, we don't need to run any
+            " command
+            return
+        else
+            throw 'Invalid layout'
+        endif
+    endif
+
     let l:directions = {
-        \ 'up':    ['topleft', 'resize', &lines],
-        \ 'down':  ['botright', 'resize', &lines],
-        \ 'left':  ['vertical topleft', 'vertical resize', &columns],
-        \ 'right': ['vertical botright', 'vertical resize', &columns] }
+                \ 'up':    ['topleft', 'resize', &lines],
+                \ 'down':  ['botright', 'resize', &lines],
+                \ 'left':  ['vertical topleft', 'vertical resize', &columns],
+                \ 'right': ['vertical botright', 'vertical resize', &columns] }
 
     for key in ['up', 'down', 'left', 'right']
         if s:present(a:layout, key)
