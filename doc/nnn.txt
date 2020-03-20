@@ -32,7 +32,7 @@ terminal feature of vim and neovim.
 -----------------------------------------------------------------------------
 Requirements                                                          *nnn-req*
 
-1. nnn (minimum version 2.2)
+1. nnn
 2. Neovim or Vim 8.1 with terminal support
 
 =============================================================================
@@ -104,24 +104,12 @@ g:nnn#layout                                                     *g:nnn#layout*
                   " Or pass a dictionary with window size
                   let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
-                  " Floating window (neovim)
-                  function! s:layout()
-                    let buf = nvim_create_buf(v:false, v:true)
-
-                    let height = &lines - (float2nr(&lines / 3))
-                    let width = float2nr(&columns - (&columns * 2 / 3))
-
-                    let opts = {
-                          \ 'relative': 'editor',
-                          \ 'row': 2,
-                          \ 'col': 8,
-                          \ 'width': width,
-                          \ 'height': height
-                          \ }
-
-                    call nvim_open_win(buf, v:true, opts)
-                  endfunction
-                  let g:nnn#layout = 'call ' . string(function('<SID>layout')) . '()'
+                  " Floating window (neovim only for now)
+                  let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
+                  " Options:
+                  " width, height, yoffset, xoffset : number
+                  " highlight : highlight group assign to the border
+                  " border : border style - 'rounded' / 'sharp' / 'horizontal' / 'vertical' / 'top' / 'bottom' / 'left' / 'right'
 <
 
 g:nnn#action                                                     *g:nnn#action*
