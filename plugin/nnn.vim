@@ -1,5 +1,5 @@
 if exists('g:nnn#loaded')
-  finish
+    finish
 endif
 let g:nnn#loaded = 1
 

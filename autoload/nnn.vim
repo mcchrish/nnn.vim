@@ -1,6 +1,10 @@
 let s:temp_file = ""
 let s:action = ""
-let s:term_buff = 0
+let s:tbuf = 0
+let s:temp_popup_tbuf = -1
+let s:temp_popup_frame_buf = -1
+let s:win_id = -1
+let s:win_frame_id = -1
 
 function! nnn#select_action(action)
     let s:action = a:action
@@ -8,7 +12,7 @@ function! nnn#select_action(action)
     if has("nvim")
         call feedkeys("i\<cr>")
     else
-        call term_sendkeys(s:term_buff, "\<cr>")
+        call term_sendkeys(s:tbuf, "\<cr>")
     endif
 endfunction
 
@@ -50,7 +54,7 @@ if has('nvim')
 else
     function! s:create_popup(hl, opts) abort
         let is_frame = has_key(a:opts, 'border')
-        let buf = is_frame ? '' : term_start(&shell, #{hidden: 1})
+        let buf = is_frame ? '' : term_start([&shell, &shellcmdflag], #{hidden: 1, term_finish: 'close'})
         let id = popup_create(buf, #{
                     \ line: a:opts.row,
                     \ col: a:opts.col,
@@ -62,9 +66,11 @@ else
         if is_frame
             call setwinvar(id, '&wincolor', a:hl)
             call setbufline(winbufnr(id), 1, a:opts.border)
-            execute 'autocmd BufWipeout * ++once call popup_close('..id..')'
+            let s:win_id = id
+            let s:temp_popup_tbuf = buf
         else
-            execute 'autocmd BufWipeout * ++once bwipeout! '..buf
+            let s:win_frame_id = id
+            let s:temp_popup_frame_buf = buf
         endif
         return winbufnr(id)
     endfunction
@@ -144,9 +150,8 @@ function! s:eval_layout(layout)
 
     if s:present(a:layout, 'window')
         if type(a:layout.window) == type({})
-            if !has('nvim')
-                " && !has('patch-8.2.191')
-                throw 'Neovim is required for floating window'
+            if !has('nvim') && !has('patch-8.2.191')
+                throw 'Neovim is required for floating window or Vim with patch-8.2.191'
             end
             call s:popup(a:layout.window)
             " Since we already created the floating window, we don't need to run any
@@ -187,6 +192,20 @@ function! s:switch_back(opts, Cmd)
         endif
     endif
 
+    if type(l:layout) == type({}) && type(l:layout.window) == type({}) && !has('nvim')
+        call popup_close(s:win_id)
+        call popup_close(s:win_frame_id)
+        if bufexists(l:tbuf)
+            execute 'bdelete!' l:tbuf
+        endif
+        if bufexists(s:temp_popup_tbuf)
+            execute 'bdelete!' s:temp_popup_tbuf
+        endif
+        if bufexists(s:temp_popup_frame_buf)
+            execute 'bdelete!' s:temp_popup_frame_buf
+        endif
+    endif
+
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
     if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
@@ -195,8 +214,8 @@ function! s:switch_back(opts, Cmd)
         if bufexists(l:tbuf)
             execute 'bdelete!' l:tbuf
         endif
-        execute 'tabnext' a:opts.ppos.tab
-        execute a:opts.ppos.win.'wincmd w'
+        silent! execute 'tabnext' a:opts.ppos.tab
+        silent! execute a:opts.ppos.win.'wincmd w'
     endif
 endfunction
 
@@ -273,10 +292,10 @@ function! nnn#pick(...) abort
         let l:opts.tbuf = bufnr('')
         startinsert
     else
-        let s:term_buff = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
-        let l:opts.tbuf = s:term_buff
+        let s:tbuf = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
+        let l:opts.tbuf = s:tbuf
         if !has('patch-8.0.1261') && !has('nvim')
-            call term_wait(s:term_buff, 20)
+            call term_wait(s:tbuf, 20)
         endif
     endif
     setf nnn
