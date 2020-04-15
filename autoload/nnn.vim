@@ -40,16 +40,24 @@ endfunction
 
 if has('nvim')
     function s:create_popup(hl, opts) abort
-        let buf = nvim_create_buf(v:false, v:true)
-        let opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
-        let border = has_key(opts, 'border') ? remove(opts, 'border') : []
-        let win = nvim_open_win(buf, v:true, opts)
-        call setwinvar(win, '&winhighlight', 'NormalFloat:'..a:hl)
-        call setwinvar(win, '&colorcolumn', '')
-        if !empty(border)
-            call nvim_buf_set_lines(buf, 0, -1, v:true, border)
+        let l:buf = nvim_create_buf(v:false, v:true)
+        let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
+        let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
+        let l:win = nvim_open_win(l:buf, v:true, l:opts)
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:'..a:hl)
+        call setwinvar(l:win, '&colorcolumn', '')
+        if !empty(l:border)
+            call nvim_buf_set_lines(l:buf, 0, -1, v:true, l:border)
         endif
-        return buf
+        let l:is_frame = has_key(a:opts, 'border')
+        if l:is_frame
+            let s:win_frame_id = l:win
+            let s:temp_popup_frame_buf = buf
+        else
+            let s:win_id = l:win
+            let s:temp_popup_tbuf = l:buf
+        endif
+        return l:buf
     endfunction
 else
     function! s:create_popup(hl, opts) abort
@@ -149,7 +157,7 @@ function! s:eval_layout(layout)
     endif
 
     if s:present(a:layout, 'window')
-        if type(a:layout.window) == type({})
+        if type(a:layout.window) == v:t_dict
             if !has('nvim') && !has('patch-8.2.191')
                 throw 'Neovim is required for floating window or Vim with patch-8.2.191'
             end
@@ -192,17 +200,34 @@ function! s:switch_back(opts, Cmd)
         endif
     endif
 
-    if type(l:layout) == type({}) && type(l:layout.window) == type({}) && !has('nvim')
-        call popup_close(s:win_id)
-        call popup_close(s:win_frame_id)
-        if bufexists(l:tbuf)
-            execute 'bdelete!' l:tbuf
-        endif
-        if bufexists(s:temp_popup_tbuf)
-            execute 'bdelete!' s:temp_popup_tbuf
-        endif
-        if bufexists(s:temp_popup_frame_buf)
-            execute 'bdelete!' s:temp_popup_frame_buf
+    if type(l:layout) == v:t_dict && type(l:layout.window) == v:t_dict
+        if has('nvim')
+            if s:win_id != -1
+                call nvim_win_close(s:win_id, v:false)
+                let s:win_id = -1
+            endif
+            if s:win_frame_id != -1
+                call nvim_win_close(s:win_frame_id, v:true)
+                let s:win_frame_id = -1
+            endif
+            if bufexists(s:temp_popup_tbuf)
+                execute 'bdelete!' s:temp_popup_tbuf
+            endif
+            if bufexists(s:temp_popup_frame_buf)
+                execute 'bdelete!' s:temp_popup_frame_buf
+            endif
+        else
+            call popup_close(s:win_id)
+            call popup_close(s:win_frame_id)
+            if bufexists(l:tbuf)
+                execute 'bdelete!' l:tbuf
+            endif
+            if bufexists(s:temp_popup_tbuf)
+                execute 'bdelete!' s:temp_popup_tbuf
+            endif
+            if bufexists(s:temp_popup_frame_buf)
+                execute 'bdelete!' s:temp_popup_frame_buf
+            endif
         endif
     endif
 
@@ -299,7 +324,7 @@ function! nnn#pick(...) abort
         endif
     endif
     setf nnn
-    if g:nnn#statusline
+    if g:nnn#statusline && type(l:layout) == v:t_string
         call s:statusline()
     endif
 endfunction
