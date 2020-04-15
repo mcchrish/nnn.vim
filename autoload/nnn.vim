@@ -196,7 +196,7 @@ function! s:switch_back(opts, Cmd)
     if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
         if bufexists(l:tbuf)
-            execute 'bdelete!' l:tbuf
+            execute 'bwipeout!' l:tbuf
         endif
     endif
 
@@ -206,27 +206,27 @@ function! s:switch_back(opts, Cmd)
                 call nvim_win_close(s:win_id, v:false)
                 let s:win_id = -1
             endif
-            if s:win_frame_id != -1
-                call nvim_win_close(s:win_frame_id, v:true)
-                let s:win_frame_id = -1
-            endif
+            " if s:win_frame_id != -1
+            "     call nvim_win_close(s:win_frame_id, v:true)
+            "     let s:win_frame_id = -1
+            " endif
             if bufexists(s:temp_popup_tbuf)
-                execute 'bdelete!' s:temp_popup_tbuf
+                execute 'bwipeout!' s:temp_popup_tbuf
             endif
             if bufexists(s:temp_popup_frame_buf)
-                execute 'bdelete!' s:temp_popup_frame_buf
+                execute 'bwipeout!' s:temp_popup_frame_buf
             endif
         else
             call popup_close(s:win_id)
             call popup_close(s:win_frame_id)
             if bufexists(l:tbuf)
-                execute 'bdelete!' l:tbuf
+                execute 'bwipeout!' l:tbuf
             endif
             if bufexists(s:temp_popup_tbuf)
-                execute 'bdelete!' s:temp_popup_tbuf
+                execute 'bwipeout!' s:temp_popup_tbuf
             endif
             if bufexists(s:temp_popup_frame_buf)
-                execute 'bdelete!' s:temp_popup_frame_buf
+                execute 'bwipeout!' s:temp_popup_frame_buf
             endif
         endif
     endif
@@ -237,7 +237,7 @@ function! s:switch_back(opts, Cmd)
                 \ || (type(l:layout) != v:t_string
                 \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
         if bufexists(l:tbuf)
-            execute 'bdelete!' l:tbuf
+            execute 'bwipeout!' l:tbuf
         endif
         silent! execute 'tabnext' a:opts.ppos.tab
         silent! execute a:opts.ppos.win.'wincmd w'
@@ -289,7 +289,7 @@ function! s:eval_temp_file(opts) abort
     let s:action = "" " reset action
 
     if bufexists(l:tbuf)
-        execute 'bdelete!' l:tbuf
+        execute 'bwipeout!' l:tbuf
     endif
     redraw!
 endfunction
