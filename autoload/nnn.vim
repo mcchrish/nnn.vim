@@ -30,6 +30,9 @@ function! s:create_on_exit_callback(opts)
 endfunction
 
 function! s:present(dict, ...)
+    if type(a:dict) != v:t_dict
+        return 0
+    endif
     for key in a:000
         if !empty(get(a:dict, key, ''))
             return 1
@@ -74,10 +77,10 @@ else
         if l:is_frame
             call setwinvar(l:win, '&wincolor', a:hl)
             call setbufline(winbufnr(l:win), 1, a:opts.border)
-            let s:win_id = win_getid(l:win)
+            let s:win_id = l:win
             let s:temp_popup_tbuf = l:buf
         else
-            let s:win_frame_id = win_getid(l:win)
+            let s:win_frame_id = l:win
             let s:temp_popup_frame_buf = l:buf
         endif
         return winbufnr(l:win)
@@ -222,6 +225,9 @@ function! s:switch_back(opts, Cmd)
                 let s:win_frame_id = -1
             endif
         else
+            call popup_close(s:win_id)
+            call popup_close(s:win_frame_id)
+
             if bufexists(l:tbuf)
                 execute 'bwipeout!' l:tbuf
             endif
@@ -231,9 +237,6 @@ function! s:switch_back(opts, Cmd)
             if bufexists(s:temp_popup_frame_buf)
                 execute 'bwipeout!' s:temp_popup_frame_buf
             endif
-
-            call popup_close(s:win_id)
-            call popup_close(s:win_frame_id)
         endif
     endif
 
