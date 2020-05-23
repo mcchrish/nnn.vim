@@ -61,26 +61,26 @@ if has('nvim')
     endfunction
 else
     function! s:create_popup(hl, opts) abort
-        let is_frame = has_key(a:opts, 'border')
-        let buf = is_frame ? '' : term_start([&shell, &shellcmdflag], #{hidden: 1, term_finish: 'close'})
-        let id = popup_create(buf, #{
+        let l:is_frame = has_key(a:opts, 'border')
+        let l:buf = l:is_frame ? '' : term_start([&shell, &shellcmdflag], #{hidden: 1, term_finish: 'close'})
+        let l:win = popup_create(l:buf, #{
                     \ line: a:opts.row,
                     \ col: a:opts.col,
                     \ minwidth: a:opts.width,
                     \ minheight: a:opts.height,
-                    \ zindex: 50 - is_frame,
+                    \ zindex: 50 - l:is_frame,
                     \ })
 
-        if is_frame
-            call setwinvar(id, '&wincolor', a:hl)
-            call setbufline(winbufnr(id), 1, a:opts.border)
-            let s:win_id = id
-            let s:temp_popup_tbuf = buf
+        if l:is_frame
+            call setwinvar(l:win, '&wincolor', a:hl)
+            call setbufline(winbufnr(l:win), 1, a:opts.border)
+            let s:win_id = win_getid(l:win)
+            let s:temp_popup_tbuf = l:buf
         else
-            let s:win_frame_id = id
-            let s:temp_popup_frame_buf = buf
+            let s:win_frame_id = win_getid(l:win)
+            let s:temp_popup_frame_buf = l:buf
         endif
-        return winbufnr(id)
+        return winbufnr(l:win)
     endfunction
 endif
 
@@ -200,25 +200,28 @@ function! s:switch_back(opts, Cmd)
         endif
     endif
 
-    if type(l:layout) == v:t_dict && type(l:layout.window) == v:t_dict
+    if s:present(l:layout, 'window')
+        if type(l:layout.window) != v:t_dict
+            throw 'Invalid layout'
+        endif
         if has('nvim')
-            if s:win_id != -1
-                call nvim_win_close(s:win_id, v:false)
-                let s:win_id = -1
-            endif
-            " if s:win_frame_id != -1
-            "     call nvim_win_close(s:win_frame_id, v:true)
-            "     let s:win_frame_id = -1
-            " endif
             if bufexists(s:temp_popup_tbuf)
                 execute 'bwipeout!' s:temp_popup_tbuf
             endif
             if bufexists(s:temp_popup_frame_buf)
                 execute 'bwipeout!' s:temp_popup_frame_buf
             endif
+
+            " Making sure we close the windows when sometimes they linger
+            if nvim_win_is_valid(s:win_id)
+                call nvim_win_close(s:win_id, v:false)
+                let s:win_id = -1
+            endif
+            if nvim_win_is_valid(s:win_frame_id)
+                call nvim_win_close(s:win_frame_id, v:true)
+                let s:win_frame_id = -1
+            endif
         else
-            call popup_close(s:win_id)
-            call popup_close(s:win_frame_id)
             if bufexists(l:tbuf)
                 execute 'bwipeout!' l:tbuf
             endif
@@ -228,6 +231,9 @@ function! s:switch_back(opts, Cmd)
             if bufexists(s:temp_popup_frame_buf)
                 execute 'bwipeout!' s:temp_popup_frame_buf
             endif
+
+            call popup_close(s:win_id)
+            call popup_close(s:win_frame_id)
         endif
     endif
 
