@@ -325,7 +325,7 @@ function! nnn#pick(...) abort
 
     let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
     let s:tbuf = l:opts.term_wins.term.buf
-    setf nnn
+    setfiletype nnn
     if g:nnn#statusline && type(l:layout) == v:t_string
         call s:statusline()
     endif

@@ -11,5 +11,5 @@ for key in keys(g:nnn#action)
     endif
 endfor
 
-setlocal nospell bufhidden=wipe nobuflisted nonumber noruler
+setlocal nospell bufhidden=wipe nobuflisted nonumber
 " vim: set sts=4 sw=4 ts=4 et :
