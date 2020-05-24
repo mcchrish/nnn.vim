@@ -51,6 +51,8 @@ the file and exit nnn.
 Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking.
 
+You may have to set `set hidden` to make floating window work.
+
 To discard selection and exit, press ^G.
 
 -----------------------------------------------------------------------------

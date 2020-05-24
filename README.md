@@ -42,6 +42,8 @@ instead of picking.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
+You may have to set `set hidden` to make floating window work.
+
 Please visit the complete documentation by running `:help nnn`.
 
 ### Configurations
