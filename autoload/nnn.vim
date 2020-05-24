@@ -1,12 +1,12 @@
 let s:temp_file = ""
 let s:action = ""
 let s:tbuf = 0
-let s:temp_popup_tbuf = -1
-let s:temp_popup_frame_buf = -1
-let s:win_id = -1
-let s:win_frame_id = -1
 
-function! nnn#select_action(action)
+function! s:statusline()
+    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
+endfunction
+
+function! nnn#select_action(action) abort
     let s:action = a:action
     " quit nnn
     if has("nvim")
@@ -14,19 +14,6 @@ function! nnn#select_action(action)
     else
         call term_sendkeys(s:tbuf, "\<cr>")
     endif
-endfunction
-
-function! s:create_on_exit_callback(opts)
-    let l:opts = a:opts
-    function! s:callback(id, code, ...) closure
-        if a:code != 0
-            echohl ErrorMsg | echo 'nnn exited with '.a:code | echohl None
-            return
-        endif
-
-        call s:eval_temp_file(l:opts)
-    endfunction
-    return function('s:callback')
 endfunction
 
 function! s:present(dict, ...)
@@ -41,53 +28,43 @@ function! s:present(dict, ...)
     return 0
 endfunction
 
-if has('nvim')
-    function s:create_popup(hl, opts) abort
-        let l:buf = nvim_create_buf(v:false, v:true)
-        let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
-        let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
-        let l:win = nvim_open_win(l:buf, v:true, l:opts)
-        call setwinvar(l:win, '&winhighlight', 'NormalFloat:'..a:hl)
-        call setwinvar(l:win, '&colorcolumn', '')
-        if !empty(l:border)
-            call nvim_buf_set_lines(l:buf, 0, -1, v:true, l:border)
-        endif
-        let l:is_frame = has_key(a:opts, 'border')
-        if l:is_frame
-            let s:win_frame_id = l:win
-            let s:temp_popup_frame_buf = buf
-        else
-            let s:win_id = l:win
-            let s:temp_popup_tbuf = l:buf
-        endif
-        return l:buf
-    endfunction
-else
-    function! s:create_popup(hl, opts) abort
-        let l:is_frame = has_key(a:opts, 'border')
-        let l:buf = l:is_frame ? '' : term_start([&shell, &shellcmdflag], #{hidden: 1, term_finish: 'close'})
-        let l:win = popup_create(l:buf, #{
-                    \ line: a:opts.row,
-                    \ col: a:opts.col,
-                    \ minwidth: a:opts.width,
-                    \ minheight: a:opts.height,
-                    \ zindex: 50 - l:is_frame,
-                    \ })
+function! s:calc_size(val, max)
+    let l:val = substitute(a:val, '^\~', '', '')
+    if val =~ '%$'
+        return a:max * str2nr(val[:-2]) / 100
+    else
+        return min([a:max, str2nr(val)])
+    endif
+endfunction
 
-        if l:is_frame
-            call setwinvar(l:win, '&wincolor', a:hl)
-            call setbufline(winbufnr(l:win), 1, a:opts.border)
-            let s:win_id = l:win
-            let s:temp_popup_tbuf = l:buf
-        else
-            let s:win_frame_id = l:win
-            let s:temp_popup_frame_buf = l:buf
-        endif
-        return winbufnr(l:win)
-    endfunction
-endif
+function! s:eval_temp_file(opts)
+    let l:Cmd = type(s:action) == v:t_func || strlen(s:action) > 0 ? s:action : a:opts.edit
 
-function! s:popup(opts) abort
+    call s:switch_back(a:opts, l:Cmd)
+
+    let l:names = s:extract_filenames()
+    " When exiting without any selection
+    if empty(l:names)
+        return
+    endif
+
+    " Action passed is function
+    if (type(l:Cmd) == 2)
+        call l:Cmd(l:names)
+    else
+        " Edit the first item.
+        execute 'silent' l:Cmd fnameescape(l:names[0])
+        " Add any remaining items to the arg list/buffer list.
+        for l:name in l:names[1:]
+            execute 'silent argadd' fnameescape(l:name)
+        endfor
+    endif
+
+    let s:action = "" " reset action
+    redraw!
+endfunction
+
+function! s:popup(opts, term_opts)
     " Support ambiwidth == 'double'
     let ambidouble = &ambiwidth == 'double' ? 2 : 1
 
@@ -134,124 +111,53 @@ function! s:popup(opts) abort
     endif
 
     let highlight = get(a:opts, 'highlight', 'Comment')
-    let frame = s:create_popup(highlight, {
+    let l:frame = s:create_popup(highlight, {
                 \ 'row': row, 'col': col, 'width': width, 'height': height, 'border': border
-                \ })
-    call s:create_popup('Normal', {
+                \ }, a:term_opts)
+    let l:term_win = s:create_popup('Normal', {
                 \ 'row': row + shift.row, 'col': col + shift.col, 'width': width + shift.width, 'height': height + shift.height
-                \ })
+                \ }, a:term_opts)
     if has('nvim')
-        execute 'autocmd BufWipeout <buffer> bwipeout '..frame
+        execute 'autocmd BufWipeout <buffer> bwipeout '..l:frame.buf
     endif
+
+    return { 'frame': l:frame, 'term': l:term_win }
 endfunction
 
-function! s:calc_size(val, max)
-    let l:val = substitute(a:val, '^\~', '', '')
-    if val =~ '%$'
-        return a:max * str2nr(val[:-2]) / 100
+function s:create_popup(hl, opts, term_opts)
+    if has('nvim')
+        let l:temp_buf = nvim_create_buf(v:false, v:true)
+        let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
+        let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
+        let l:win = nvim_open_win(l:temp_buf, v:true, l:opts)
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:'..a:hl)
+        call setwinvar(l:win, '&colorcolumn', '')
+        if has_key(a:opts, 'border')
+            call nvim_buf_set_lines(l:temp_buf, 0, -1, v:true, l:border)
+            return { 'buf': l:temp_buf, 'winhandle': l:win }
+        else
+            let l:tbuf = s:create_term_buf(a:term_opts)
+            return { 'buf': l:tbuf, 'winhandle': l:win }
+        endif
     else
-        return min([a:max, str2nr(val)])
+        let l:is_frame = has_key(a:opts, 'border')
+        let l:buf = l:is_frame ? '' : s:create_term_buf(extend(a:term_opts, { 'curwin': 0, 'hidden': 1 }))
+        let l:win = popup_create(l:buf, #{
+                    \ line: a:opts.row,
+                    \ col: a:opts.col,
+                    \ minwidth: a:opts.width,
+                    \ minheight: a:opts.height,
+                    \ zindex: 50 - l:is_frame,
+                    \ })
+
+        if l:is_frame
+            call setwinvar(l:win, '&wincolor', a:hl)
+            call setbufline(winbufnr(l:win), 1, a:opts.border)
+        endif
+        return { 'buf': l:buf, 'winhandle': l:win }
     endif
 endfunction
 
-function! s:eval_layout(layout)
-    if type(a:layout) == v:t_string
-        return 'keepalt ' . a:layout
-    endif
-
-    if s:present(a:layout, 'window')
-        if type(a:layout.window) == v:t_dict
-            if !has('nvim') && !has('patch-8.2.191')
-                throw 'Neovim is required for floating window or Vim with patch-8.2.191'
-            end
-            call s:popup(a:layout.window)
-            " Since we already created the floating window, we don't need to run any
-            " command
-            return
-        else
-            throw 'Invalid layout'
-        endif
-    endif
-
-    let l:directions = {
-                \ 'up':    ['topleft', 'resize', &lines],
-                \ 'down':  ['botright', 'resize', &lines],
-                \ 'left':  ['vertical topleft', 'vertical resize', &columns],
-                \ 'right': ['vertical botright', 'vertical resize', &columns] }
-
-    for key in ['up', 'down', 'left', 'right']
-        if s:present(a:layout, key)
-            let l:size = a:layout[key]
-            let [l:cmd, l:resz, l:max]= l:directions[key]
-            return l:cmd . s:calc_size(l:size, l:max) . 'new'
-        endif
-    endfor
-
-    throw 'Invalid layout'
-endfunction
-
-function! s:switch_back(opts, Cmd)
-    let l:buf = a:opts.ppos.buf
-    let l:layout = a:opts.layout
-    let l:tbuf = a:opts.tbuf
-
-    " when split explorer
-    if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
-        execute 'keepalt b' l:buf
-        if bufexists(l:tbuf)
-            execute 'bwipeout!' l:tbuf
-        endif
-    endif
-
-    if s:present(l:layout, 'window')
-        if type(l:layout.window) != v:t_dict
-            throw 'Invalid layout'
-        endif
-        if has('nvim')
-            if bufexists(s:temp_popup_tbuf)
-                execute 'bwipeout!' s:temp_popup_tbuf
-            endif
-            if bufexists(s:temp_popup_frame_buf)
-                execute 'bwipeout!' s:temp_popup_frame_buf
-            endif
-
-            " Making sure we close the windows when sometimes they linger
-            if nvim_win_is_valid(s:win_id)
-                call nvim_win_close(s:win_id, v:false)
-                let s:win_id = -1
-            endif
-            if nvim_win_is_valid(s:win_frame_id)
-                call nvim_win_close(s:win_frame_id, v:true)
-                let s:win_frame_id = -1
-            endif
-        else
-            call popup_close(s:win_id)
-            call popup_close(s:win_frame_id)
-
-            if bufexists(l:tbuf)
-                execute 'bwipeout!' l:tbuf
-            endif
-            if bufexists(s:temp_popup_tbuf)
-                execute 'bwipeout!' s:temp_popup_tbuf
-            endif
-            if bufexists(s:temp_popup_frame_buf)
-                execute 'bwipeout!' s:temp_popup_frame_buf
-            endif
-        endif
-    endif
-
-    " don't switch when action = 'edit' and just retain the window
-    " don't switch when layout = 'enew' for split explorer feature
-    if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
-                \ || (type(l:layout) != v:t_string
-                \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
-        if bufexists(l:tbuf)
-            execute 'bwipeout!' l:tbuf
-        endif
-        silent! execute 'tabnext' a:opts.ppos.tab
-        silent! execute a:opts.ppos.win.'wincmd w'
-    endif
-endfunction
 
 function! s:extract_filenames()
     if !filereadable(s:temp_file)
@@ -271,41 +177,139 @@ function! s:extract_filenames()
     return l:names
 endfunction
 
-function! s:eval_temp_file(opts) abort
-    let l:tbuf = a:opts.tbuf
-    let l:Cmd = type(s:action) == v:t_func || strlen(s:action) > 0 ? s:action : a:opts.edit
+function! s:switch_back(opts, Cmd)
+    let l:buf = a:opts.ppos.buf
+    let l:layout = a:opts.layout
+    let l:term_wins = a:opts.term_wins
 
-    call s:switch_back(a:opts, l:Cmd)
-
-    let l:names = s:extract_filenames()
-    " When exiting without any selection
-    if empty(l:names)
-        return
+    " when split explorer
+    if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
+        execute 'keepalt b' l:buf
+        if bufexists(l:term_wins.term.buf)
+            execute 'bwipeout!' l:term_wins.term.buf
+        endif
     endif
 
-    " Action passed is function
-    if (type(l:Cmd) == 2)
-        call l:Cmd(l:names)
+    if s:present(l:layout, 'window')
+        if type(l:layout.window) != v:t_dict
+            throw 'Invalid layout'
+        endif
+        if has('nvim')
+            if bufexists(l:term_wins.term.buf)
+                execute 'bwipeout!' l:term_wins.term.buf
+            endif
+            if bufexists(l:term_wins.frame.buf)
+                execute 'bwipeout!' l:term_wins.frame.buf
+            endif
+
+            " Making sure we close the windows when sometimes they linger
+            if nvim_win_is_valid(l:term_wins.term.winhandle)
+                call nvim_win_close(l:term_wins.term.winhandle, v:false)
+            endif
+            if nvim_win_is_valid(l:term_wins.frame.winhandle)
+                call nvim_win_close(l:term_wins.frame.winhandle, v:false)
+            endif
+        else
+            call popup_close(l:term_wins.term.winhandle)
+            call popup_close(l:term_wins.frame.winhandle)
+
+            if bufexists(l:term_wins.term.buf)
+                execute 'bwipeout!' l:term_wins.term.buf
+            endif
+            if bufexists(l:term_wins.frame.buf)
+                execute 'bwipeout!' l:term_wins.frame.buf
+            endif
+        endif
+    endif
+
+    " don't switch when action = 'edit' and just retain the window
+    " don't switch when layout = 'enew' for split explorer feature
+    if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
+                \ || (type(l:layout) != v:t_string
+                \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
+        if bufexists(l:term_wins.term.buf)
+            execute 'bwipeout!' l:term_wins.term.buf
+        endif
+        silent! execute 'tabnext' a:opts.ppos.tab
+        silent! execute a:opts.ppos.win.'wincmd w'
+    endif
+endfunction
+
+function! s:create_term_buf(opts)
+    if has("nvim")
+        call termopen(a:opts.cmd, {'on_exit': a:opts.on_exit })
+        startinsert
+        return bufnr('')
     else
-        " Edit the first item.
-        execute 'silent' l:Cmd fnameescape(l:names[0])
-        " Add any remaining items to the arg list/buffer list.
-        for l:name in l:names[1:]
-            execute 'silent argadd' fnameescape(l:name)
-        endfor
+        let l:curwin = get(a:opts, 'curwin', 1)
+        let l:hidden = get(a:opts, 'hidden', 0)
+        let l:Exit_cb = get(a:opts, 'on_exit')
+        let l:tbuf = term_start([&shell, &shellcmdflag, a:opts.cmd], #{ 
+                    \ curwin: l:curwin,
+                    \ hidden: l:hidden,
+                    \ exit_cb: l:Exit_cb
+                    \ })
+        if !has('patch-8.0.1261') && !has('nvim')
+            call term_wait(l:tbuf, 20)
+        endif
+        return l:tbuf
     endif
-
-    let s:action = "" " reset action
-
-    if bufexists(l:tbuf)
-        execute 'bwipeout!' l:tbuf
-    endif
-    redraw!
 endfunction
 
-function! s:statusline()
-    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
+function! s:create_on_exit_callback(opts)
+    let l:opts = a:opts
+    function! s:callback(id, code, ...) closure
+        if a:code != 0
+            echohl ErrorMsg | echo 'nnn exited with '.a:code | echohl None
+            return
+        endif
+
+        call s:eval_temp_file(l:opts)
+    endfunction
+    return function('s:callback')
 endfunction
+
+function! s:build_window(layout, term_opts)
+    if type(a:layout) == v:t_string
+        execute 'keepalt ' . a:layout
+        return { 'term': { 
+                    \ 'buf': s:create_term_buf(a:term_opts),
+                    \ 'winhandle': win_getid()
+                    \ } }
+    endif
+
+    if s:present(a:layout, 'window')
+        if type(a:layout.window) == v:t_dict
+            if !has('nvim') && !has('patch-8.2.191')
+                throw 'Neovim is required for floating window or Vim with patch-8.2.191'
+            end
+            return s:popup(a:layout.window, a:term_opts)
+        else
+            throw 'Invalid layout'
+        endif
+    endif
+
+    let l:directions = {
+                \ 'up':    ['topleft', 'resize', &lines],
+                \ 'down':  ['botright', 'resize', &lines],
+                \ 'left':  ['vertical topleft', 'vertical resize', &columns],
+                \ 'right': ['vertical botright', 'vertical resize', &columns] }
+
+    for key in ['up', 'down', 'left', 'right']
+        if s:present(a:layout, key)
+            let l:size = a:layout[key]
+            let [l:cmd, l:resz, l:max]= l:directions[key]
+            execute l:cmd . s:calc_size(l:size, l:max) . 'new'
+            return { 'term': { 
+                        \ 'buf': s:create_term_buf(a:term_opts),
+                        \ 'winhandle': win_getid()
+                        \ } }
+        endif
+    endfor
+
+    throw 'Invalid layout'
+endfunction
+
 
 function! nnn#pick(...) abort
     let l:directory = expand(get(a:, 1, ""))
@@ -317,21 +321,10 @@ function! nnn#pick(...) abort
 
     let l:opts.layout = l:layout
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
-    execute s:eval_layout(l:layout)
-
     let l:On_exit = s:create_on_exit_callback(l:opts)
 
-    if has("nvim")
-        call termopen(l:cmd, {'on_exit': function(l:On_exit) })
-        let l:opts.tbuf = bufnr('')
-        startinsert
-    else
-        let s:tbuf = term_start([&shell, &shellcmdflag, l:cmd], {'curwin': 1, 'exit_cb': function(l:On_exit)})
-        let l:opts.tbuf = s:tbuf
-        if !has('patch-8.0.1261') && !has('nvim')
-            call term_wait(s:tbuf, 20)
-        endif
-    endif
+    let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
+    let s:tbuf = l:opts.term_wins.term.buf
     setf nnn
     if g:nnn#statusline && type(l:layout) == v:t_string
         call s:statusline()
