@@ -169,7 +169,7 @@ function! s:extract_filenames()
         return []
     endif
 
-    let l:names = uniq(filter(split(l:file[0], "\\n"), '!isdirectory(v:val) && filereadable(v:val)'))
+    let l:names = uniq(filter(l:file, '!isdirectory(v:val) && filereadable(v:val)'))
     if empty(l:names) || strlen(l:names[0]) <= 0
         return []
     endif
