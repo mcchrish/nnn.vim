@@ -265,6 +265,16 @@ function! s:create_on_exit_callback(opts)
         endif
 
         call s:eval_temp_file(l:opts)
+
+        let fdir = !empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config'
+        let fname = fdir . '/nnn/.lastd'
+        if !empty(glob(fname))
+            let firstline = readfile(fname)[0]
+            let lastd = split(firstline, '"')[1]
+            execute 'cd' fnameescape(lastd)
+            call delete(fnameescape(fname))
+        endif
+
     endfunction
     return function('s:callback')
 endfunction
