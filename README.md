@@ -63,6 +63,8 @@ nnoremap <silent> <leader>nn :NnnPicker<CR>
 nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 ```
 
+Note: For fish shell, the single quotes around `'%:p:h'` should be dropped.
+
 #### Layout
 
 ```vim
