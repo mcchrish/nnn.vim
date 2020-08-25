@@ -184,7 +184,12 @@ function! s:switch_back(opts, Cmd)
 
     " when split explorer
     if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
-        execute 'keepalt b' l:buf
+        try
+            execute 'keepalt b' l:buf
+        " in case nnn was used to delete file in open buffer
+        catch /E211: File/
+            let junk = input(matchstr(string(v:exception), 'E211: .*$') . "\nPress ENTER to continue")
+        endtry
         if bufexists(l:term_wins.term.buf)
             execute 'bwipeout!' l:term_wins.term.buf
         endif
