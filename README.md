@@ -60,10 +60,8 @@ nnoremap <silent> <leader>nn :NnnPicker<CR>
 
 " Or override
 " Start nnn in the current file's directory
-nnoremap <leader>n :NnnPicker '%:p:h'<CR>
+nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
-
-Note: For fish shell, the single quotes around `'%:p:h'` should be dropped.
 
 #### Layout
 
