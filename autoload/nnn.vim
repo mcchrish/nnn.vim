@@ -331,7 +331,7 @@ function! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
-    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp_file).' '.shellescape(l:directory)
+    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory) : '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.layout = l:layout
