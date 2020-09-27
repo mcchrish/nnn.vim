@@ -166,6 +166,10 @@ g:nnn#statusline                                             *g:nnn#statusline*
                   Default: 1
                   The nnn statusline. Set to 0 to disable.
 
+g:nnn#shell                                                      *g:nnn#shell*
+                  Default: &shell
+                  The shell to run the terminal window.
+
 
 -----------------------------------------------------------------------------
 Functions                                                            *nnn-func*

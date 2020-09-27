@@ -27,6 +27,10 @@ if !(exists("g:nnn#statusline"))
     let g:nnn#statusline = 1
 endif
 
+if !(exists("g:nnn#shell"))
+    let g:nnn#shell = &shell
+endif
+
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
 command! -bar -nargs=? -complete=dir Np call nnn#pick(<f-args>)
 

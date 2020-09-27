@@ -242,14 +242,14 @@ endfunction
 
 function! s:create_term_buf(opts)
     if has("nvim")
-        call termopen(a:opts.cmd, {'on_exit': a:opts.on_exit })
+        call termopen([g:nnn#shell, &shellcmdflag, a:opts.cmd], {'on_exit': a:opts.on_exit })
         startinsert
         return bufnr('')
     else
         let l:curwin = get(a:opts, 'curwin', 1)
         let l:hidden = get(a:opts, 'hidden', 0)
         let l:Exit_cb = get(a:opts, 'on_exit')
-        let l:tbuf = term_start([&shell, &shellcmdflag, a:opts.cmd], #{ 
+        let l:tbuf = term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], #{ 
                     \ curwin: l:curwin,
                     \ hidden: l:hidden,
                     \ exit_cb: l:Exit_cb
