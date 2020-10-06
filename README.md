@@ -63,9 +63,6 @@ nnoremap <silent> <leader>nn :NnnPicker<CR>
 nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
 
-_NOTE there are no quotes around `%:p:h` anymore - v1.7 and earlier versions suggested using quotes, but that can trigger a `E79: Cannot expand wildcards` error_
-
-
 #### Layout
 
 ```vim
