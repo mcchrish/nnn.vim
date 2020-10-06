@@ -60,10 +60,11 @@ nnoremap <silent> <leader>nn :NnnPicker<CR>
 
 " Or override
 " Start nnn in the current file's directory
-nnoremap <leader>n :NnnPicker '%:p:h'<CR>
+nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
 
-Note: For fish shell, the single quotes around `'%:p:h'` should be dropped.
+_NOTE there are no quotes around `%:p:h` anymore - v1.7 and earlier versions suggested using quotes, but that can trigger a `E79: Cannot expand wildcards` error_
+
 
 #### Layout
 
