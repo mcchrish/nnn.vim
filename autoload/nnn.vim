@@ -200,19 +200,19 @@ function! s:switch_back(opts, Cmd)
             throw 'Invalid layout'
         endif
         if has('nvim')
-            if bufexists(l:term_wins.term.buf)
-                execute 'bwipeout!' l:term_wins.term.buf
-            endif
-            if bufexists(l:term_wins.frame.buf)
-                execute 'bwipeout!' l:term_wins.frame.buf
-            endif
-
             " Making sure we close the windows when sometimes they linger
             if nvim_win_is_valid(l:term_wins.term.winhandle)
                 call nvim_win_close(l:term_wins.term.winhandle, v:false)
             endif
             if nvim_win_is_valid(l:term_wins.frame.winhandle)
                 call nvim_win_close(l:term_wins.frame.winhandle, v:false)
+            endif
+
+            if bufexists(l:term_wins.term.buf)
+                execute 'bwipeout!' l:term_wins.term.buf
+            endif
+            if bufexists(l:term_wins.frame.buf)
+                execute 'bwipeout!' l:term_wins.frame.buf
             endif
         else
             call popup_close(l:term_wins.term.winhandle)
