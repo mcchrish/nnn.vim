@@ -1,4 +1,4 @@
-*nnn.vim* nnn file manager plugin for vim/neovim.
+*nnn.vim* n³ file manager plugin for vim/neovim.
 *nnn*
 >
   __   __     __   __     __   __     __   __   __     __    __
@@ -24,29 +24,30 @@ CONTENTS *nnn-help*
 =============================================================================
 Introduction                                                        *nnn-intro*
 
-This plugins attempts to make nnn the file manager companion for vim. Use it
-to create, remove, move files or to quickly select files in nnn and open them
+This plugins attempts to make n³ the file manager companion for vim. Use it
+to create, remove, move files or to quickly select files in n³ and open them
 in vim all without leaving vim. It achieves these but utilizing the built-in
 terminal feature of vim and neovim.
 
 -----------------------------------------------------------------------------
 Requirements                                                          *nnn-req*
 
-1. nnn
+1. n³
 2. Neovim or Vim 8.1 with terminal support
 
 =============================================================================
 Usage                                                               *nnn-usage*
 
 By running |:NnnPicker| or calling the |nnn#pick()| function, a new terminal
-buffer opens running an nnn process in picker mode.
+buffer opens running an n³ process in picker mode.
 
-Once you select (see https://github.com/jarun/nnn#selection) one or more
-files and press enter, vim quits the nnn window and opens the first selected
-file and add the remaining files to the arg list/buffer list.
+Once you select (see https://github.com/jarun/nnn/wiki/concepts#selection)
+one or more files and press enter, vim quits the n³ window and opens the
+first selected file and add the remaining files to the arg list/buffer
+list.
 
-Pressing enter on a file in nnn will pick any earlier selection, pick
-the file and exit nnn.
+Pressing enter on a file in n³ will pick any earlier selection, pick
+the file and exit n³.
 
 Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking.
@@ -59,7 +60,7 @@ To discard selection and exit, press ^G.
 Commands                                                         *nnn-commands*
 
 :NnnPicker                                                         *:NnnPicker*
-                  Opens an nnn window.
+                  Opens an n³ window.
 :Np                                                                       *:Np*
                   Does the same as :NnnPicker.
 
@@ -88,19 +89,19 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 
 
                   " Or override
-                  " Start nnn in the current file's directory
+                  " Start n³ in the current file's directory
                   nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 <
 
 g:nnn#layout                                                     *g:nnn#layout*
                   Default: 'enew'
-                  Display type for the nnn buffer. Default is |enew|, which
+                  Display type for the n³ buffer. Default is |enew|, which
                   has a special behavior to act as a "split explorer" reusing
                   the current window and brings back the last buffer if
                   nothing is selected.
                   Examples:
 >
-                  " Opens the nnn window in a split
+                  " Opens the n³ window in a split
                   let g:nnn#layout = 'new' " or vnew, tabnew etc.
 
                   " Or pass a dictionary with window size
@@ -116,9 +117,9 @@ g:nnn#layout                                                     *g:nnn#layout*
 
 g:nnn#action                                                     *g:nnn#action*
                   Default: {}
-                  Additional key-binding set for the nnn buffer for opening
+                  Additional key-binding set for the n³ buffer for opening
                   files in different ways. Nothing is set by default to not
-                  override nnn's own key-bindings.
+                  override n³'s own key-bindings.
                   Examples:
 >
                   let g:nnn#action = {
@@ -127,7 +128,7 @@ g:nnn#action                                                     *g:nnn#action*
                         \ '<c-v>': 'vsplit',
                         \ '<c-o>': function('CopyLinestoRegister') }
 
-                  For example, when inside an nnn window, pressing <C-t> will
+                  For example, when inside an n³ window, pressing <C-t> will
                   open the selected file in a tab, instead of the current
                   window. <C-x> will open in a split an so on. Meanwhile for
                   multi selected files will be loaded in the buffer list.
@@ -147,9 +148,9 @@ g:nnn#action                                                     *g:nnn#action*
 
 g:nnn#command                                                   *g:nnn#command*
                   Default: 'nnn'
-                  When you want to override the default nnn command and add
+                  When you want to override the default n³ command and add
                   some extra flags.
-                  Example you want to start nnn in detail mode.
+                  Example you want to start n³ in detail mode.
 >
                   let g:nnn#command = 'nnn -d'
 
@@ -159,12 +160,12 @@ g:nnn#command                                                   *g:nnn#command*
 
 g:nnn#replace_netrw                                       *g:nnn#replace_netrw*
                   Default: 0
-                  Open nnn instead of netrw when opening a directory.
+                  Open n³ instead of netrw when opening a directory.
 
 
 g:nnn#statusline                                             *g:nnn#statusline*
                   Default: 1
-                  The nnn statusline. Set to 0 to disable.
+                  The n³ statusline. Set to 0 to disable.
 
 g:nnn#shell                                                      *g:nnn#shell*
                   Default: &shell
@@ -195,7 +196,7 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
 =============================================================================
 Miscellaneous                                                        *nnn-misc*
 
-You can define env variables in `vimrc` and nnn will detect it.
+You can define env variables in `vimrc` and n³ will detect it.
 >
                   let $NNN_TRASH=1
 <
@@ -203,14 +204,14 @@ You can define env variables in `vimrc` and nnn will detect it.
 =============================================================================
 Credits                                                           *nnn-credits*
 
-Main nnn program by Arun Prakash Jana
+Main n³ program by Arun Prakash Jana
 github: https://github.com/jarun
 
 Vim/neovim plugin maintained by Michael Chris Lopez
-gitub: https://github.com/mcchrish
+github: https://github.com/mcchrish
 
 Source codes:
-nnn: https://github.com/jarun/nnn
+n³: https://github.com/jarun/nnn
 vim plugin: https://github.com/mcchrish/nnn.vim
 
 =============================================================================
