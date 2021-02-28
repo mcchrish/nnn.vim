@@ -1,6 +1,6 @@
 # nnn.vim
 
-Fast and featureful file manager in vim/neovim powered by nnn.
+Fast and featureful file manager in vim/neovim powered by n³.
 
 <p align="center">
   <img width="934" src="https://user-images.githubusercontent.com/7200153/77138110-8dd94600-6aab-11ea-925f-8e159b8f0ad4.png">
@@ -9,13 +9,13 @@ Fast and featureful file manager in vim/neovim powered by nnn.
 
 ### Requirements
 
-1. nnn (minimum version 2.2)
+1. n³
 2. Neovim or Vim 8.1 with terminal support
 
 ### Install
 
-You must install nnn itself. Instructions
-[here](https://github.com/jarun/nnn#installation).
+You must install n³ itself. Instructions
+[here](https://github.com/jarun/nnn/wiki/Usage#installation).
 
 Then install using your favorite plugin manager:
 
@@ -26,16 +26,16 @@ Plug 'mcchrish/nnn.vim'
 
 ### Usage
 
-To open nnn as a file picker in vim/neovim, use the command `:NnnPicker` or
+To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or
 `:Np` or the key-binding `<leader>n`. You can pass a directory to `:NnnPicker`
-command and opens nnn from there e.g. `:NnnPicker path/to/somewhere`.
+command and opens n³ from there e.g. `:NnnPicker path/to/somewhere`.
 
 Once you [select](https://github.com/jarun/nnn#selection) one or more files and
-press <kbd>enter</kbd>, vim quits the nnn window and opens the first selected
+press <kbd>enter</kbd>, vim quits the n³ window and opens the first selected
 file and add the remaining files to the arg list/buffer list.
 
-Pressing <kbd>enter</kbd> on a file in nnn will pick any earlier selection, pick
-the file and exit nnn.
+Pressing <kbd>enter</kbd> on a file in n³ will pick any earlier selection, pick
+the file and exit n³.
 
 Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking.
@@ -66,7 +66,7 @@ nnoremap <leader>n :NnnPicker %:p:h<CR>
 #### Layout
 
 ```vim
-" Opens the nnn window in a split
+" Opens the n³ window in a split
 let g:nnn#layout = 'new' " or vnew, tabnew etc.
 
 " Or pass a dictionary with window size
@@ -79,7 +79,7 @@ let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debu
 #### Action
 
 You can set extra key-bindings for opening files in different ways. Nothing is
-set by default to not override nnn's own key-bindings.
+set by default to not override n³'s own key-bindings.
 
 ```vim
 let g:nnn#action = {
@@ -88,15 +88,15 @@ let g:nnn#action = {
       \ '<c-v>': 'vsplit' }
 ```
 
-For example, when inside an nnn window, pressing <kbd>ctrl-t</kbd> will open the
+For example, when inside an n³ window, pressing <kbd>ctrl-t</kbd> will open the
 selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
 open in a split an so on. Meanwhile for multi selected files will be loaded in
 the buffer list.
 
 #### Command override
 
-When you want to override the default nnn command and add some extra flags.
-Example you want to start nnn in detail mode.
+When you want to override the default n³ command and add some extra flags.
+Example you want to start n³ in detail mode.
 
 ```vim
 let g:nnn#command = 'nnn -d'
@@ -123,7 +123,7 @@ call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 
 #### Environment variables
 
-You can define env variables in `vimrc` and nnn will detect it.
+You can define env variables in `vimrc` and n³ will detect it.
 
 ```vim
 let $NNN_TRASH=1
@@ -131,4 +131,4 @@ let $NNN_TRASH=1
 
 ### Credits
 
-Main nnn program: https://github.com/jarun/nnn
+Main n³ program: https://github.com/jarun/nnn
