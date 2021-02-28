@@ -1,6 +1,6 @@
 # nnn.vim
 
-Fast and featureful file manager in vim/neovim powered by n³.
+File manager for vim/neovim powered by n³.
 
 <p align="center">
   <img width="934" src="https://user-images.githubusercontent.com/7200153/77138110-8dd94600-6aab-11ea-925f-8e159b8f0ad4.png">
@@ -30,7 +30,7 @@ To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or
 `:Np` or the key-binding `<leader>n`. You can pass a directory to `:NnnPicker`
 command and opens n³ from there e.g. `:NnnPicker path/to/somewhere`.
 
-Once you [select](https://github.com/jarun/nnn#selection) one or more files and
+Once you [select](https://github.com/jarun/nnn/wiki/concepts#selection) one or more files and
 press <kbd>enter</kbd>, vim quits the n³ window and opens the first selected
 file and add the remaining files to the arg list/buffer list.
 
