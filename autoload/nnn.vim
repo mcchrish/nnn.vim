@@ -142,12 +142,12 @@ function s:create_popup(hl, opts, term_opts)
     else
         let l:is_frame = has_key(a:opts, 'border')
         let l:buf = l:is_frame ? '' : s:create_term_buf(extend(a:term_opts, { 'curwin': 0, 'hidden': 1 }))
-        let l:win = popup_create(l:buf, #{
-                    \ line: a:opts.row,
-                    \ col: a:opts.col,
-                    \ minwidth: a:opts.width,
-                    \ minheight: a:opts.height,
-                    \ zindex: 50 - l:is_frame,
+        let l:win = popup_create(l:buf, {
+                    \ 'line': a:opts.row,
+                    \ 'col': a:opts.col,
+                    \ 'minwidth': a:opts.width,
+                    \ 'minheight': a:opts.height,
+                    \ 'zindex': 50 - l:is_frame,
                     \ })
 
         if l:is_frame
@@ -249,10 +249,10 @@ function! s:create_term_buf(opts)
         let l:curwin = get(a:opts, 'curwin', 1)
         let l:hidden = get(a:opts, 'hidden', 0)
         let l:Exit_cb = get(a:opts, 'on_exit')
-        let l:tbuf = term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], #{ 
-                    \ curwin: l:curwin,
-                    \ hidden: l:hidden,
-                    \ exit_cb: l:Exit_cb
+        let l:tbuf = term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
+                    \ 'curwin': l:curwin,
+                    \ 'hidden': l:hidden,
+                    \ 'exit_cb': l:Exit_cb
                     \ })
         if !has('patch-8.0.1261') && !has('nvim')
             call term_wait(l:tbuf, 20)
