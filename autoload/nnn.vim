@@ -239,7 +239,7 @@ function! s:switch_back(opts, Cmd)
                     call nvim_win_close(l:term_wins.term.winhandle, v:false)
                 endif
             else
-                call popup_close(l:term_wins.term.winhandle)
+                execute win_id2win(l:term_wins.term.winhandle) . 'close'
             endif
         catch /E444: Cannot close last window/
 	    " In case Vim complains it is the last window, fail silently.
