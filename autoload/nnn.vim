@@ -232,6 +232,10 @@ function! s:switch_back(opts, Cmd)
     if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
                 \ || (type(l:layout) != v:t_string
                 \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
+        " delete the nnn window and buffer
+        if nvim_win_is_valid(l:term_wins.term.winhandle)
+            call nvim_win_close(l:term_wins.term.winhandle, v:false)
+        endif
         if bufexists(l:term_wins.term.buf)
             execute 'bwipeout!' l:term_wins.term.buf
         endif
