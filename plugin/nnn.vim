@@ -31,6 +31,10 @@ if !(exists("g:nnn#shell"))
     let g:nnn#shell = &shell
 endif
 
+if !(exists("g:nnn#session"))
+   let g:nnn#session = "none"
+endif
+
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
 command! -bar -nargs=? -complete=dir Np call nnn#pick(<f-args>)
 
