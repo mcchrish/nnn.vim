@@ -1,6 +1,8 @@
 let s:temp_file = ""
 let s:action = ""
 let s:tbuf = 0
+" HACK: cannot use / in a session name
+let s:local_ses = substitute(tempname(), '/', '-', 'g')
 
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
@@ -342,7 +344,14 @@ function! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
-    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
+    if g:nnn#session ==# 'none'
+        let l:sess_cfg = ' '
+    elseif g:nnn#session ==# 'global'
+        let l:sess_cfg = ' -S '
+    elseif g:nnn#session ==# 'local'
+        let l:sess_cfg = ' -S -s '.s:local_ses.' '
+    endif
+    let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.layout = l:layout
