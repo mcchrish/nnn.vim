@@ -2,6 +2,16 @@ let s:temp_file = ""
 let s:action = ""
 let s:tbuf = 0
 
+let s:local_ses = 'nnn_vim_'
+" Add timestamp for convenience
+" :h strftime() -- strftime is not portable
+if exists('*strftime')
+    let s:local_ses .= strftime('%Y_%m_%dT%H_%M_%SZ')
+else
+    " HACK: cannot use / in a session name
+    let s:local_ses .= substitute(tempname(), '/', '_', 'g')
+endif
+
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
 endfunction
@@ -242,8 +252,8 @@ function! s:switch_back(opts, Cmd)
                 execute win_id2win(l:term_wins.term.winhandle) . 'close'
             endif
         catch /E444: Cannot close last window/
-	    " In case Vim complains it is the last window, fail silently.
-	endtry
+            " In case Vim complains it is the last window, fail silently.
+        endtry
         if bufexists(l:term_wins.term.buf)
             execute 'bwipeout!' l:term_wins.term.buf
         endif
@@ -273,6 +283,8 @@ function! s:create_term_buf(opts)
     endif
 endfunction
 
+let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+
 function! s:create_on_exit_callback(opts)
     let l:opts = a:opts
     function! s:callback(id, code, ...) closure
@@ -283,8 +295,7 @@ function! s:create_on_exit_callback(opts)
 
         call s:eval_temp_file(l:opts)
 
-        let fdir = !empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config'
-        let fname = fdir . '/nnn/.lastd'
+        let fname = s:nnn_conf_dir.'/.lastd'
         if !empty(glob(fname))
             let firstline = readfile(fname)[0]
             let lastd = split(firstline, '"')[1]
@@ -342,7 +353,20 @@ function! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
-    let l:cmd = g:nnn#command.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
+
+    if g:nnn#session ==# 'none' || !get(l:opts, 'session', 1)
+        let l:sess_cfg = ' '
+    elseif g:nnn#session ==# 'global'
+        let l:sess_cfg = ' -S '
+    elseif g:nnn#session ==# 'local'
+        let l:sess_cfg = ' -S -s '.s:local_ses.' '
+        let session_file = s:nnn_conf_dir.'/sessions/'.s:local_ses
+        execute 'augroup NnnSession | autocmd! VimLeavePre * call delete(fnameescape("'.session_file.'")) | augroup End'
+    else
+        let l:sess_cfg = ' '
+    endif
+
+    let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.layout = l:layout
