@@ -93,6 +93,18 @@ selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
 open in a split an so on. Meanwhile for multi selected files will be loaded in
 the buffer list.
 
+#### Persistent session
+
+You can configure n³ to use a session to remember your place when you reopen it.
+
+```vim
+" use the same nnn session within a vim session
+let g:nnn#session = 'local'
+
+" use the same nnn session everywhere (including outside vim)
+let g:nnn#session = 'global'
+```
+
 #### Command override
 
 When you want to override the default n³ command and add some extra flags.
