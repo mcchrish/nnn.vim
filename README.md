@@ -95,7 +95,8 @@ the buffer list.
 
 #### Persistent session
 
-You can configure n³ to use a session to remember your place when you reopen it.
+You can configure n³ to use a session so it remembers your place when
+you reopen it.
 
 ```vim
 " use the same nnn session within a vim session
