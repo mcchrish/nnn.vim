@@ -352,7 +352,6 @@ function! nnn#pick(...) abort
     elseif g:nnn#session ==# 'local'
         let l:sess_cfg = ' -S -s '.s:local_ses.' '
         let session_file = s:nnn_conf_dir.'/sessions/'.s:local_ses
-        echom session_file
         if !(exists('g:nnn_ses_autocmd'))
             execute 'autocmd VimLeavePre * call delete(fnameescape("'.session_file.'"))'
             let g:nnn_ses_autocmd = 1
