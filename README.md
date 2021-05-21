@@ -14,10 +14,10 @@ File manager for vim/neovim powered by n³.
 
 ### Install
 
-You must install n³ itself. Instructions
+n³ must be installed. Instructions
 [here](https://github.com/jarun/nnn/wiki/Usage#installation).
 
-Then install using your favorite plugin manager:
+Then install the plugin using your plugin manager:
 
 ```vim
 " using vim-plug
@@ -27,14 +27,14 @@ Plug 'mcchrish/nnn.vim'
 ### Usage
 
 To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or
-`:Np` or the key-binding `<leader>n`. You can pass a directory to `:NnnPicker`
-command and opens n³ from there e.g. `:NnnPicker path/to/somewhere`.
+`:Np` or the key-binding `<leader>n`. The command accepts an optional path
+to open e.g. `:NnnPicker path/to/somewhere`.
 
-Once you [select](https://github.com/jarun/nnn/wiki/concepts#selection) one or more files and
-press <kbd>enter</kbd>, vim quits the n³ window and opens the first selected
-file and add the remaining files to the arg list/buffer list.
+Run the plugin, [select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection)
+and press <kbd>Enter</kbd> to quit the n³ window. Now vim will open the first
+selected file and add the remaining files to the arg list/buffer list.
 
-Pressing <kbd>enter</kbd> on a file in n³ will pick any earlier selection, pick
+Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection, pick
 the file and exit n³.
 
 Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
@@ -42,11 +42,11 @@ instead of picking.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
-You may have to set `set hidden` to make floating window work.
+vim config `set hidden` may be required for the floating windows to work.
 
-Please visit the complete documentation by running `:help nnn`.
+Complete plugin documentation - `:help nnn`.
 
-### Configurations
+### Configuration
 
 #### Custom mappings
 
@@ -54,12 +54,12 @@ Please visit the complete documentation by running `:help nnn`.
 " Disable default mappings
 let g:nnn#set_default_mappings = 0
 
-" Then set your own
+" Set personalized mappings
 nnoremap <silent> <leader>nn :NnnPicker<CR>
 
 
-" Or override
-" Start nnn in the current file's directory
+" OR override
+" Start n³ in the current file's directory
 nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
 
@@ -78,8 +78,8 @@ let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debu
 
 #### Action
 
-You can set extra key-bindings for opening files in different ways. Nothing is
-set by default to not override n³'s own key-bindings.
+It's possible to set extra key-bindings for opening files in various ways.
+No default is set so that n³'s key-bindings are not overridden.
 
 ```vim
 let g:nnn#action = {
@@ -88,21 +88,19 @@ let g:nnn#action = {
       \ '<c-v>': 'vsplit' }
 ```
 
-For example, when inside an n³ window, pressing <kbd>ctrl-t</kbd> will open the
-selected file in a tab, instead of the current window. <kbd>ctrl-x</kbd> will
-open in a split an so on. Meanwhile for multi selected files will be loaded in
-the buffer list.
+With the above example, when inside an n³ window, pressing <kbd>^T</kbd> will
+open the selected file in a tab instead of the current window. <kbd>^X</kbd> will
+open in a split an so on. Multi-selected files will be loaded in the buffer list.
 
 #### Persistent session
 
-You can configure n³ to use a session so it remembers your place when
-you reopen it.
+n³ sessions can be used to remember the location when it is reopened.
 
 ```vim
-" use the same nnn session within a vim session
+" use the same n³ session within a vim session
 let g:nnn#session = 'local'
 
-" use the same nnn session everywhere (including outside vim)
+" use the same n³ session everywhere (including outside vim)
 let g:nnn#session = 'global'
 ```
 
@@ -111,25 +109,25 @@ Note: If desired, an n³ session can be disabled temporarily by passing
 
 #### Command override
 
-When you want to override the default n³ command and add some extra flags.
-Example you want to start n³ in detail mode.
+It's possible to override the default n³ command and add some extra program options.
 
 ```vim
+" to start n³ in detail mode:
 let g:nnn#command = 'nnn -d'
 
-" or pass some env variables
+" OR, to pass env variables
 let g:nnn#command = 'NNN_TRASH=1 nnn -d'
 ```
 
 #### `nnn#pick()`
 
-The `nnn#pick([<dir>][,<opts>])` function can be called with custom directory
-and additional options such as opening file in splits or tabs. Basically a more
-configurable version of `:NnnPicker` command.
+The `nnn#pick([<dir>][,<opts>])` function can be called with a custom directory
+and additional options such as opening file in splits or tabs. It's a more
+configurable version of the `:NnnPicker` command.
 
 ```vim
 call nnn#pick('~/some-files', { 'edit': 'vertical split' })
-" Then you can do all kinds of mappings if you want
+" Then add custom mappings
 ```
 
 `opts` can be:
@@ -139,7 +137,7 @@ call nnn#pick('~/some-files', { 'edit': 'vertical split' })
 
 #### Environment variables
 
-You can define env variables in `vimrc` and n³ will detect it.
+n³ will detect env variables defined in `vimrc`.
 
 ```vim
 let $NNN_TRASH=1
