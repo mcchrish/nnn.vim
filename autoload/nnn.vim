@@ -275,6 +275,8 @@ function! s:create_term_buf(opts)
     endif
 endfunction
 
+let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+
 function! s:create_on_exit_callback(opts)
     let l:opts = a:opts
     function! s:callback(id, code, ...) closure
@@ -285,8 +287,7 @@ function! s:create_on_exit_callback(opts)
 
         call s:eval_temp_file(l:opts)
 
-        let fdir = !empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config'
-        let fname = fdir . '/nnn/.lastd'
+        let fname = s:nnn_conf_dir.'/.lastd'
         if !empty(glob(fname))
             let firstline = readfile(fname)[0]
             let lastd = split(firstline, '"')[1]
