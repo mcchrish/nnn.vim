@@ -351,6 +351,12 @@ function! nnn#pick(...) abort
         let l:sess_cfg = ' -S '
     elseif g:nnn#session ==# 'local'
         let l:sess_cfg = ' -S -s '.s:local_ses.' '
+        let session_file = s:nnn_conf_dir.'/sessions/'.s:local_ses
+        echom session_file
+        if !(exists('g:nnn_ses_autocmd'))
+            execute 'autocmd VimLeavePre * call delete(fnameescape("'.session_file.'"))'
+            let g:nnn_ses_autocmd = 1
+        endif
     endif
     let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
