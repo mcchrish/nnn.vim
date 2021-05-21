@@ -3,11 +3,11 @@ let s:action = ""
 let s:tbuf = 0
 
 " HACK: cannot use / in a session name
-let s:local_ses = 'nnn-vim-'.substitute(tempname(), '/', '-', 'g')
+let s:local_ses = 'nnn_vim_'.substitute(tempname(), '/', '_', 'g')
 " Add timestamp for convenience
 " :h strftime() -- strftime is not portable
 if exists('*strftime')
-    let s:local_ses .= '-'.strftime('%Y-%m-%dT%H:%M:%SZ')
+    let s:local_ses .= '_'.strftime('%Y_%m_%dT%H_%M_%SZ')
 endif
 
 function! s:statusline()
