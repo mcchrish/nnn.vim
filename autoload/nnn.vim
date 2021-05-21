@@ -345,7 +345,7 @@ function! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
-    if g:nnn#session ==# 'none'
+    if g:nnn#session ==# 'none' || !get(l:opts, 'session', 1)
         let l:sess_cfg = ' '
     elseif g:nnn#session ==# 'global'
         let l:sess_cfg = ' -S '
@@ -353,6 +353,8 @@ function! nnn#pick(...) abort
         let l:sess_cfg = ' -S -s '.s:local_ses.' '
         let session_file = s:nnn_conf_dir.'/sessions/'.s:local_ses
 	execute 'augroup NnnSession | autocmd! VimLeavePre * call delete(fnameescape("'.session_file.'")) | augroup End'
+    else
+        let l:sess_cfg = ' '
     endif
     let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout

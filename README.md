@@ -105,6 +105,9 @@ let g:nnn#session = 'local'
 let g:nnn#session = 'global'
 ```
 
+Note: If desired, an n³ session can be disabled temporarily by passing
+`session: false` as an option to `nnn#pick()`.
+
 #### Command override
 
 When you want to override the default n³ command and add some extra flags.
