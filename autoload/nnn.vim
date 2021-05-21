@@ -244,8 +244,8 @@ function! s:switch_back(opts, Cmd)
                 execute win_id2win(l:term_wins.term.winhandle) . 'close'
             endif
         catch /E444: Cannot close last window/
-	    " In case Vim complains it is the last window, fail silently.
-	endtry
+            " In case Vim complains it is the last window, fail silently.
+        endtry
         if bufexists(l:term_wins.term.buf)
             execute 'bwipeout!' l:term_wins.term.buf
         endif
@@ -345,6 +345,7 @@ function! nnn#pick(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
+
     if g:nnn#session ==# 'none' || !get(l:opts, 'session', 1)
         let l:sess_cfg = ' '
     elseif g:nnn#session ==# 'global'
@@ -352,10 +353,11 @@ function! nnn#pick(...) abort
     elseif g:nnn#session ==# 'local'
         let l:sess_cfg = ' -S -s '.s:local_ses.' '
         let session_file = s:nnn_conf_dir.'/sessions/'.s:local_ses
-	execute 'augroup NnnSession | autocmd! VimLeavePre * call delete(fnameescape("'.session_file.'")) | augroup End'
+        execute 'augroup NnnSession | autocmd! VimLeavePre * call delete(fnameescape("'.session_file.'")) | augroup End'
     else
         let l:sess_cfg = ' '
     endif
+
     let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
