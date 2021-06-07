@@ -143,6 +143,18 @@ n³ will detect env variables defined in `vimrc`.
 let $NNN_TRASH=1
 ```
 
+#### Setup for `init.lua`
+
+Use the same option names as you would in Vimscript, e.g.:
+
+```lua
+require('nnn').setup{
+    set_default_mappings = false,
+    session = 'global',
+    layout = { left = '20%' }
+}
+```
+
 ### Credits
 
 Main n³ program: https://github.com/jarun/nnn
