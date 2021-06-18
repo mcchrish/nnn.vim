@@ -347,6 +347,31 @@ function! s:build_window(layout, term_opts)
     throw 'Invalid layout'
 endfunction
 
+" adapted from NERDTree source code
+function! s:explorer_jump_to_buffer(fname)
+    let l:winnr = bufwinnr('^' . a:fname . '$')
+
+    if l:winnr !=# -1
+        " jump to the window if it's already displayed
+        execute l:winnr . 'wincmd w'
+    else
+        " if not, there are some options here: we can allow the user to choose,
+        " but a sane default is to open it in the previous window
+        " NOTE: this can go to "special" windows like qflist
+        let l:winnr = winnr('#')
+        execute l:winnr . 'wincmd w'
+        execute 'edit ' . a:fname
+    endif
+endfunction
+
+function! s:explorer_on_output(...)
+    let l:fname = has('nvim') ? a:2[0] : a:2
+    if l:fname ==# ''
+        return
+    endif
+    call s:explorer_jump_to_buffer(l:fname)
+endfunction
+
 
 function! nnn#pick(...) abort
     let l:directory = get(a:, 1, '')
