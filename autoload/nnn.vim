@@ -363,4 +363,28 @@ function! nnn#pick(...) abort
     endif
 endfunction
 
+function! nnn#explorer(...) abort
+    let l:directory = get(a:, 1, '')
+    let l:default_opts = { 'edit': 'edit' }
+    let l:opts = extend(l:default_opts, get(a:, 2, {}))
+    let s:explorer_fifo = tempname()
+
+    let l:cmd = g:nnn#command.' -X '.shellescape(s:explorer_fifo).' '.(l:directory != '' ? shellescape(l:directory): '')
+
+    let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
+
+    let l:opts.layout = l:layout
+    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
+    let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
+
+    let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
+    let s:tbuf = l:opts.term_wins.term.buf
+
+    call s:explorer_job()
+    if g:nnn#statusline && !s:present(l:layout, 'window')
+        call s:statusline()
+    endif
+endfunction
+
+
 " vim: set sts=4 sw=4 ts=4 et :
