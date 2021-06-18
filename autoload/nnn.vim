@@ -12,6 +12,9 @@ else
     let s:local_ses .= substitute(tempname(), '/', '_', 'g')
 endif
 
+" The fifo used by the persistent explorer
+let s:explorer_fifo = ""
+
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
 endfunction
@@ -372,6 +375,40 @@ function! s:explorer_on_output(...)
     call s:explorer_jump_to_buffer(l:fname)
 endfunction
 
+function! s:explorer_job()
+    " HACK: a delay is needed otherwise nnn may not have created the fifo in time
+    let l:watcher_cmd = 'sleep 0.5 && cat '.s:explorer_fifo
+    if has('nvim')
+        let l:opts = { 'on_stdout': function('s:explorer_on_output') }
+        call jobstart([g:nnn#shell, &shellcmdflag, l:watcher_cmd], l:opts)
+    else
+        let l:opts = { 'out_cb': function('s:explorer_on_output') }
+        call job_start([g:nnn#shell, &shellcmdflag, l:watcher_cmd], l:opts)
+    endif
+endfunction
+
+function! s:explorer_create_on_exit_callback(opts)
+    function! s:callback(id, code, ...) closure
+        let l:term_wins = a:opts.term_wins
+        call delete(fnameescape(s:explorer_fifo))
+	" same code as in the bottom of s:switch_back()
+        try
+            if has('nvim')
+                if nvim_win_is_valid(l:term_wins.term.winhandle)
+                    call nvim_win_close(l:term_wins.term.winhandle, v:false)
+                endif
+            else
+                execute win_id2win(l:term_wins.term.winhandle) . 'close'
+            endif
+        catch /E444: Cannot close last window/
+            " In case Vim complains it is the last window, fail silently.
+        endtry
+        if bufexists(l:term_wins.term.buf)
+            execute 'bwipeout!' l:term_wins.term.buf
+        endif
+    endfunction
+    return function('s:callback')
+endfunction
 
 function! nnn#pick(...) abort
     let l:directory = get(a:, 1, '')
