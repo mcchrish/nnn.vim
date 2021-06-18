@@ -11,6 +11,10 @@ if !(exists("g:nnn#layout"))
     let g:nnn#layout = 'enew'
 endif
 
+if !(exists("g:nnn#explorer_layout"))
+    let g:nnn#explorer_layout = { 'left': '20%' }
+endif
+
 if !(exists("g:nnn#action"))
     let g:nnn#action = {}
 endif
