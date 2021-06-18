@@ -438,6 +438,7 @@ function! nnn#pick(...) abort
     let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
     let s:tbuf = l:opts.term_wins.term.buf
 
+    autocmd BufEnter <buffer> startinsert
     setfiletype nnn
     if g:nnn#statusline && type(l:layout) == v:t_string
         call s:statusline()
@@ -463,6 +464,7 @@ function! nnn#explorer(...) abort
 
     call s:explorer_job()
 
+    autocmd BufEnter <buffer> startinsert
     setfiletype nnn
     if g:nnn#statusline && type(l:layout) == v:t_string
         call s:statusline()
