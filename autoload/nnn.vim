@@ -366,6 +366,7 @@ function! nnn#pick(...) abort
         let l:sess_cfg = ' '
     endif
 
+    let g:nnn#command = 'NNN_SEL='.shellescape(s:temp_file).' '.g:nnn#command
     let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
