@@ -165,11 +165,9 @@ function! s:switch_back(opts, Cmd)
         if type(l:layout.window) != v:t_dict
             throw 'Invalid layout'
         endif
-        if has('nvim')
-            " Making sure we close the windows when sometimes they linger
-            if nvim_win_is_valid(l:term.winhandle)
-                call nvim_win_close(l:term.winhandle, v:false)
-            endif
+        " Making sure we close the windows when sometimes they linger
+        if has('nvim') && nvim_win_is_valid(l:term.winhandle)
+            call nvim_win_close(l:term.winhandle, v:false)
         else
             call popup_close(l:term.winhandle)
         endif
@@ -185,10 +183,8 @@ function! s:switch_back(opts, Cmd)
                 \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
         " delete the nnn window and buffer
         try
-            if has('nvim')
-                if nvim_win_is_valid(l:term.winhandle)
-                    call nvim_win_close(l:term.winhandle, v:false)
-                endif
+            if has('nvim') && nvim_win_is_valid(l:term.winhandle)
+                call nvim_win_close(l:term.winhandle, v:false)
             else
                 execute win_id2win(l:term.winhandle) . 'close'
             endif
