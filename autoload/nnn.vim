@@ -130,17 +130,18 @@ function! s:extract_filenames()
         return []
     endif
 
-    let l:file = readfile(s:temp_file)
-    if empty(l:file)
+    let l:files = readfile(s:temp_file)
+    if empty(l:files)
         return []
     endif
 
-    let l:names = uniq(filter(l:file, '!isdirectory(v:val) && filereadable(v:val)'))
-    if empty(l:names) || strlen(l:names[0]) <= 0
+    uniq(filter(l:files, {_, val -> !isdirectory(val) && filereadable(val) }))
+
+    if empty(l:files) || strlen(l:files[0]) <= 0
         return []
     endif
 
-    return l:names
+    return l:files
 endfunction
 
 function! s:switch_back(opts, Cmd)
