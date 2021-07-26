@@ -8,7 +8,13 @@ if !(exists("g:nnn#set_default_mappings"))
 endif
 
 if !(exists("g:nnn#layout"))
-    let g:nnn#layout = 'enew'
+    if has('nvim-0.5') || !has('patch-8.2.191')
+        let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+    else
+        let g:nnn#layout = 'enew'
+    endif
+elseif type(g:nnn#layout.window) == v:t_dict && !(has('nvim-0.5') || !has('patch-8.2.191'))
+    throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
 endif
 
 if !(exists("g:nnn#action"))

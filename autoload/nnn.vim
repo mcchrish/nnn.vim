@@ -173,16 +173,11 @@ function! s:switch_back(opts, Cmd)
             if nvim_win_is_valid(l:term_wins.term.winhandle)
                 call nvim_win_close(l:term_wins.term.winhandle, v:false)
             endif
-
-            if bufexists(l:term_wins.term.buf)
-                execute 'bwipeout!' l:term_wins.term.buf
-            endif
         else
             call popup_close(l:term_wins.term.winhandle)
-
-            if bufexists(l:term_wins.term.buf)
-                execute 'bwipeout!' l:term_wins.term.buf
-            endif
+        endif
+        if bufexists(l:term_wins.term.buf)
+            execute 'bwipeout!' l:term_wins.term.buf
         endif
     endif
 
@@ -268,9 +263,6 @@ function! s:build_window(layout, term_opts)
 
     if s:present(a:layout, 'window')
         if type(a:layout.window) == v:t_dict
-            if !has('nvim') && !has('patch-8.2.191')
-                throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
-            end
             return s:popup(a:layout.window, a:term_opts)
         else
             throw 'Invalid layout'
