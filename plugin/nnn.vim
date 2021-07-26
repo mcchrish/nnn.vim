@@ -7,7 +7,7 @@ if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
 endif
 
-let g:nnn#has_floating_window_support = has('nvim-0.5') || !has('patch-8.2.191')
+let g:nnn#has_floating_window_support = has('nvim-0.5') || has('patch-8.2.191')
 
 if !(exists("g:nnn#layout"))
     if g:nnn#has_floating_window_support
