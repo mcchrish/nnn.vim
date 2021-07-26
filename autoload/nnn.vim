@@ -1,5 +1,5 @@
-let s:temp_file = ""
-let s:action = ""
+let s:temp_file = ''
+let s:action = ''
 let s:tbuf = 0
 
 let s:local_ses = 'nnn_vim_'
@@ -75,12 +75,8 @@ function! s:eval_temp_file(opts)
 endfunction
 
 function! s:popup(opts, term_opts)
-    " Support ambiwidth == 'double'
-    let ambidouble = &ambiwidth == 'double' ? 2 : 1
-
     " Size and position
     let width = min([max([0, float2nr(&columns * a:opts.width)]), &columns])
-    let width += width % ambidouble
     let height = min([max([0, float2nr(&lines * a:opts.height)]), &lines - has('nvim')])
     let row = float2nr(get(a:opts, 'yoffset', 0.5) * (&lines - height))
     let col = float2nr(get(a:opts, 'xoffset', 0.5) * (&columns - width))
@@ -91,80 +87,35 @@ function! s:popup(opts, term_opts)
     let row += !has('nvim')
     let col += !has('nvim')
 
-    " Border style
-    let style = tolower(get(a:opts, 'border', 'rounded'))
-    if !has_key(a:opts, 'border') && !get(a:opts, 'rounded', 1)
-        let style = 'sharp'
-    endif
+    let l:border = get(a:opts, 'border', 'rounded')
+    let l:highlight = get(a:opts, 'highlight', 'Comment')
 
-    if style =~ 'vertical\|left\|right'
-        let mid = style == 'vertical' ? '│' .. repeat(' ', width - 2 * ambidouble) .. '│' :
-                    \ style == 'left'     ? '│' .. repeat(' ', width - 1 * ambidouble)
-                    \                     :        repeat(' ', width - 1 * ambidouble) .. '│'
-        let border = repeat([mid], height)
-        let shift = { 'row': 0, 'col': style == 'right' ? 0 : 2, 'width': style == 'vertical' ? -4 : -2, 'height': 0 }
-    elseif style =~ 'horizontal\|top\|bottom'
-        let hor = repeat('─', width / ambidouble)
-        let mid = repeat(' ', width)
-        let border = style == 'horizontal' ? [hor] + repeat([mid], height - 2) + [hor] :
-                    \ style == 'top'        ? [hor] + repeat([mid], height - 1)
-                    \                       :         repeat([mid], height - 1) + [hor]
-        let shift = { 'row': style == 'bottom' ? 0 : 1, 'col': 0, 'width': 0, 'height': style == 'horizontal' ? -2 : -1 }
-    else
-        let edges = style == 'sharp' ? ['┌', '┐', '└', '┘'] : ['╭', '╮', '╰', '╯']
-        let bar = repeat('─', width / ambidouble - 2)
-        let top = edges[0] .. bar .. edges[1]
-        let mid = '│' .. repeat(' ', width - 2 * ambidouble) .. '│'
-        let bot = edges[2] .. bar .. edges[3]
-        let border = [top] + repeat([mid], height - 2) + [bot]
-        let shift = { 'row': 1, 'col': 2, 'width': -4, 'height': -2 }
-    endif
-
-    let highlight = get(a:opts, 'highlight', 'Comment')
-    let l:frame = s:create_popup(highlight, {
-                \ 'row': row, 'col': col, 'width': width, 'height': height, 'border': border
-                \ }, a:term_opts)
-    let l:term_win = s:create_popup('Normal', {
-                \ 'row': row + shift.row, 'col': col + shift.col, 'width': width + shift.width, 'height': height + shift.height
-                \ }, a:term_opts)
     if has('nvim')
-        execute 'autocmd BufWipeout <buffer> bwipeout '..l:frame.buf
-    endif
-
-    return { 'frame': l:frame, 'term': l:term_win }
-endfunction
-
-function s:create_popup(hl, opts, term_opts)
-    if has('nvim')
-        let l:temp_buf = nvim_create_buf(v:false, v:true)
-        let l:opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
-        let l:border = has_key(l:opts, 'border') ? remove(l:opts, 'border') : []
-        let l:win = nvim_open_win(l:temp_buf, v:true, l:opts)
-        call setwinvar(l:win, '&winhighlight', 'NormalFloat:'..a:hl)
-        call setwinvar(l:win, '&colorcolumn', '')
-        if has_key(a:opts, 'border')
-            call nvim_buf_set_lines(l:temp_buf, 0, -1, v:true, l:border)
-            return { 'buf': l:temp_buf, 'winhandle': l:win }
-        else
-            let l:tbuf = s:create_term_buf(a:term_opts)
-            return { 'buf': l:tbuf, 'winhandle': l:win }
-        endif
-    else
-        let l:is_frame = has_key(a:opts, 'border')
-        let l:buf = l:is_frame ? '' : s:create_term_buf(extend(a:term_opts, { 'curwin': 0, 'hidden': 1 }))
-        let l:win = popup_create(l:buf, {
-                    \ 'line': a:opts.row,
-                    \ 'col': a:opts.col,
-                    \ 'minwidth': a:opts.width,
-                    \ 'minheight': a:opts.height,
-                    \ 'zindex': 50 - l:is_frame,
+        let l:win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, {
+                    \ 'row': row,
+                    \ 'col': col,
+                    \ 'width': width,
+                    \ 'height': height,
+                    \ 'border': l:border == 'rounded' ? 'rounded' : 'single',
+                    \ 'relative': 'editor',
+                    \ 'style': 'minimal'
                     \ })
-
-        if l:is_frame
-            call setwinvar(l:win, '&wincolor', a:hl)
-            call setbufline(winbufnr(l:win), 1, a:opts.border)
-        endif
-        return { 'buf': l:buf, 'winhandle': l:win }
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:Normal')
+        call setwinvar(l:win, '&colorcolumn', '')
+        return { 'term': { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win } }
+    else
+        let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
+        let l:borderchars = l:.border == 'rounded' ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰'] : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
+        let l:win = popup_create(l:buf, #{
+                    \ line: row,
+                    \ col: col,
+                    \ minwidth: width,
+                    \ minheight: height,
+                    \ border: [],
+                    \ borderhighlight: [l:highlight],
+                    \ borderchars: l:borderchars,
+                    \ })
+        return #{ term: { buf: l:buf, winhandle: l:win } }
     endif
 endfunction
 
@@ -214,25 +165,15 @@ function! s:switch_back(opts, Cmd)
             if nvim_win_is_valid(l:term_wins.term.winhandle)
                 call nvim_win_close(l:term_wins.term.winhandle, v:false)
             endif
-            if nvim_win_is_valid(l:term_wins.frame.winhandle)
-                call nvim_win_close(l:term_wins.frame.winhandle, v:false)
-            endif
 
             if bufexists(l:term_wins.term.buf)
                 execute 'bwipeout!' l:term_wins.term.buf
-            endif
-            if bufexists(l:term_wins.frame.buf)
-                execute 'bwipeout!' l:term_wins.frame.buf
             endif
         else
             call popup_close(l:term_wins.term.winhandle)
-            call popup_close(l:term_wins.frame.winhandle)
 
             if bufexists(l:term_wins.term.buf)
                 execute 'bwipeout!' l:term_wins.term.buf
-            endif
-            if bufexists(l:term_wins.frame.buf)
-                execute 'bwipeout!' l:term_wins.frame.buf
             endif
         endif
     endif
@@ -322,7 +263,7 @@ function! s:build_window(layout, term_opts)
     if s:present(a:layout, 'window')
         if type(a:layout.window) == v:t_dict
             if !has('nvim') && !has('patch-8.2.191')
-                throw 'Neovim is required for floating window or Vim with patch-8.2.191'
+                throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
             end
             return s:popup(a:layout.window, a:term_opts)
         else
