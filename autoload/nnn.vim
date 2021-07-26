@@ -1,6 +1,7 @@
 let s:temp_file = ''
 let s:action = ''
 let s:tbuf = 0
+let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 
 let s:local_ses = 'nnn_vim_'
 " Add timestamp for convenience
@@ -20,9 +21,9 @@ function! nnn#select_action(action) abort
     let s:action = a:action
     " quit nnn
     if has('nvim')
-        call feedkeys('i\<cr>')
+        call feedkeys("i\<cr>")
     else
-        call term_sendkeys(s:tbuf, '\<cr>')
+        call term_sendkeys(s:tbuf, "\<cr>")
     endif
 endfunction
 
@@ -45,6 +46,26 @@ function! s:calc_size(val, max)
     else
         return min([a:max, str2nr(val)])
     endif
+endfunction
+
+function! s:extract_filenames()
+    if !filereadable(s:temp_file)
+        return []
+    endif
+
+    let l:files = readfile(s:temp_file)
+    if empty(l:files)
+        return []
+    endif
+
+    call uniq(filter(l:files, {_, val -> !isdirectory(val) && filereadable(val) }))
+
+    if empty(l:files) || strlen(l:files[0]) <= 0
+        return []
+    endif
+
+    echom string(l:files)
+    return l:files
 endfunction
 
 function! s:eval_temp_file(opts)
@@ -124,25 +145,6 @@ function! s:popup(opts, term_opts)
     endif
 endfunction
 
-
-function! s:extract_filenames()
-    if !filereadable(s:temp_file)
-        return []
-    endif
-
-    let l:files = readfile(s:temp_file)
-    if empty(l:files)
-        return []
-    endif
-
-    uniq(filter(l:files, {_, val -> !isdirectory(val) && filereadable(val) }))
-
-    if empty(l:files) || strlen(l:files[0]) <= 0
-        return []
-    endif
-
-    return l:files
-endfunction
 
 function! s:switch_back(opts, Cmd)
     let l:buf = a:opts.ppos.buf
@@ -233,8 +235,6 @@ function! s:create_term_buf(opts)
         return l:tbuf
     endif
 endfunction
-
-let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 
 function! s:create_on_exit_callback(opts)
     let l:opts = a:opts
