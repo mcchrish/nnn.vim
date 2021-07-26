@@ -263,6 +263,9 @@ function! s:build_window(layout, term_opts)
 
     if s:present(a:layout, 'window')
         if type(a:layout.window) == v:t_dict
+            if !has('nvim') && !has('patch-8.2.191')
+                throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
+            endif
             return s:popup(a:layout.window, a:term_opts)
         else
             throw 'Invalid layout'

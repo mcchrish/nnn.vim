@@ -13,8 +13,6 @@ if !(exists("g:nnn#layout"))
     else
         let g:nnn#layout = 'enew'
     endif
-elseif type(g:nnn#layout.window) == v:t_dict && !(has('nvim-0.5') || !has('patch-8.2.191'))
-    throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
 endif
 
 if !(exists("g:nnn#action"))
