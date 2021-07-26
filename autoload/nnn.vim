@@ -64,7 +64,6 @@ function! s:extract_filenames()
         return []
     endif
 
-    echom string(l:files)
     return l:files
 endfunction
 
@@ -147,7 +146,6 @@ function! s:popup(opts, term_opts)
     endif
 endfunction
 
-
 function! s:switch_back(opts, Cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
@@ -156,12 +154,7 @@ function! s:switch_back(opts, Cmd)
     " when split explorer
     if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
-        if bufexists(l:term.buf)
-            execute 'bwipeout!' l:term.buf
-        endif
-    endif
-
-    if s:present(l:layout, 'window')
+    elseif s:present(l:layout, 'window')
         if type(l:layout.window) != v:t_dict
             throw 'Invalid layout'
         endif
@@ -171,31 +164,18 @@ function! s:switch_back(opts, Cmd)
         else
             call popup_close(l:term.winhandle)
         endif
-        if bufexists(l:term.buf)
-            execute 'bwipeout!' l:term.buf
-        endif
     endif
 
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
     if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
-                \ || (type(l:layout) != v:t_string
-                \ || (type(l:layout) == v:t_string && l:layout != 'enew'))
-        " delete the nnn window and buffer
-        try
-            if has('nvim') && nvim_win_is_valid(l:term.winhandle)
-                call nvim_win_close(l:term.winhandle, v:false)
-            else
-                execute win_id2win(l:term.winhandle) . 'close'
-            endif
-        catch /E444: Cannot close last window/
-            " In case Vim complains it is the last window, fail silently.
-        endtry
-        if bufexists(l:term.buf)
-            execute 'bwipeout!' l:term.buf
-        endif
+                \ || (type(l:layout) != v:t_string || (type(l:layout) == v:t_string && l:layout != 'enew'))
         silent! execute 'tabnext' a:opts.ppos.tab
         silent! execute a:opts.ppos.win.'wincmd w'
+    endif
+
+    if bufexists(l:term.buf)
+        execute 'bwipeout!' l:term.buf
     endif
 endfunction
 
@@ -242,7 +222,7 @@ function! s:build_window(layout, term_opts)
     if s:present(a:layout, 'window')
         if type(a:layout.window) == v:t_dict
             if !g:nnn#has_floating_window_support
-                throw 'Your vim/neovim version does not support floating window/popup.'
+                throw 'Your vim/neovim version does not support popup/floating window.'
             endif
             return s:popup(a:layout.window, a:term_opts)
         else
@@ -272,7 +252,6 @@ function! s:build_window(layout, term_opts)
 
     throw 'Invalid layout'
 endfunction
-
 
 function! nnn#pick(...) abort
     let l:directory = get(a:, 1, '')
