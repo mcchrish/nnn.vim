@@ -19,10 +19,10 @@ endfunction
 function! nnn#select_action(action) abort
     let s:action = a:action
     " quit nnn
-    if has("nvim")
-        call feedkeys("i\<cr>")
+    if has('nvim')
+        call feedkeys('i\<cr>')
     else
-        call term_sendkeys(s:tbuf, "\<cr>")
+        call term_sendkeys(s:tbuf, '\<cr>')
     endif
 endfunction
 
@@ -70,7 +70,7 @@ function! s:eval_temp_file(opts)
         endfor
     endif
 
-    let s:action = "" " reset action
+    let s:action = '' " reset action
     redraw!
 endfunction
 
@@ -91,12 +91,17 @@ function! s:popup(opts, term_opts)
     let l:highlight = get(a:opts, 'highlight', 'Comment')
 
     if has('nvim')
+        let l:borderchars = map(l:border == 'rounded'
+                    \ ? ['╭', '─' ,'╮', '│', '╯', '─', '╰', '│' ]
+                    \ : ['┌', '─' ,'┐', '│', '┘', '─', '└', '│' ], 
+                    \ {_, val -> [v:val, l:highlight]})
+
         let l:win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, {
                     \ 'row': row,
                     \ 'col': col,
                     \ 'width': width,
                     \ 'height': height,
-                    \ 'border': l:border == 'rounded' ? 'rounded' : 'single',
+                    \ 'border': l:borderchars,
                     \ 'relative': 'editor',
                     \ 'style': 'minimal'
                     \ })
@@ -149,7 +154,7 @@ function! s:switch_back(opts, Cmd)
             execute 'keepalt b' l:buf
         " in case nnn was used to delete file in open buffer
         catch /E211: File/
-            let junk = input(matchstr(string(v:exception), 'E211: .*$') . "\nPress ENTER to continue")
+            let junk = input(matchstr(string(v:exception), 'E211: .*$') . '\nPress ENTER to continue')
         endtry
         if bufexists(l:term_wins.term.buf)
             execute 'bwipeout!' l:term_wins.term.buf
