@@ -128,10 +128,12 @@ function! s:popup(opts, term_opts)
                     \ })
         call setwinvar(l:win, '&winhighlight', 'NormalFloat:Normal')
         call setwinvar(l:win, '&colorcolumn', '')
-        return { 'term': { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win } }
+        return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
-        let l:borderchars = l:.border == 'rounded' ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰'] : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
+        let l:borderchars = l:.border == 'rounded'
+                    \ ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰']
+                    \ : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
         let l:win = popup_create(l:buf, #{
                     \ line: row,
                     \ col: col,
@@ -141,7 +143,7 @@ function! s:popup(opts, term_opts)
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,
                     \ })
-        return #{ term: #{ buf: l:buf, winhandle: l:win } }
+        return #{ buf: l:buf, winhandle: l:win }
     endif
 endfunction
 
@@ -149,18 +151,13 @@ endfunction
 function! s:switch_back(opts, Cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
-    let l:term_wins = a:opts.term_wins
+    let l:term = a:opts.term
 
     " when split explorer
     if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
-        try
-            execute 'keepalt b' l:buf
-        " in case nnn was used to delete file in open buffer
-        catch /E211: File/
-            let junk = input(matchstr(string(v:exception), 'E211: .*$') . '\nPress ENTER to continue')
-        endtry
-        if bufexists(l:term_wins.term.buf)
-            execute 'bwipeout!' l:term_wins.term.buf
+        execute 'keepalt b' l:buf
+        if bufexists(l:term.buf)
+            execute 'bwipeout!' l:term.buf
         endif
     endif
 
@@ -170,14 +167,14 @@ function! s:switch_back(opts, Cmd)
         endif
         if has('nvim')
             " Making sure we close the windows when sometimes they linger
-            if nvim_win_is_valid(l:term_wins.term.winhandle)
-                call nvim_win_close(l:term_wins.term.winhandle, v:false)
+            if nvim_win_is_valid(l:term.winhandle)
+                call nvim_win_close(l:term.winhandle, v:false)
             endif
         else
-            call popup_close(l:term_wins.term.winhandle)
+            call popup_close(l:term.winhandle)
         endif
-        if bufexists(l:term_wins.term.buf)
-            execute 'bwipeout!' l:term_wins.term.buf
+        if bufexists(l:term.buf)
+            execute 'bwipeout!' l:term.buf
         endif
     endif
 
@@ -189,17 +186,17 @@ function! s:switch_back(opts, Cmd)
         " delete the nnn window and buffer
         try
             if has('nvim')
-                if nvim_win_is_valid(l:term_wins.term.winhandle)
-                    call nvim_win_close(l:term_wins.term.winhandle, v:false)
+                if nvim_win_is_valid(l:term.winhandle)
+                    call nvim_win_close(l:term.winhandle, v:false)
                 endif
             else
-                execute win_id2win(l:term_wins.term.winhandle) . 'close'
+                execute win_id2win(l:term.winhandle) . 'close'
             endif
         catch /E444: Cannot close last window/
             " In case Vim complains it is the last window, fail silently.
         endtry
-        if bufexists(l:term_wins.term.buf)
-            execute 'bwipeout!' l:term_wins.term.buf
+        if bufexists(l:term.buf)
+            execute 'bwipeout!' l:term.buf
         endif
         silent! execute 'tabnext' a:opts.ppos.tab
         silent! execute a:opts.ppos.win.'wincmd w'
@@ -215,19 +212,12 @@ function! s:create_term_buf(opts)
         startinsert
         return bufnr('')
     else
-        let l:curwin = get(a:opts, 'curwin', 1)
-        let l:hidden = get(a:opts, 'hidden', 0)
-        let l:Exit_cb = get(a:opts, 'on_exit')
-        let l:tbuf = term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
+        return term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
+                    \ 'curwin': get(a:opts, 'curwin', 1),
+                    \ 'hidden': get(a:opts, 'hidden', 0),
                     \ 'env': { 'NNN_SEL': s:temp_file },
-                    \ 'curwin': l:curwin,
-                    \ 'hidden': l:hidden,
-                    \ 'exit_cb': l:Exit_cb
+                    \ 'exit_cb': get(a:opts, 'on_exit')
                     \ })
-        if !has('patch-8.0.1261') && !has('nvim')
-            call term_wait(l:tbuf, 20)
-        endif
-        return l:tbuf
     endif
 endfunction
 
@@ -253,23 +243,20 @@ function! s:create_on_exit_callback(opts)
 endfunction
 
 function! s:build_window(layout, term_opts)
-    if type(a:layout) == v:t_string
-        execute 'keepalt ' . a:layout
-        return { 'term': { 
-                    \ 'buf': s:create_term_buf(a:term_opts),
-                    \ 'winhandle': win_getid()
-                    \ } }
-    endif
-
     if s:present(a:layout, 'window')
         if type(a:layout.window) == v:t_dict
             if !g:nnn#has_floating_window_support
-                throw 'Neovim 0.5+ or Vim with patch-8.2.191+ is required for floating window'
+                throw 'Your vim/neovim version does not support floating window/popup.'
             endif
             return s:popup(a:layout.window, a:term_opts)
         else
             throw 'Invalid layout'
         endif
+    endif
+
+    if type(a:layout) == v:t_string
+        execute 'keepalt ' . a:layout
+        return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': win_getid() }
     endif
 
     let l:directions = {
@@ -283,10 +270,7 @@ function! s:build_window(layout, term_opts)
             let l:size = a:layout[key]
             let [l:cmd, l:resz, l:max]= l:directions[key]
             execute l:cmd . s:calc_size(l:size, l:max) . 'new'
-            return { 'term': { 
-                        \ 'buf': s:create_term_buf(a:term_opts),
-                        \ 'winhandle': win_getid()
-                        \ } }
+            return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': win_getid() }
         endif
     endfor
 
@@ -317,12 +301,11 @@ function! nnn#pick(...) abort
 
     let l:opts.layout = l:layout
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
-    let l:On_exit = s:create_on_exit_callback(l:opts)
 
-    let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
-    let s:tbuf = l:opts.term_wins.term.buf
+    let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
+    let s:tbuf = l:opts.term.buf
     setfiletype nnn
-    if g:nnn#statusline && type(l:layout) == v:t_string
+    if g:nnn#statusline && !s:present(l:layout, 'window')
         call s:statusline()
     endif
 endfunction
