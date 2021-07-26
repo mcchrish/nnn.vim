@@ -95,8 +95,8 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 <
 
 g:nnn#layout                                                     *g:nnn#layout*
-                  Default: 'enew'
-                  Display type for the n³ buffer. Default is |enew|, which
+                  Default: { 'window': { 'width': 0.9, 'height': 0.6 } }
+                  Display type for the n³ buffer. Default is a floating window. |enew|
                   has a special behavior to act as a "split explorer" reusing
                   the current window and brings back the last buffer if
                   nothing is selected.
@@ -113,7 +113,7 @@ g:nnn#layout                                                     *g:nnn#layout*
                   " Options:
                   " width, height, yoffset, xoffset : number
                   " highlight : highlight group assign to the border
-                  " border : border style - 'rounded' / 'sharp' / 'horizontal' / 'vertical' / 'top' / 'bottom' / 'left' / 'right'
+                  " border : border style - 'rounded' / 'sharp'
 <
 
 g:nnn#action                                                     *g:nnn#action*
