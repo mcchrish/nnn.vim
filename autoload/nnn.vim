@@ -115,7 +115,7 @@ function! s:popup(opts, term_opts)
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,
                     \ })
-        return #{ term: { buf: l:buf, winhandle: l:win } }
+        return #{ term: #{ buf: l:buf, winhandle: l:win } }
     endif
 endfunction
 
