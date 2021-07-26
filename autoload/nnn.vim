@@ -1,6 +1,5 @@
 let s:temp_file = ''
 let s:action = ''
-let s:tbuf = 0
 let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 
 let s:local_ses = 'nnn_vim_'
@@ -23,7 +22,7 @@ function! nnn#select_action(action) abort
     if has('nvim')
         call feedkeys("i\<cr>")
     else
-        call term_sendkeys(s:tbuf, "\<cr>")
+        call term_sendkeys(b:tbuf, "\<cr>")
     endif
 endfunction
 
@@ -278,7 +277,7 @@ function! nnn#pick(...) abort
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
-    let s:tbuf = l:opts.term.buf
+    let b:tbuf = l:opts.term.buf
     setfiletype nnn
     if g:nnn#statusline && !s:present(l:layout, 'window')
         call s:statusline()
