@@ -2,8 +2,8 @@
 
 File manager for vim/neovim powered by n³.
 
+https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b34e-225c225906b1.mov
 <p align="center">
-  <img width="934" src="https://user-images.githubusercontent.com/7200153/77138110-8dd94600-6aab-11ea-925f-8e159b8f0ad4.png">
   <small>colorscheme <a href="https://github.com/pgdouyon/vim-yin-yang">yin</a></small>
 </p>
 
