@@ -185,7 +185,7 @@ g:nnn#shell                                                      *g:nnn#shell*
                   Default: &shell
                   The shell to run the terminal window.
 
-require('nnn').setup{}                                          *nnn-lua-setup*
+require('nnn').setup{}                                         *nnn-lua-setup*
                   Default: same as Vimscript defaults
                   An alternative way to configure n³ more suitable for
                   init.lua users. For example:
