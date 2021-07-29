@@ -2,15 +2,17 @@
 
 File manager for vim/neovim powered by n³.
 
+https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b34e-225c225906b1.mov
+
 <p align="center">
-  <img width="934" src="https://user-images.githubusercontent.com/7200153/77138110-8dd94600-6aab-11ea-925f-8e159b8f0ad4.png">
   <small>colorscheme <a href="https://github.com/pgdouyon/vim-yin-yang">yin</a></small>
 </p>
 
 ### Requirements
 
 1. n³
-2. Neovim or Vim 8.1 with terminal support
+2. `has('nvim') || has('terminal')` with terminal support
+3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
 
 ### Install
 
@@ -26,9 +28,9 @@ Plug 'mcchrish/nnn.vim'
 
 ### Usage
 
-To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or
-`:Np` or the key-binding `<leader>n`. The command accepts an optional path
-to open e.g. `:NnnPicker path/to/somewhere`.
+To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or the
+key-binding `<leader>n`. The command accepts an optional path to open e.g.
+`:NnnPicker path/to/somewhere`.
 
 Run the plugin, [select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection)
 and press <kbd>Enter</kbd> to quit the n³ window. Now vim will open the first
@@ -42,9 +44,9 @@ instead of picking.
 
 To discard selection and exit, press <kbd>^G</kbd>.
 
-vim config `set hidden` may be required for the floating windows to work.
+`set hidden` may be required for the floating windows to work.
 
-Complete plugin documentation - `:help nnn`.
+For complete plugin documentation see `:help nnn`.
 
 ### Configuration
 
@@ -54,11 +56,9 @@ Complete plugin documentation - `:help nnn`.
 " Disable default mappings
 let g:nnn#set_default_mappings = 0
 
-" Set personalized mappings
+" Set custom mappings
 nnoremap <silent> <leader>nn :NnnPicker<CR>
 
-
-" OR override
 " Start n³ in the current file's directory
 nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
@@ -72,7 +72,7 @@ let g:nnn#layout = 'new' " or vnew, tabnew etc.
 " Or pass a dictionary with window size
 let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
-" Floating window (neovim latest and vim with patch 8.2.191)
+" Floating window.
 let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 ```
 
@@ -89,8 +89,9 @@ let g:nnn#action = {
 ```
 
 With the above example, when inside an n³ window, pressing <kbd>^T</kbd> will
-open the selected file in a tab instead of the current window. <kbd>^X</kbd> will
-open in a split an so on. Multi-selected files will be loaded in the buffer list.
+open the selected file in a tab instead of the current window. <kbd>^X</kbd>
+will open in a split an so on. Multi-selected files will be loaded in the
+buffer list.
 
 #### Persistent session
 
@@ -109,7 +110,8 @@ Note: If desired, an n³ session can be disabled temporarily by passing
 
 #### Command override
 
-It's possible to override the default n³ command and add some extra program options.
+It's possible to override the default n³ command and add some extra program
+options.
 
 ```vim
 " to start n³ in detail mode:
@@ -148,7 +150,7 @@ let $NNN_TRASH=1
 Use the same option names as you would in Vimscript, e.g.:
 
 ```lua
-require('nnn').setup{
+require('nnn').setup {
     set_default_mappings = false,
     session = 'global',
     layout = { left = '20%' }

@@ -1,12 +1,14 @@
 local M = {}
 
 M.valid_options = {
-    'session',
     'set_default_mappings',
     'layout',
     'action',
     'session',
     'command',
+    'replace_netrw',
+    'statusline',
+    'shell',
 }
 
 function M.setup(config)

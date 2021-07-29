@@ -7,8 +7,14 @@ if !(exists("g:nnn#set_default_mappings"))
     let g:nnn#set_default_mappings = 1
 endif
 
+let g:nnn#has_floating_window_support = has('nvim-0.5') || has('popupwin')
+
 if !(exists("g:nnn#layout"))
-    let g:nnn#layout = 'enew'
+    if g:nnn#has_floating_window_support
+        let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+    else
+        let g:nnn#layout = 'enew'
+    endif
 endif
 
 if !(exists("g:nnn#action"))

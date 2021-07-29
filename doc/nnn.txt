@@ -33,7 +33,8 @@ terminal feature of vim and neovim.
 Requirements                                                          *nnn-req*
 
 1. n³
-2. Neovim or Vim 8.1 with terminal support
+2. `has('nvim') || has('terminal')` with terminal support
+3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
 
 =============================================================================
 Usage                                                               *nnn-usage*
@@ -44,14 +45,13 @@ buffer opens running an n³ process in picker mode.
 Once you select (see https://github.com/jarun/nnn/wiki/concepts#selection)
 one or more files and press enter, vim quits the n³ window and opens the
 first selected file and add the remaining files to the arg list/buffer
-list. If |nnn#session| is enabled, then n³ will remember where you left off
-of when you reopen it.
+list. If |nnn#session| is enabled, then n³ will remember where you left off of
+when you reopen it.
 
-Pressing enter on a file in n³ will pick any earlier selection, pick
-the file and exit n³.
+Pressing enter on a file in n³ will pick any earlier selection, pick the file
+and exit n³.
 
-Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
-instead of picking.
+Note that pressing `l` or <Right> on a file would open it instead of picking.
 
 You may have to set `set hidden` to make floating window work.
 
@@ -95,11 +95,11 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 <
 
 g:nnn#layout                                                     *g:nnn#layout*
-                  Default: 'enew'
-                  Display type for the n³ buffer. Default is |enew|, which
-                  has a special behavior to act as a "split explorer" reusing
-                  the current window and brings back the last buffer if
-                  nothing is selected.
+                  Default: { 'window': { 'width': 0.9, 'height': 0.6 } }
+                  Display type for the n³ buffer. Default is a floating
+                  window. |enew| has a special behavior to act as a
+                  "split explorer" reusing the current window and brings back
+                  the last buffer if nothing is selected.
                   Examples:
 >
                   " Opens the n³ window in a split
@@ -108,12 +108,12 @@ g:nnn#layout                                                     *g:nnn#layout*
                   " Or pass a dictionary with window size
                   let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
-                  " Floating window (neovim only for now)
+                  " Floating window
                   let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
                   " Options:
                   " width, height, yoffset, xoffset : number
                   " highlight : highlight group assign to the border
-                  " border : border style - 'rounded' / 'sharp' / 'horizontal' / 'vertical' / 'top' / 'bottom' / 'left' / 'right'
+                  " border : border style - 'rounded' / 'sharp'
 <
 
 g:nnn#action                                                     *g:nnn#action*
@@ -149,10 +149,10 @@ g:nnn#action                                                     *g:nnn#action*
 
 g:nnn#session                                                   *g:nnn#session*
                   Default: 'none'
-                  How n³ should utilize sessions. Default is 'none' meaning no
-                  persistent sessions. Other options are 'local' for the same
-                  n³ session across a vim session, or 'global' for the same n³
-                  session across everywhere.
+                  How n³ should utilize sessions. Default is 'none' meaning
+                  no persistent sessions. Other options are 'local' for the
+                  same n³ session across a vim session, or 'global' for the
+                  same n³ session across everywhere.
 >
                   " use the same nnn session within a vim session, for
                   " example, so that consecutive uses of :Np will remember
@@ -185,7 +185,7 @@ g:nnn#shell                                                      *g:nnn#shell*
                   Default: &shell
                   The shell to run the terminal window.
 
-require('nnn').setup{}                                          *nnn-lua-setup*
+require('nnn').setup{}                                         *nnn-lua-setup*
                   Default: same as Vimscript defaults
                   An alternative way to configure n³ more suitable for
                   init.lua users. For example:
@@ -209,8 +209,8 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
                   {dir} : (string) a directory.
                   {opts}: (dict) can be:
                     edit  : type of window the select file will be open. Or
-                            pass a FuncRef and array of selected files will be
-                            passed to that function.
+                            pass a FuncRef and array of selected files will
+                            be passed to that function.
                     layout: same as |g:nnn#layout| and overrides it if
                              specified.
 
