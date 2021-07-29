@@ -11,7 +11,7 @@ https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b
 ### Requirements
 
 1. n³
-2. `has('nvim') || has('terminal')` with terminal support
+2. `has('nvim') || has('terminal')` i.e. terminal support
 3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
 
 ### Install

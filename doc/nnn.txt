@@ -33,7 +33,7 @@ terminal feature of vim and neovim.
 Requirements                                                          *nnn-req*
 
 1. n³
-2. `has('nvim') || has('terminal')` with terminal support
+2. `has('nvim') || has('terminal')` i.e. terminal support
 3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
 
 =============================================================================
