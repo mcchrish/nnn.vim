@@ -264,7 +264,10 @@ endfunction
 
 function! s:create_term_buf(opts)
     if has("nvim")
-        call termopen([g:nnn#shell, &shellcmdflag, a:opts.cmd], {'on_exit': a:opts.on_exit })
+        call termopen([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
+                    \ 'env': { 'NNN_SEL': s:temp_file },
+                    \ 'on_exit': a:opts.on_exit
+                    \ })
         startinsert
         return bufnr('')
     else
@@ -272,6 +275,7 @@ function! s:create_term_buf(opts)
         let l:hidden = get(a:opts, 'hidden', 0)
         let l:Exit_cb = get(a:opts, 'on_exit')
         let l:tbuf = term_start([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
+                    \ 'env': { 'NNN_SEL': s:temp_file },
                     \ 'curwin': l:curwin,
                     \ 'hidden': l:hidden,
                     \ 'exit_cb': l:Exit_cb
@@ -366,7 +370,6 @@ function! nnn#pick(...) abort
         let l:sess_cfg = ' '
     endif
 
-    let g:nnn#command = 'NNN_SEL='.shellescape(s:temp_file).' '.g:nnn#command
     let l:cmd = g:nnn#command.l:sess_cfg.' -p '.shellescape(s:temp_file).' '.(l:directory != '' ? shellescape(l:directory): '')
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
