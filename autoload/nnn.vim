@@ -16,8 +16,8 @@ function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
 endfunction
 
-function! nnn#select_action(action) abort
-    let s:action = a:action
+function! nnn#select_action(key) abort
+    let s:action = g:nnn#action[a:key]
     " quit nnn
     if has('nvim')
         call feedkeys("i\<cr>")
@@ -78,7 +78,7 @@ function! s:eval_temp_file(opts)
     endif
 
     " Action passed is function
-    if (type(l:Cmd) == 2)
+    if (type(l:Cmd) == v:t_func)
         call l:Cmd(l:names)
     else
         " Edit the first item.
