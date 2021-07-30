@@ -110,7 +110,7 @@ function! s:popup(opts, term_opts)
     let l:highlight = get(a:opts, 'highlight', 'Comment')
 
     if has('nvim')
-        let l:borderchars = map(l:border == 'rounded'
+        let l:borderchars = map(l:border ==# 'rounded'
                     \ ? ['╭', '─' ,'╮', '│', '╯', '─', '╰', '│' ]
                     \ : ['┌', '─' ,'┐', '│', '┘', '─', '└', '│' ], 
                     \ {_, val -> [v:val, l:highlight]})
@@ -129,7 +129,7 @@ function! s:popup(opts, term_opts)
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
-        let l:borderchars = l:.border == 'rounded'
+        let l:borderchars = l:.border ==# 'rounded'
                     \ ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰']
                     \ : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
         let l:win = popup_create(l:buf, #{
@@ -151,7 +151,7 @@ function! s:switch_back(opts, Cmd)
     let l:term = a:opts.term
 
     " when split explorer
-    if type(l:layout) == v:t_string && l:layout == 'enew' && bufexists(l:buf)
+    if type(l:layout) == v:t_string && l:layout ==# 'enew' && bufexists(l:buf)
         execute 'keepalt b' l:buf
     elseif s:present(l:layout, 'window')
         if type(l:layout.window) != v:t_dict
@@ -167,8 +167,8 @@ function! s:switch_back(opts, Cmd)
 
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
-    if (type(a:Cmd) == v:t_string && a:Cmd != 'edit')
-                \ || (type(l:layout) != v:t_string || (type(l:layout) == v:t_string && l:layout != 'enew'))
+    if (type(a:Cmd) == v:t_string && a:Cmd !=# 'edit')
+                \ || (type(l:layout) != v:t_string || (type(l:layout) == v:t_string && l:layout !=# 'enew'))
         silent! execute 'tabnext' a:opts.ppos.tab
         silent! execute a:opts.ppos.win.'wincmd w'
     endif
