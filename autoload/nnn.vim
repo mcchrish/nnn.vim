@@ -261,7 +261,7 @@ function! nnn#pick(...) abort
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     let s:temp_file = tempname()
 
-    if g:nnn#session ==# 'none' || !get(l:opts, 'session', 1)
+    if g:nnn#session ==# 'none' || get(l:opts, 'session', 0)
         let l:sess_cfg = ' '
     elseif g:nnn#session ==# 'global'
         let l:sess_cfg = ' -S '
