@@ -8,13 +8,13 @@ https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b
   <small>colorscheme <a href="https://github.com/pgdouyon/vim-yin-yang">yin</a></small>
 </p>
 
-### Requirements
+## Requirements
 
 1. n³
 2. `has('nvim') || has('terminal')` i.e. terminal support
 3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
 
-### Install
+## Install
 
 n³ must be installed. Instructions
 [here](https://github.com/jarun/nnn/wiki/Usage#installation).
@@ -26,7 +26,7 @@ Then install the plugin using your plugin manager:
 Plug 'mcchrish/nnn.vim'
 ```
 
-### Usage
+## Usage
 
 To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or the
 key-binding `<leader>n`. The command accepts an optional path to open e.g.
@@ -48,9 +48,9 @@ To discard selection and exit, press <kbd>^G</kbd>.
 
 For complete plugin documentation see `:help nnn`.
 
-### Configuration
+## Configuration
 
-#### Custom mappings
+### Custom mappings
 
 ```vim
 " Disable default mappings
@@ -63,7 +63,7 @@ nnoremap <silent> <leader>nn :NnnPicker<CR>
 nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
 
-#### Layout
+### Layout
 
 ```vim
 " Opens the n³ window in a split
@@ -76,7 +76,7 @@ let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 ```
 
-#### Action
+### Action
 
 It's possible to set extra key-bindings for opening files in various ways.
 No default is set so that n³'s key-bindings are not overridden.
@@ -93,7 +93,7 @@ open the selected file in a tab instead of the current window. <kbd>^X</kbd>
 will open in a split an so on. Multi-selected files will be loaded in the
 buffer list.
 
-#### Persistent session
+### Persistent session
 
 n³ sessions can be used to remember the location when it is reopened.
 
@@ -106,9 +106,9 @@ let g:nnn#session = 'global'
 ```
 
 Note: If desired, an n³ session can be disabled temporarily by passing
-`session: false` as an option to `nnn#pick()`.
+`session: 0` as an option to `nnn#pick()`.
 
-#### Command override
+### Command override
 
 It's possible to override the default n³ command and add some extra program
 options.
@@ -121,7 +121,7 @@ let g:nnn#command = 'nnn -d'
 let g:nnn#command = 'NNN_TRASH=1 nnn -d'
 ```
 
-#### `nnn#pick()`
+### `nnn#pick()`
 
 The `nnn#pick([<dir>][,<opts>])` function can be called with a custom directory
 and additional options such as opening file in splits or tabs. It's a more
@@ -137,7 +137,7 @@ call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
 - `edit` - type of window the select file will be open.
 - `layout` - same as `g:nnn#layout` and overrides it if specified.
 
-#### Environment variables
+### Environment variables
 
 n³ will detect env variables defined in `vimrc`.
 
@@ -145,18 +145,24 @@ n³ will detect env variables defined in `vimrc`.
 let $NNN_TRASH=1
 ```
 
-#### Setup for `init.lua`
+### Setup for `init.lua`
 
-Use the same option names as you would in Vimscript, e.g.:
+Use the same option names as you would in Vim script, e.g.:
 
 ```lua
-require('nnn').setup {
-    set_default_mappings = false,
-    session = 'global',
-    layout = { left = '20%' }
-}
+require("nnn").setup({
+	command = "nnn -o -C",
+	set_default_mappings = 0,
+	replace_netrw = 1,
+	action = {
+		["<c-t>"] = "tab split",
+		["<c-s>"] = "split",
+		["<c-v>"] = "vsplit",
+		["<c-o>"] = copy_to_clipboard,
+	},
+})
 ```
 
-### Credits
+## Credits
 
-Main n³ program: https://github.com/jarun/nnn
+Main [n³ repository](https://github.com/jarun/nnn).

@@ -208,11 +208,13 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
 
                   {dir} : (string) a directory.
                   {opts}: (dict) can be:
-                    edit  : type of window the select file will be open. Or
-                            pass a FuncRef and array of selected files will
-                            be passed to that function.
-                    layout: same as |g:nnn#layout| and overrides it if
+                    edit   : type of window the select file will be open. Or
+                             pass a FuncRef and array of selected files will
+                             be passed to that function.
+                    layout : same as |g:nnn#layout| and overrides it if
                              specified.
+                    session: set to 0 to disable session regardless of
+                             |g:nnn#session| value.
 
                   Example:
 >
