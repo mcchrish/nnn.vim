@@ -128,7 +128,7 @@ and additional options such as opening file in splits or tabs. It's a more
 configurable version of the `:NnnPicker` command.
 
 ```vim
-call nnn#pick('~/some-files', { 'edit': 'vertical split' })
+call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
 " Then add custom mappings
 ```
 
