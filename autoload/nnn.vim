@@ -179,7 +179,7 @@ function! s:switch_back(opts, Cmd)
 endfunction
 
 function! s:create_term_buf(opts)
-    if has("nvim")
+    if has('nvim')
         call termopen([g:nnn#shell, &shellcmdflag, a:opts.cmd], {
                     \ 'env': { 'NNN_SEL': s:temp_file },
                     \ 'on_exit': a:opts.on_exit
@@ -191,7 +191,7 @@ function! s:create_term_buf(opts)
                     \ 'curwin': get(a:opts, 'curwin', 1),
                     \ 'hidden': get(a:opts, 'hidden', 0),
                     \ 'env': { 'NNN_SEL': s:temp_file },
-                    \ 'exit_cb': get(a:opts, 'on_exit')
+                    \ 'exit_cb': a:opts.on_exit
                     \ })
     endif
 endfunction
@@ -230,7 +230,7 @@ function! s:build_window(layout, term_opts)
     endif
 
     if type(a:layout) == v:t_string
-        execute 'keepalt ' . a:layout
+        execute 'keepalt' a:layout
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': win_getid() }
     endif
 
