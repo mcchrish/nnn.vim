@@ -25,10 +25,6 @@ if !exists('g:nnn#statusline')
     let g:nnn#statusline = 1
 endif
 
-if !exists('g:nnn#shell')
-    let g:nnn#shell = &shell
-endif
-
 if !exists('g:nnn#session')
     let g:nnn#session = "none"
 endif
