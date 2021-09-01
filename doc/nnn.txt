@@ -95,7 +95,9 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 <
 
 g:nnn#layout                                                     *g:nnn#layout*
-                  Default: { 'window': { 'width': 0.9, 'height': 0.6 } }
+                  Default:
+                    neovim: { 'window': { 'width': 0.9, 'height': 0.6 } }
+                    vim: 'enew'
                   Display type for the n³ buffer. Default is a floating
                   window. |enew| has a special behavior to act as a
                   "split explorer" reusing the current window and brings back

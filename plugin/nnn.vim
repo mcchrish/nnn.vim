@@ -6,7 +6,7 @@ let g:nnn#loaded = 1
 let g:nnn#has_floating_window_support = has('nvim-0.5') || has('popupwin')
 
 if !exists('g:nnn#layout')
-    if g:nnn#has_floating_window_support
+    if g:nnn#has_floating_window_support && has('nvim')
         let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
     else
         let g:nnn#layout = 'enew'
