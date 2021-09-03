@@ -100,8 +100,10 @@ function! s:popup(opts, term_opts)
     " Size and position
     let width = min([max([0, float2nr(&columns * a:opts.width)]), &columns])
     let height = min([max([0, float2nr(&lines * a:opts.height)]), &lines - has('nvim')])
-    let row = float2nr(get(a:opts, 'yoffset', 0.5) * (&lines - height))
-    let col = float2nr(get(a:opts, 'xoffset', 0.5) * (&columns - width))
+    let yoffset = get(a:opts, 'yoffset', 0.5)
+    let xoffset = get(a:opts, 'xoffset', 0.5)
+    let row = float2nr(yoffset * (&lines - height))
+    let col = float2nr(xoffset * (&columns - width))
 
     " Managing the differences
     let row = min([max([0, row]), &lines - has('nvim') - height])
@@ -133,7 +135,7 @@ function! s:popup(opts, term_opts)
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
-        let l:borderchars = l:.border ==# 'rounded'
+        let l:borderchars = l:border ==# 'rounded'
                     \ ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰']
                     \ : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
         let l:win = popup_create(l:buf, #{
