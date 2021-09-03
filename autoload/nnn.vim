@@ -110,7 +110,8 @@ function! s:popup(opts, term_opts)
     let col += !has('nvim')
 
     let l:border = get(a:opts, 'border', 'rounded')
-    let l:highlight = get(a:opts, 'highlight', 'Comment')
+    let l:default_hl = hlexists('FloatBorder') ? 'FloatBorder' : 'Comment'
+    let l:highlight = get(a:opts, 'highlight', l:default_hl)
 
     if has('nvim')
         let l:borderchars = map(l:border ==# 'rounded'
