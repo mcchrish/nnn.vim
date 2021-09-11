@@ -32,9 +32,10 @@ To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or the
 key-binding `<leader>n`. The command accepts an optional path to open e.g.
 `:NnnPicker path/to/somewhere`.
 
-Run the plugin, [select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection)
-and press <kbd>Enter</kbd> to quit the n³ window. Now vim will open the first
-selected file and add the remaining files to the arg list/buffer list.
+Run the plugin,
+[select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection) and press
+<kbd>Enter</kbd> to quit the n³ window. Now vim will open the first selected
+file and add the remaining files to the arg list/buffer list.
 
 Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection, pick
 the file and exit n³.
@@ -78,8 +79,8 @@ let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debu
 
 ### Action
 
-It's possible to set extra key-bindings for opening files in various ways.
-No default is set so that n³'s key-bindings are not overridden.
+It's possible to set extra key-bindings for opening files in various ways. No
+default is set so that n³'s key-bindings are not overridden.
 
 ```vim
 let g:nnn#action = {
@@ -90,8 +91,8 @@ let g:nnn#action = {
 
 With the above example, when inside an n³ window, pressing <kbd>^T</kbd> will
 open the selected file in a tab instead of the current window. <kbd>^X</kbd>
-will open in a split an so on. Multi-selected files will be loaded in the
-buffer list.
+will open in a split an so on. Multi-selected files will be loaded in the buffer
+list.
 
 An example assigning a function to an action:
 
