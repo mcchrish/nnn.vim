@@ -47,7 +47,7 @@ function! s:calc_size(val, max)
     endif
 endfunction
 
-function! s:extract_filenames()
+function! s:extra_selections()
     if !filereadable(s:temp_file)
         return []
     endif
@@ -57,7 +57,7 @@ function! s:extract_filenames()
         return []
     endif
 
-    call uniq(filter(l:files, {_, val -> !isdirectory(val) && filereadable(val) }))
+    call uniq(l:files)
 
     if empty(l:files) || strlen(l:files[0]) <= 0
         return []
@@ -71,7 +71,7 @@ function! s:eval_temp_file(opts)
 
     call s:switch_back(a:opts, l:Cmd)
 
-    let l:names = s:extract_filenames()
+    let l:names = s:extra_selections()
     " When exiting without any selection
     if empty(l:names)
         return
@@ -81,6 +81,8 @@ function! s:eval_temp_file(opts)
     if (type(l:Cmd) == v:t_func)
         call l:Cmd(l:names)
     else
+        " Remove directories and missing files
+        call filter(l:names, {_, val -> !isdirectory(val) && filereadable(val) })
         " Consider trimming out current working directory from filename
         let l:cwd = getcwd()
         call map(l:names, { _, val -> strcharpart(val, 0, strlen(l:cwd)) ==# l:cwd  ? strcharpart(val, strlen(l:cwd) + 1) : val }) " + 1 is to also remove the trailing slash
