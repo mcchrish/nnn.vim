@@ -56,6 +56,5 @@ if g:nnn#replace_netrw
 endif
 
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
-command! -bar -nargs=? -complete=dir Np echohl WarningMsg | echom 'Np is deprecated in favor of NnnPicker' | echohl None | call nnn#pick(<f-args>)
 
 " vim: set sts=4 sw=4 ts=4 et :
