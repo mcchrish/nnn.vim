@@ -125,6 +125,15 @@ g:nnn#action                                                     *g:nnn#action*
                   override n³'s own key-bindings.
                   Examples:
 >
+                  function! CopyLinestoRegister(lines)
+                    let joined_lines = join(a:lines, "\n")
+                    if len(a:lines) > 1
+                      let joined_lines .= "\n"
+                    endif
+                    echom joined_lines
+                    let @+ = joined_lines
+                  endfunction
+
                   let g:nnn#action = {
                         \ '<c-t>': 'tab split',
                         \ '<c-x>': 'split',
@@ -139,14 +148,17 @@ g:nnn#action                                                     *g:nnn#action*
                   And finally you can pass a FuncRef and the array of selected
                   lines will be passed to that function.
 
-                  function! CopyLinestoRegister(lines)
-                    let joined_lines = join(a:lines, "\n")
-                    if len(a:lines) > 1
-                      let joined_lines .= "\n"
+                  Another example, cd into selected file's directory:
+
+                  function! CdSelectedFile(lines)
+                    let dir = a:lines[-1]
+                    if filereadable(dir)
+                      let dir = fnamemodify(dir, ':h')
                     endif
-                    echom joined_lines
-                    let @+ = joined_lines
+                    execute 'cd' dir
                   endfunction
+
+                  let g:nnn#action = { 'c': function('CdSelectedFile') }
 <
 
 g:nnn#session                                                   *g:nnn#session*
