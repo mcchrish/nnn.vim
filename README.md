@@ -84,7 +84,7 @@ No default is set so that n³'s key-bindings are not overridden.
 ```vim
 let g:nnn#action = {
       \ '<c-t>': 'tab split',
-      \ '<c-x>': 'split',
+      \ '<c-s>': 'split',
       \ '<c-v>': 'vsplit' }
 ```
 
@@ -92,6 +92,23 @@ With the above example, when inside an n³ window, pressing <kbd>^T</kbd> will
 open the selected file in a tab instead of the current window. <kbd>^X</kbd>
 will open in a split an so on. Multi-selected files will be loaded in the
 buffer list.
+
+An example assigning a function to an action:
+
+```vim
+function! CdSelectedFile(lines)
+    let dir = a:lines[-1]
+    if filereadable(dir)
+        let dir = fnamemodify(dir, ':h')
+    endif
+    execute 'cd' dir
+endfunction
+
+let g:nnn#action = { 'c': function('CdSelectedFile') }
+```
+
+In this example, pressing <kbd>c</kbd> will select the file and `cd` into it's
+directory.
 
 ### Persistent session
 

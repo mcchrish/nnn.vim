@@ -1,4 +1,4 @@
-*nnn.vim* n³ file manager plugin for vim/neovim.
+*nnn.vim* File manager for vim/neovim powered by n³.
 *nnn*
 >
   __   __     __   __     __   __     __   __   __     __    __
