@@ -86,6 +86,7 @@ function! s:eval_temp_file(opts)
         " Consider trimming out current working directory from filename
         let l:cwd = getcwd()
         call map(l:names, { _, val -> strcharpart(val, 0, strlen(l:cwd)) ==# l:cwd  ? strcharpart(val, strlen(l:cwd) + 1) : val }) " + 1 is to also remove the trailing slash
+        call reverse(l:names)
         " Edit the first item.
         execute 'silent' l:Cmd fnameescape(l:names[0])
         " Add any remaining items to the arg list/buffer list.
