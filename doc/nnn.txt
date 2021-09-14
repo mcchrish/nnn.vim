@@ -158,7 +158,7 @@ g:nnn#action                                                     *g:nnn#action*
                     execute 'cd' dir
                   endfunction
 
-                  let g:nnn#action = { 'c': function('CdSelectedFile') }
+                  let g:nnn#action = { '<c-w>': function('CdSelectedFile') }
 <
 
 g:nnn#session                                                   *g:nnn#session*

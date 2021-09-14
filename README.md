@@ -105,7 +105,7 @@ function! CdSelectedFile(lines)
     execute 'cd' dir
 endfunction
 
-let g:nnn#action = { 'c': function('CdSelectedFile') }
+let g:nnn#action = { '<c-w>': function('CdSelectedFile') }
 ```
 
 In this example, pressing <kbd>c</kbd> will select the file and `cd` into its
