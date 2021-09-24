@@ -154,7 +154,7 @@ function! s:popup(opts, term_opts)
     endif
 endfunction
 
-function! s:switch_back(opts, Cmd)
+function! s:switch_back(opts, cmd)
     let l:buf = a:opts.ppos.buf
     let l:layout = a:opts.layout
     let l:term = a:opts.term
@@ -176,10 +176,9 @@ function! s:switch_back(opts, Cmd)
 
     " don't switch when action = 'edit' and just retain the window
     " don't switch when layout = 'enew' for split explorer feature
-    if (type(a:Cmd) == v:t_string && a:Cmd !=# 'edit')
+    if (type(a:cmd) == v:t_string && a:cmd !=# 'edit')
                 \ || (type(l:layout) != v:t_string || (type(l:layout) == v:t_string && l:layout !=# 'enew'))
-        silent! execute 'tabnext' a:opts.ppos.tab
-        silent! execute a:opts.ppos.win.'wincmd w'
+        call win_gotoid(a:opts.ppos.winid)
     endif
 
     if bufexists(l:term.buf)
@@ -284,7 +283,7 @@ function! nnn#pick(...) abort
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#layout
 
     let l:opts.layout = l:layout
-    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
+    let l:opts.ppos = { 'buf': bufnr(''), 'winid': win_getid() }
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
