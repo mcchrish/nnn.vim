@@ -55,7 +55,9 @@ Note that pressing `l` or <Right> on a file would open it instead of picking.
 
 You may have to set `set hidden` to make floating window work.
 
-To discard selection and exit, press ^G.
+To discard selection and/or exit, press q.
+
+Press <c-g> to quit n³ and `cd` into the last directory.
 
 -----------------------------------------------------------------------------
 Commands                                                         *nnn-commands*

@@ -43,7 +43,12 @@ the file and exit n³.
 Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking.
 
-To discard selection and exit, press <kbd>^G</kbd>.
+To discard selection and/or exit, press <kbd>q</kbd>.
+
+#### `cd` on quit
+
+Press <kbd>c-g</kbd> to quit n³ and `cd` into the last directory.
+
 
 `set hidden` may be required for the floating windows to work.
 
@@ -108,8 +113,8 @@ endfunction
 let g:nnn#action = { '<c-w>': function('CdSelectedFile') }
 ```
 
-In this example, pressing <kbd>c</kbd> will select the file and `cd` into its
-directory.
+In this example, pressing <kbd>c-w</kbd> will select the file and `cd` into
+its directory.
 
 ### Persistent session
 
