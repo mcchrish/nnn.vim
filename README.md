@@ -40,8 +40,9 @@ file and add the remaining files to the arg list/buffer list.
 Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection, pick
 the file and exit n³.
 
-Note that pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
-instead of picking.
+***NOTE:*** Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
+instead of picking. Use `-o` via [nnn#command](#command-override) to disable
+this.
 
 To discard selection and/or exit, press <kbd>q</kbd>.
 
