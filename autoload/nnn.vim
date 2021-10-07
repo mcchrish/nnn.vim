@@ -1,51 +1,51 @@
-let s:temp_file = ''
-let s:action = ''
-let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+temp_file = ''
+action = ''
+nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 
-let s:local_ses = 'nnn_vim_'
+point_ses = 'nnn_vim_'
 " Add timestamp for convenience
 " :h strftime() -- strftime is not portable
-if exists('*strftime')
-    let s:local_ses .= strftime('%Y_%m_%dT%H_%M_%SZ')
-else
+       ('*strftime')
+         local_ses .= strftime('%Y_%m_%dT%H_%M_%SZ')
+
     " HACK: cannot use / in a session name
-    let s:local_ses .= substitute(tempname(), '/', '_', 'g')
-endif
+         point_ses .= substitute(tempname(), '/', '_', 'g')
+          statusline()
+    setpoint statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
 
-function! s:statusline()
-    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
-endfunction
 
-function! nnn#select_action(key) abort
-    let s:action = g:nnn#action[a:key]
+        nnn#select_action(key) abort
+          action = g:nnn#action[a:key]
     " quit nnn
-    if has('nvim')
-        call feedkeys("i\<cr>")
-    else
-        call term_sendkeys(b:tbuf, "\<cr>")
-    endif
-endfunction
+          ('nvim')
+             feedkeys("i\<cr>")
+    
+             term_sendkeys(b:tbuf, "\<cr>")
+    
 
-function! s:present(dict, ...)
-    if type(a:dict) != v:t_dict
-        return 0
-    endif
-    for key in a:000
-        if !empty(get(a:dict, key, ''))
-            return 1
-        endif
-    endfor
-    return 0
-endfunction
 
-function! s:calc_size(val, max)
-    let l:val = substitute(a:val, '^\~', '', '')
-    if val =~ '%$'
-        return a:max * str2nr(val[:-2]) / 100
-    else
-        return min([a:max, str2nr(val)])
-    endif
-endfunction
+f
+
+               present(dict, ...)
+           (  dict)    t_dict
+               0
+    
+      key      000
+                (get( dict, key, ''))
+                  1
+        
+    
+           0
+
+
+           calc_size(val, max)
+        val = substitute(a:val, '^\~', '', '')
+       val =~ '%$'
+               max * str2nr(val[:-2]) / 100
+    
+               min([a:max, str2nr(val)])
+    
+
 
 function! s:extra_selections()
     if !filereadable(s:temp_file)
