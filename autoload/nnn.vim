@@ -311,7 +311,6 @@ endfunction
 function! s:explorer_create_on_exit_callback(opts)
     function! s:callback(id, code, ...) closure
         let l:term_wins = a:opts.term_wins
-        call delete(fnameescape(s:explorer_fifo))
 	" same code as in the bottom of s:switch_back()
         try
             if has('nvim')
@@ -368,9 +367,12 @@ function! nnn#explorer(...) abort
     let l:directory = get(a:, 1, '')
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
-    let s:explorer_fifo = tempname()
+    if !$NNN_FIFO || $NNN_FIFO == ""
+        let $NNN_FIFO = "/tmp/nnn_ex.fifo"
+    endif
+    let s:explorer_fifo = $NNN_FIFO
 
-    let l:cmd = g:nnn#command.' -X '.shellescape(s:explorer_fifo).' '.(l:directory != '' ? shellescape(l:directory): '')
+    let l:cmd = g:nnn#command.' -F 1'.' '.(l:directory != '' ? shellescape(l:directory): '')
 
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
 
