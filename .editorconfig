@@ -2,7 +2,10 @@ root = true
 
 [*]
 end_of_line = lf
+indent_size = 4
 
 [*.lua]
 indent_style = tab
-indent_size = 4
+
+[*.vim]
+indent_style = space
