@@ -117,7 +117,7 @@ g:nnn#layout                                                     *g:nnn#layout*
                   " Options:
                   " width, height, yoffset, xoffset : number
                   " highlight : highlight group assign to the border
-                  " border : border style - 'rounded' / 'sharp'
+                  " border : border style - 'rounded' / 'sharp' / 'none'
 <
 
 g:nnn#action                                                     *g:nnn#action*

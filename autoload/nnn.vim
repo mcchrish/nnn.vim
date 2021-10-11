@@ -119,7 +119,7 @@ function! s:popup(opts, term_opts)
     let l:highlight = get(a:opts, 'highlight', l:default_hl)
 
     if has('nvim')
-        let l:borderchars = map(l:border ==# 'rounded'
+        let l:borderchars = l:border ==# 'none' ? 'none' : map(l:border ==# 'rounded'
                     \ ? ['╭', '─' ,'╮', '│', '╯', '─', '╰', '│' ]
                     \ : ['┌', '─' ,'┐', '│', '┘', '─', '└', '│' ], 
                     \ {_, val -> [v:val, l:highlight]})
@@ -146,7 +146,7 @@ function! s:popup(opts, term_opts)
                     \ col: col,
                     \ minwidth: width,
                     \ minheight: height,
-                    \ border: [],
+                    \ border: l:border ==# 'none' ? [0, 0, 0, 0] : [],
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,
                     \ })
