@@ -392,5 +392,4 @@ function! nnn#explorer(...) abort
     endif
 endfunction
 
-
 " vim: set sts=4 sw=4 ts=4 et :
