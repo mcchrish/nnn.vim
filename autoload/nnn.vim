@@ -13,16 +13,12 @@ else
 endif
 
 " nnn highlight groups
-if !hlexists('NnnBorder')
-    if hlexists('FloatBorder')
-        highlight! link NnnBorder FloatBorder
-    else
-        highlight! link NnnBorder Comment
-    endif
+if hlexists('FloatBorder')
+    highlight default link NnnBorder FloatBorder
+else
+    highlight default link NnnBorder Comment
 endif
-if !hlexists('NnnNormal')
-    highlight! link NnnNormal Normal
-endif
+highlight default link NnnNormal Normal
 
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
