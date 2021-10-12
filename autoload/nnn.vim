@@ -12,6 +12,18 @@ else
     let s:local_ses .= substitute(tempname(), '/', '_', 'g')
 endif
 
+" nnn highlight groups
+if !hlexists('NnnBorder')
+    if hlexists('FloatBorder')
+        highlight! link NnnBorder FloatBorder
+    else
+        highlight! link NnnBorder Comment
+    endif
+endif
+if !hlexists('NnnNormal')
+    highlight! link NnnNormal Normal
+endif
+
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
 endfunction
@@ -115,8 +127,7 @@ function! s:popup(opts, term_opts)
     let col += !has('nvim')
 
     let l:border = get(a:opts, 'border', 'rounded')
-    let l:default_hl = hlexists('FloatBorder') ? 'FloatBorder' : 'Comment'
-    let l:highlight = get(a:opts, 'highlight', l:default_hl)
+    let l:highlight = get(a:opts, 'highlight', 'NnnBorder')
 
     if has('nvim')
         let l:borderchars = l:border ==# 'none' ? 'none' : map(l:border ==# 'rounded'
@@ -133,8 +144,7 @@ function! s:popup(opts, term_opts)
                     \ 'relative': 'editor',
                     \ 'style': 'minimal'
                     \ })
-        call setwinvar(l:win, '&winhighlight', 'NormalFloat:Normal')
-        call setwinvar(l:win, '&colorcolumn', '')
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormal')
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
@@ -146,6 +156,7 @@ function! s:popup(opts, term_opts)
                     \ col: col,
                     \ minwidth: width,
                     \ minheight: height,
+                    \ highlight: 'NnnNormal',
                     \ border: l:border ==# 'none' ? [0, 0, 0, 0] : [],
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,

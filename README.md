@@ -79,8 +79,8 @@ let g:nnn#layout = 'new' " or vnew, tabnew etc.
 " Or pass a dictionary with window size
 let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 
-" Floating window.
-let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
+" Floating window. This is the default
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Comment' } }
 ```
 
 ### Action

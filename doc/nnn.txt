@@ -18,6 +18,7 @@ CONTENTS *nnn-help*
     Mappings .............................. |nnn-mappings|
     Configurations ........................ |nnn-config|
     Functions ............................. |nnn-func|
+    Highlights ............................ |nnn-hl|
   Miscellaneous ......................... |nnn-misc|
   Credits ............................... |nnn-credits|
 
@@ -236,6 +237,14 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
 >
                   call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
 <
+
+-----------------------------------------------------------------------------
+Highlights                                                             *nnn-hl*
+
+The following are the highlight groups that are used:
+
+NnnNormal: window hl group. Linked to |hl-Normal|.
+NnnBorder: floating window border. Linked to |hl-FloatBorder| or |hl-Comment|.
 
 =============================================================================
 Miscellaneous                                                        *nnn-misc*
