@@ -1,8 +1,8 @@
-let s:temp_file = ''
-let s:action = ''
-let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+      temp_file = ''
+      action = ''
+      nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 
-let s:local_ses = 'nnn_vim_'
+      local_ses = 'nnn_vim_'
 " Add timestamp for convenience
 " :h strftime() -- strftime is not portable
 if exists('*strftime')
