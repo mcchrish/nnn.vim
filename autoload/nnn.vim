@@ -358,11 +358,6 @@ function! nnn#pick(...) abort
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
-    autocmd BufEnter <buffer> startinsert
-    setfiletype nnn
-    if g:nnn#statusline && !s:present(l:layout, 'window')
-        call s:statusline()
-    endif
 endfunction
 
 function! nnn#explorer(...) abort
