@@ -60,5 +60,6 @@ if g:nnn#replace_netrw
 endif
 
 command! -bar -nargs=? -complete=dir NnnPicker call nnn#pick(<f-args>)
+command! -bar -nargs=? -complete=dir NnnExplorer call nnn#explorer(<f-args>)
 
 " vim: set sts=4 sw=4 ts=4 et :
