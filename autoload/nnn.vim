@@ -311,21 +311,22 @@ endfunction
 
 function! s:explorer_create_on_exit_callback(opts)
     function! s:callback(id, code, ...) closure
-        let l:term_wins = a:opts.term_wins
+        let l:term = a:opts.term
+        let l:buf = a:opts.ppos.buf
 	" same code as in the bottom of s:switch_back()
         try
             if has('nvim')
-                if nvim_win_is_valid(l:term_wins.term.winhandle)
-                    call nvim_win_close(l:term_wins.term.winhandle, v:false)
+                if nvim_win_is_valid(l:term.winhandle)
+                    call nvim_win_close(l:term.winhandle, v:false)
                 endif
             else
-                execute win_id2win(l:term_wins.term.winhandle) . 'close'
+                execute win_id2win(l:term.winhandle) . 'close'
             endif
         catch /E444: Cannot close last window/
             " In case Vim complains it is the last window, fail silently.
         endtry
-        if bufexists(l:term_wins.term.buf)
-            execute 'bwipeout!' l:term_wins.term.buf
+        if bufexists(l:term.buf)
+            execute 'bwipeout!' l:term.buf
         endif
     endfunction
     return function('s:callback')
@@ -381,8 +382,8 @@ function! nnn#explorer(...) abort
     let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
     let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
 
-    let l:opts.term_wins = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
-    let b:tbuf = l:opts.term_wins
+    let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
+    let b:tbuf = l:opts.term
 
     call s:explorer_job()
 
