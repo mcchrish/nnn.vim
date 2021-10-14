@@ -39,8 +39,10 @@ endif
 
 if g:nnn#set_default_mappings
     nnoremap <silent> <leader>n :NnnPicker<CR>
-    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-l> <C-\><C-n><C-w>l
-    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-h> <C-\><C-n><C-w>h
+    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-w>l <C-\><C-n><C-w>l
+    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-w>h <C-\><C-n><C-w>h
+    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-w>j <C-\><C-n><C-w>j
+    autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
 if !exists('g:nnn#replace_netrw')
