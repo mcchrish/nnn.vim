@@ -36,12 +36,16 @@ Requirements                                                          *nnn-req*
 1. n³
 2. `has('nvim') || has('terminal')` i.e. terminal support
 3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
+4. Optional n³ v4.3(+) needed for file-explorer mode
 
 =============================================================================
 Usage                                                               *nnn-usage*
 
 By running |:NnnPicker| or calling the |nnn#pick()| function, a new terminal
 buffer opens running an n³ process in picker mode.
+
+To open n³ as a file-explorer use the command |:NnnExplorer|. The command
+accepts optional path similar to |:NnnPicker|.
 
 Once you select (see https://github.com/jarun/nnn/wiki/concepts#selection)
 one or more files and press enter, vim quits the n³ window and opens the
@@ -67,6 +71,8 @@ Commands                                                         *nnn-commands*
                   Opens an n³ window.
 :Np                                                                       *:Np*
                   Does the same as :NnnPicker.
+:NnnExplorer
+                  Opens an n³ file-explorer.
 
 -----------------------------------------------------------------------------
 Mappings                                                         *nnn-mappings*
@@ -76,6 +82,10 @@ Defaults mappings. Can be disabled by setting |g:nnn#set_default_mappings| to
 
 <leader>n
                   Runs |:NnnPicker|.
+<C-w>h/j/k/l
+                  Switches out of the nnn window.
+                  Useful when using explorer mode.
+
 
 -----------------------------------------------------------------------------
 Configurations                                                     *nnn-config*
@@ -91,6 +101,8 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
                   " Set your own
                   nnoremap <silent> <leader>nn :NnnPicker<CR>
 
+                  " Switch away from file-explorer (assuming left sided) via <C-l>
+                  autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-l> <C-\><C-n><C-w>l
 
                   " Or override
                   " Start n³ in the current file's directory
@@ -120,6 +132,12 @@ g:nnn#layout                                                     *g:nnn#layout*
                   " highlight : highlight group assign to the border
                   " border : border style - 'rounded' / 'sharp' / 'none'
 <
+g:nnn#explorer_layout                                   *g:nnn#explorer_layout*
+
+                  Default:  { 'left': '20%' }
+
+                  Same as g:nnn#layout but for the explorer mode.
+
 
 g:nnn#action                                                     *g:nnn#action*
                   Default: {}
@@ -237,6 +255,8 @@ nnn#pick([{dir}][,{opts}])                                         *nnn#pick()*
 >
                   call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
 <
+nnn#explorer([{dir}][,{opts}])                                 *nnn#explorer()*
+                  Same as |nnn#pick()| but for explorer mode.
 
 -----------------------------------------------------------------------------
 Highlights                                                             *nnn-hl*
