@@ -1,6 +1,8 @@
 let s:temp_file = ''
 let s:action = ''
 let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+" The fifo used by the persistent explorer
+let s:explorer_fifo = ""
 
 let s:local_ses = 'nnn_vim_'
 " Add timestamp for convenience
@@ -19,9 +21,6 @@ else
     highlight default link NnnBorder Comment
 endif
 highlight default link NnnNormal Normal
-
-" The fifo used by the persistent explorer
-let s:explorer_fifo = ""
 
 function! s:statusline()
     setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
