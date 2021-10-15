@@ -369,11 +369,12 @@ function! nnn#explorer(...) abort
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
     if !$NNN_FIFO || $NNN_FIFO == ""
-        let $NNN_FIFO = "/tmp/nnn_ex.fifo"
+        let s:explorer_fifo = "/tmp/nnn_ex.fifo"
+    else
+        let s:explorer_fifo = $NNN_FIFO
     endif
-    let s:explorer_fifo = $NNN_FIFO
 
-    let l:cmd = g:nnn#command.' -F 1'.' '.(l:directory != '' ? shellescape(l:directory): '')
+    let l:cmd = 'NNN_FIFO='.s:explorer_fifo.' '.g:nnn#command.' -F 1'.' '.(l:directory != '' ? shellescape(l:directory): '')
 
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
 
