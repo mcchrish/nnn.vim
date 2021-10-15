@@ -372,6 +372,9 @@ function! nnn#explorer(...) abort
 
     let l:cmd = 'NNN_FIFO='.shellescape(s:explorer_fifo).' '
     " explorer won't work if -a is set. we need to filter that out.
+    if exists("$NNN_OPTS")
+        let l:cmd .= 'NNN_OPTS='.substitute($NNN_OPTS, '\Ca', '', 'g').' '
+    endif
     let l:cmd .= substitute(g:nnn#command, '\Ca', '', 'g').' '
     " we need -F 1 so that picked files are written to the fifo
     let l:cmd .= '-F 1 '.(l:directory != '' ? shellescape(l:directory): '')
