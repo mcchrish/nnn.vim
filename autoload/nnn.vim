@@ -296,8 +296,7 @@ function! s:explorer_on_output(...)
 endfunction
 
 function! s:explorer_job()
-    " HACK: a delay is needed otherwise nnn may not have created the fifo in time
-    let l:watcher_cmd = 'sleep 0.5 && cat '.s:explorer_fifo
+    let l:watcher_cmd = 'cat '.s:explorer_fifo
     let l:shell = get(g:, 'nnn#shell', &shell)
     if has('nvim')
         let l:opts = { 'on_stdout': function('s:explorer_on_output') }
@@ -388,6 +387,8 @@ function! nnn#explorer(...) abort
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
     let b:tbuf = l:opts.term
 
+    " create the fifo ourselves since otherwise nnn might not create it on time
+    execute 'silent !mkfifo '.s:explorer_fifo
     call s:explorer_job()
 
     autocmd BufEnter <buffer> startinsert
