@@ -216,7 +216,7 @@ endfunction
 
 function! s:create_on_exit_callback(opts)
     let l:opts = a:opts
-    function! s:explorer_callback(id, code, ...) closure
+    function! s:callback(id, code, ...) closure
         if a:code != 0
             echohl ErrorMsg | echo 'nnn exited with '.a:code | echohl None
             return
@@ -232,7 +232,7 @@ function! s:create_on_exit_callback(opts)
             call delete(fnameescape(fname))
         endif
     endfunction
-    return function('s:explorer_callback')
+    return function('s:callback')
 endfunction
 
 function! s:build_window(layout, term_opts)
