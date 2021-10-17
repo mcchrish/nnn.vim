@@ -308,7 +308,7 @@ function! s:explorer_job()
 endfunction
 
 function! s:explorer_create_on_exit_callback(opts)
-    function! s:callback(id, code, ...) closure
+    function! s:explorer_callback(id, code, ...) closure
         let l:term = a:opts.term
         let l:buf = a:opts.ppos.buf
         call delete(fnameescape(s:explorer_fifo))
@@ -328,7 +328,7 @@ function! s:explorer_create_on_exit_callback(opts)
             execute 'bwipeout!' l:term.buf
         endif
     endfunction
-    return function('s:callback')
+    return function('s:explorer_callback')
 endfunction
 
 function! nnn#pick(...) abort
