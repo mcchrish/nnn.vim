@@ -37,8 +37,8 @@ Run the plugin,
 <kbd>Enter</kbd> to quit the n³ window. Now vim will open the first selected
 file and add the remaining files to the arg list/buffer list.
 
-Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection, pick
-the file and exit n³.
+Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection (or
+the hovered file if no selection exists) and exit n³.
 
 ***NOTE:*** Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking. Use `-o` via [nnn#command](#command-override) to disable

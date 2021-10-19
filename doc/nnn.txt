@@ -49,8 +49,8 @@ first selected file and add the remaining files to the arg list/buffer
 list. If |nnn#session| is enabled, then n³ will remember where you left off of
 when you reopen it.
 
-Pressing enter on a file in n³ will pick any earlier selection, pick the file
-and exit n³.
+Pressing enter on a file in n³ will pick any earlier selection (or the hovered
+file if no selection exists) and exit n³.
 
 Note that pressing `l` or <Right> on a file would open it instead of picking.
 
