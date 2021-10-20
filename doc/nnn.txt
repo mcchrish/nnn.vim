@@ -57,6 +57,7 @@ Pressing enter on a file in n³ will pick any earlier selection (or the hovered
 file if no selection exists) and exit n³.
 
 Note that pressing `l` or <Right> on a file would open it instead of picking.
+Use `-o` via |nnn#command| to disable this.
 
 You may have to set `set hidden` to make floating window work.
 
@@ -69,8 +70,6 @@ Commands                                                         *nnn-commands*
 
 :NnnPicker                                                         *:NnnPicker*
                   Opens an n³ window.
-:Np                                                                       *:Np*
-                  Does the same as :NnnPicker.
 :NnnExplorer
                   Opens an n³ file-explorer.
 
@@ -113,10 +112,10 @@ g:nnn#layout                                                     *g:nnn#layout*
                   Default:
                     neovim: { 'window': { 'width': 0.9, 'height': 0.6 } }
                     vim: 'enew'
-                  Display type for the n³ buffer. Default is a floating
-                  window. |enew| has a special behavior to act as a
-                  "split explorer" reusing the current window and brings back
-                  the last buffer if nothing is selected.
+                  Display type for the n³ buffer. Default is a floating window
+                  on neovim and |enew| on vim. |enew| has a special behavior
+                  to act as a "split explorer" reusing the current window and
+                  brings back the last buffer if nothing is selected.
                   Examples:
 >
                   " Opens the n³ window in a split
