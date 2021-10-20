@@ -1,6 +1,8 @@
 let s:temp_file = ''
 let s:action = ''
 let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
+" The fifo used by the persistent explorer
+let s:explorer_fifo = ""
 
 let s:local_ses = 'nnn_vim_'
 " Add timestamp for convenience
@@ -268,6 +270,67 @@ function! s:build_window(layout, term_opts)
     throw 'Invalid layout'
 endfunction
 
+" adapted from NERDTree source code
+function! s:explorer_jump_to_buffer(fname)
+    let l:winnr = bufwinnr('^' . a:fname . '$')
+
+    if l:winnr !=# -1
+        " jump to the window if it's already displayed
+        execute l:winnr . 'wincmd w'
+    else
+        " if not, there are some options here: we can allow the user to choose,
+        " but a sane default is to open it in the previous window
+        " NOTE: this can go to "special" windows like qflist
+        let l:winnr = winnr('#')
+        execute l:winnr . 'wincmd w'
+        execute 'edit ' . a:fname
+    endif
+endfunction
+
+function! s:explorer_on_output(...)
+    let l:fname = has('nvim') ? a:2[0] : a:2
+    if l:fname ==# ''
+        return
+    endif
+    call s:explorer_jump_to_buffer(l:fname)
+endfunction
+
+function! s:explorer_job()
+    let l:watcher_cmd = 'cat '.s:explorer_fifo
+    let l:shell = get(g:, 'nnn#shell', &shell)
+    if has('nvim')
+        let l:opts = { 'on_stdout': function('s:explorer_on_output') }
+        call jobstart([l:shell, &shellcmdflag, l:watcher_cmd], l:opts)
+    else
+        let l:opts = { 'out_cb': function('s:explorer_on_output') }
+        call job_start([l:shell, &shellcmdflag, l:watcher_cmd], l:opts)
+    endif
+endfunction
+
+function! s:explorer_create_on_exit_callback(opts)
+    function! s:explorer_callback(id, code, ...) closure
+        let l:term = a:opts.term
+        let l:buf = a:opts.ppos.buf
+        call delete(fnameescape(s:explorer_fifo))
+	" same code as in the bottom of s:switch_back()
+        try
+            if has('nvim')
+                if nvim_win_is_valid(l:term.winhandle)
+                    call nvim_win_close(l:term.winhandle, v:false)
+                endif
+            else
+                execute win_id2win(l:term.winhandle) . 'close'
+            endif
+        catch /E444: Cannot close last window/
+            " In case Vim complains it is the last window, fail silently.
+        endtry
+        if bufexists(l:term.buf)
+            execute 'bwipeout!' l:term.buf
+        endif
+    endfunction
+    return function('s:explorer_callback')
+endfunction
+
 function! nnn#pick(...) abort
     let l:directory = get(a:, 1, '')
     let l:default_opts = { 'edit': 'edit' }
@@ -294,6 +357,41 @@ function! nnn#pick(...) abort
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
+    setfiletype nnn
+    if g:nnn#statusline && !s:present(l:layout, 'window')
+        call s:statusline()
+    endif
+endfunction
+
+function! nnn#explorer(...) abort
+    let l:directory = get(a:, 1, '')
+    let l:default_opts = { 'edit': 'edit' }
+    let l:opts = extend(l:default_opts, get(a:, 2, {}))
+    let s:explorer_fifo = tempname()
+
+    let l:cmd = 'NNN_FIFO='.shellescape(s:explorer_fifo).' '
+    " explorer won't work if -a is set. we need to filter that out.
+    if exists("$NNN_OPTS")
+        let l:cmd .= 'NNN_OPTS='.substitute($NNN_OPTS, '\Ca', '', 'g').' '
+    endif
+    let l:cmd .= substitute(g:nnn#command, '\Ca', '', 'g').' '
+    " we need -F 1 so that picked files are written to the fifo
+    let l:cmd .= '-F 1 '.(l:directory != '' ? shellescape(l:directory): '')
+
+    let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
+
+    let l:opts.layout = l:layout
+    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
+    let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
+
+    let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
+    let b:tbuf = l:opts.term
+
+    " create the fifo ourselves since otherwise nnn might not create it on time
+    execute 'silent !mkfifo '.s:explorer_fifo
+    call s:explorer_job()
+
+    autocmd BufEnter <buffer> startinsert
     setfiletype nnn
     if g:nnn#statusline && !s:present(l:layout, 'window')
         call s:statusline()

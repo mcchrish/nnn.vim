@@ -13,6 +13,7 @@ https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b
 1. n³
 2. `has('nvim') || has('terminal')` i.e. terminal support
 3. Optional `has('nvim-0.5') || has('popupwin')` for floating window
+4. Optional n³ v4.3(+) needed for file-explorer mode
 
 ## Install
 
@@ -31,6 +32,9 @@ Plug 'mcchrish/nnn.vim'
 To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or the
 key-binding `<leader>n`. The command accepts an optional path to open e.g.
 `:NnnPicker path/to/somewhere`.
+
+To open n³ as a file-explorer use the command `:NnnExplorer`. The command
+accepts optional path similar to `:NnnPicker`.
 
 Run the plugin,
 [select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection) and press
@@ -66,6 +70,9 @@ let g:nnn#set_default_mappings = 0
 " Set custom mappings
 nnoremap <silent> <leader>nn :NnnPicker<CR>
 
+" Switch away from file-explorer (assuming left sided) via <C-l>
+autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-l> <C-\><C-n><C-w>l
+
 " Start n³ in the current file's directory
 nnoremap <leader>n :NnnPicker %:p:h<CR>
 ```
@@ -82,6 +89,8 @@ let g:nnn#layout = { 'left': '~20%' } " or right, up, down
 " Floating window. This is the default
 let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Comment' } }
 ```
+
+`g:nnn#explorer_layout` is same as `g:nnn#layout` but for the explorer mode.
 
 ### Action
 
@@ -145,11 +154,12 @@ let g:nnn#command = 'nnn -d'
 let g:nnn#command = 'NNN_TRASH=1 nnn -d'
 ```
 
-### `nnn#pick()`
+### `nnn#pick()` and `nnn#explorer()`
 
-The `nnn#pick([<dir>][,<opts>])` function can be called with a custom directory
-and additional options such as opening file in splits or tabs. It's a more
-configurable version of the `:NnnPicker` command.
+The `nnn#pick([<dir>][,<opts>])` and `nnn#explorer([<dir>][,<opts>])` functions
+can be called with a custom directory and additional options such as opening
+file in splits or tabs. They are more configurable versions of the `:NnnPicker`
+and `:NnnExplorer` commands.
 
 ```vim
 call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
