@@ -209,7 +209,8 @@ function! s:create_term_buf(opts)
                     \ 'curwin': get(a:opts, 'curwin', 1),
                     \ 'hidden': get(a:opts, 'hidden', 0),
                     \ 'env': { 'NNN_SEL': s:temp_file },
-                    \ 'exit_cb': a:opts.on_exit
+                    \ 'exit_cb': a:opts.on_exit,
+                    \ 'term_kill': 'term'
                     \ })
     endif
 endfunction
