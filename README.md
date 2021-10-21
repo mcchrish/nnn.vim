@@ -29,12 +29,11 @@ Plug 'mcchrish/nnn.vim'
 
 ## Usage
 
+### Picker
+
 To open n³ as a file picker in vim/neovim, use the command `:NnnPicker` or the
 key-binding `<leader>n`. The command accepts an optional path to open e.g.
 `:NnnPicker path/to/somewhere`.
-
-To open n³ as a file-explorer use the command `:NnnExplorer`. The command
-accepts optional path similar to `:NnnPicker`.
 
 Run the plugin,
 [select file(s)](https://github.com/jarun/nnn/wiki/concepts#selection) and press
@@ -43,6 +42,17 @@ file and add the remaining files to the arg list/buffer list.
 
 Pressing <kbd>Enter</kbd> on a file in n³ will pick any earlier selection (or
 the hovered file if no selection exists) and exit n³.
+
+### Explorer
+
+To open n³ as a file-explorer use the command `:NnnExplorer`. The command
+accepts optional path similar to `:NnnPicker`. In explorer mode pressing
+<kbd>Enter</kbd> will pick a file but keep the n³ window open.
+
+NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
+installed.
+
+- - -
 
 ***NOTE:*** Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking. Use `-o` via [nnn#command](#command-override) to disable
