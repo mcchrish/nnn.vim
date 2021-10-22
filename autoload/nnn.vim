@@ -199,7 +199,7 @@ function! s:create_term_buf(opts)
     let l:shell = get(g:, 'nnn#shell', &shell)
     if has('nvim')
         call termopen([l:shell, &shellcmdflag, a:opts.cmd], {
-                    \ 'env': { 'NNN_SEL': s:temp_file },
+                    \ 'env': { 'NNN_SEL': s:temp_file, 'TERM': $TERM },
                     \ 'on_exit': a:opts.on_exit
                     \ })
         startinsert
@@ -208,7 +208,7 @@ function! s:create_term_buf(opts)
         return term_start([l:shell, &shellcmdflag, a:opts.cmd], {
                     \ 'curwin': get(a:opts, 'curwin', 1),
                     \ 'hidden': get(a:opts, 'hidden', 0),
-                    \ 'env': { 'NNN_SEL': s:temp_file },
+                    \ 'env': { 'NNN_SEL': s:temp_file, 'TERM': $TERM },
                     \ 'exit_cb': a:opts.on_exit,
                     \ 'term_kill': 'term'
                     \ })
