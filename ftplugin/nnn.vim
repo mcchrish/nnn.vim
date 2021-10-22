@@ -14,5 +14,5 @@ if g:nnn#set_default_mappings
     tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-setlocal nospell bufhidden=wipe nobuflisted nonumber wrap
+setlocal nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap
 " vim: set sts=4 sw=4 ts=4 et :
