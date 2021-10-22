@@ -386,7 +386,7 @@ function! nnn#explorer(...) abort
     let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
 
     " create the fifo ourselves since otherwise nnn might not create it on time
-    execute 'silent !mkfifo '.s:explorer_fifo
+    call system(['mkfifo', s:explorer_fifo])
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
     let b:tbuf = l:opts.term
 
