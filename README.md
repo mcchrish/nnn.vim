@@ -214,8 +214,11 @@ require("nnn").setup({
 
 ## Troubleshooting
 
-* Files being renamed randomly: This can happen when you're using `AutoComplPop`
-plugin. Add the following snippet to your `vimrc` to fix it.
+These are some common problems that one might run into. Follow the instruction
+and add relevant code snippet into your `vimrc` or `init.vim` to fix them.
+
+* Files being renamed randomly: This can happen when using `AutoComplPop`
+plugin.
 
 ```vim
 function! AutoCmpNNN()
@@ -224,6 +227,14 @@ function! AutoCmpNNN()
     autocmd BufEnter <buffer> call acp#disable()
 endfunction
 autocmd FileType nnn call AutoCmpNNN()
+```
+
+* Explorer buffer gets wiped when opening a file: This can happen when using
+`miniBufExpl` plugin. The workaround is to make sure `miniBufExpl` is open
+before calling `:NnnExplorer`.
+
+```vim
+let g:miniBufExplBuffersNeeded = 1
 ```
 
 ## Credits
