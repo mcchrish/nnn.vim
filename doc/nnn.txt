@@ -284,8 +284,11 @@ You can define env variables in `vimrc` and n³ will detect it.
 =============================================================================
 Troubleshooting                                           *nnn-troubleshooting*
 
-* Files being renamed randomly: This can happen when you're using `AutoComplPop`
-plugin. Add the following snippet to your `vimrc` to fix it.
+These are some common problems that one might run into. Follow the instruction
+and add relevant code snippet into your `vimrc` or `init.vim` to fix them.
+
+* Files being renamed randomly: This can happen when using `AutoComplPop`
+plugin.
 >
                   function! AutoCmpNNN()
                       call acp#disable()
@@ -294,6 +297,14 @@ plugin. Add the following snippet to your `vimrc` to fix it.
                   endfunction
                   autocmd FileType nnn call AutoCmpNNN()
 <
+
+* Explorer buffer gets wiped when opening a file: This can happen when using
+`miniBufExpl` plugin. The workaround is to make sure `miniBufExpl` is open
+before calling `:NnnExplorer`.
+>
+                  let g:miniBufExplBuffersNeeded = 1
+<
+
 =============================================================================
 Credits                                                           *nnn-credits*
 
