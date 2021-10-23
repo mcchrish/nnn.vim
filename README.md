@@ -212,6 +212,20 @@ require("nnn").setup({
 })
 ```
 
+## Troubleshooting
+
+* Files being renamed randomly: This can happen when you're using `AutoComplPop`
+plugin. Add the following snippet to your `vimrc` to fix it.
+
+```vim
+function! AutoCmpNNN()
+    call acp#disable()
+    autocmd BufLeave <buffer> call acp#enable()
+    autocmd BufEnter <buffer> call acp#disable()
+endfunction
+autocmd FileType nnn call AutoCmpNNN()
+```
+
 ## Credits
 
 Main [n³ repository](https://github.com/jarun/nnn).

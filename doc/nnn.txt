@@ -20,6 +20,7 @@ CONTENTS *nnn-help*
     Functions ............................. |nnn-func|
     Highlights ............................ |nnn-hl|
   Miscellaneous ......................... |nnn-misc|
+  Troubleshooting ....................... |nnn-troubleshooting|
   Credits ............................... |nnn-credits|
 
 =============================================================================
@@ -280,7 +281,19 @@ You can define env variables in `vimrc` and n³ will detect it.
 >
                   let $NNN_TRASH=1
 <
+=============================================================================
+Troubleshooting                                           *nnn-troubleshooting*
 
+* Files being renamed randomly: This can happen when you're using `AutoComplPop`
+plugin. Add the following snippet to your `vimrc` to fix it.
+>
+                  function! AutoCmpNNN()
+                      call acp#disable()
+                      autocmd BufLeave <buffer> call acp#enable()
+                      autocmd BufEnter <buffer> call acp#disable()
+                  endfunction
+                  autocmd FileType nnn call AutoCmpNNN()
+<
 =============================================================================
 Credits                                                           *nnn-credits*
 
