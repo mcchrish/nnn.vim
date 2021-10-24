@@ -313,7 +313,7 @@ function! s:explorer_create_on_exit_callback(opts)
         let l:term = a:opts.term
         let l:buf = a:opts.ppos.buf
         call delete(fnameescape(s:explorer_fifo))
-	" same code as in the bottom of s:switch_back()
+        " same code as in the bottom of s:switch_back()
         try
             if has('nvim')
                 if nvim_win_is_valid(l:term.winhandle)
@@ -382,7 +382,7 @@ function! nnn#explorer(...) abort
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
 
     let l:opts.layout = l:layout
-    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
+    let l:opts.ppos = { 'buf': bufnr(''), 'winid': win_getid() }
     let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
 
     " create the fifo ourselves since otherwise nnn might not create it on time
