@@ -1,4 +1,4 @@
-if exists('g:nnn_ftplugin')
+if exists('b:nnn_ftplugin')
     finish
 endif
 let b:nnn_ftplugin = 1
@@ -14,5 +14,28 @@ if g:nnn#set_default_mappings
     tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-setlocal nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap
+" autocmd BufLeave <buffer> set winhighlight=Normal:NnnNormalNC
+" autocmd BufEnter <buffer> set winhighlight=Normal:NnnNormal
+
+function! s:statusline_bufenter()
+    setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#
+endfunction
+
+function! s:statusline_bufleave()
+    setlocal statusline=%#Ignore#
+endfunction
+
+if exists('g:nnn#statusline') && g:nnn#statusline
+    call s:statusline_bufenter()
+endif
+
+if exists('g:nnn#hide_inactive_statusline') && g:nnn#hide_inactive_statusline
+    augroup nnn_statusline
+        autocmd!
+        autocmd BufLeave <buffer> call <SID>statusline_bufleave()
+        autocmd BufEnter <buffer> call <SID>statusline_bufenter()
+    augroup end
+endif
+
+setlocal nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap nocursorline nocursorcolumn
 " vim: set sts=4 sw=4 ts=4 et :

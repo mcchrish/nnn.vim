@@ -13,7 +13,7 @@ if !exists('g:nnn#layout')
     endif
 endif
 
-if !(exists("g:nnn#explorer_layout"))
+if !exists('g:nnn#explorer_layout')
     let g:nnn#explorer_layout = { 'left': '20%' }
 endif
 

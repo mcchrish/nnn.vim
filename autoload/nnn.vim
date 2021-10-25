@@ -21,9 +21,10 @@ else
     highlight default link NnnBorder Comment
 endif
 highlight default link NnnNormal Normal
+highlight default link NnnNormalNC Normal
 
 function! s:statusline()
-    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
+    setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#
 endfunction
 
 function! nnn#select_action(key) abort
@@ -394,9 +395,6 @@ function! nnn#explorer(...) abort
 
     autocmd BufEnter <buffer> startinsert
     setfiletype nnn
-    if g:nnn#statusline && !s:present(l:layout, 'window')
-        call s:statusline()
-    endif
 endfunction
 
 " vim: set sts=4 sw=4 ts=4 et :
