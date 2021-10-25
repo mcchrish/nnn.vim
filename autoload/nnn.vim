@@ -23,10 +23,8 @@ endif
 highlight default link NnnNormal Normal
 highlight default link NnnNormalNC Normal
 highlight default link NnnVertSplit VertSplit
-
-function! s:statusline()
-    setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#
-endfunction
+highlight default link NnnStatusLine StatusLine
+highlight default link NnnStatusLineNC StatusLineNC
 
 function! nnn#select_action(key) abort
     let s:action = g:nnn#action[a:key]
@@ -361,9 +359,6 @@ function! nnn#pick(...) abort
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
     setfiletype nnn
-    if g:nnn#statusline && !s:present(l:layout, 'window')
-        call s:statusline()
-    endif
 endfunction
 
 function! nnn#explorer(...) abort

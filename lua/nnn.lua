@@ -9,7 +9,6 @@ M.valid_options = {
 	"command",
 	"replace_netrw",
 	"statusline",
-	"hide_inactive_statusline",
 	"shell",
 }
 

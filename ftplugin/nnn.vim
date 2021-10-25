@@ -14,27 +14,12 @@ if g:nnn#set_default_mappings
     tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-setlocal winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal
+setlocal winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal,StatusLine:NnnStatusLine,StatusLineNC:NnnStatusLineNC
 
-function! s:statusline_bufenter()
-    setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#
-endfunction
-
-function! s:statusline_bufleave()
-    setlocal statusline=%#NnnNormalNC#
-endfunction
-
-if exists('g:nnn#statusline') && g:nnn#statusline
-    call s:statusline_bufenter()
+if !exists('g:nnn#statusline') || g:nnn#statusline
+    setlocal statusline=%<%y
 endif
 
-if exists('g:nnn#hide_inactive_statusline') && g:nnn#hide_inactive_statusline
-    augroup nnn_statusline
-        autocmd!
-        autocmd BufLeave <buffer> call <SID>statusline_bufleave()
-        autocmd BufEnter <buffer> call <SID>statusline_bufenter()
-    augroup end
-endif
 
 setlocal nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap nocursorline nocursorcolumn
 " vim: set sts=4 sw=4 ts=4 et :
