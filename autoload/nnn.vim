@@ -22,6 +22,7 @@ else
 endif
 highlight default link NnnNormal Normal
 highlight default link NnnNormalNC Normal
+highlight default link NnnVertSplit VertSplit
 
 function! s:statusline()
     setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#

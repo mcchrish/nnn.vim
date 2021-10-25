@@ -14,15 +14,14 @@ if g:nnn#set_default_mappings
     tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-" autocmd BufLeave <buffer> set winhighlight=Normal:NnnNormalNC
-" autocmd BufEnter <buffer> set winhighlight=Normal:NnnNormal
+setlocal winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal
 
 function! s:statusline_bufenter()
     setlocal statusline=%#StatusLine#\ nnn\ %#StatusLineNC#
 endfunction
 
 function! s:statusline_bufleave()
-    setlocal statusline=%#Ignore#
+    setlocal statusline=%#NnnNormalNC#
 endfunction
 
 if exists('g:nnn#statusline') && g:nnn#statusline
