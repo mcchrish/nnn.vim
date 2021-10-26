@@ -14,7 +14,15 @@ if g:nnn#set_default_mappings
     tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-setlocal winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal,StatusLine:NnnStatusLine,StatusLineNC:NnnStatusLineNC
+if has('nvim')
+    setl winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal,StatusLine:NnnStatusLine,StatusLineNC:NnnStatusLineNC
+else
+    augroup NnnSetWincolor
+        autocmd!
+        autocmd BufEnter <buffer> setl wincolor=
+        autocmd BufLeave <buffer> setl wincolor=NnnNormalNC
+    augroup END
+endif
 
 if !exists('g:nnn#statusline') || g:nnn#statusline
     setlocal statusline=%<%y
