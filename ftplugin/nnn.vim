@@ -15,11 +15,12 @@ if g:nnn#set_default_mappings
 endif
 
 if has('nvim')
-    setl winhighlight=VertSplit:NnnVertSplit,NormalNC:NnnNormalNC,Normal:NnnNormal,StatusLine:NnnStatusLine,StatusLineNC:NnnStatusLineNC
+    setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,VertSplit:NnnVertSplit
 else
+    setl wincolor=NnnNormal
     augroup NnnSetWincolor
         autocmd!
-        autocmd BufEnter <buffer> setl wincolor=
+        autocmd BufEnter <buffer> setl wincolor=NnnNormal
         autocmd BufLeave <buffer> setl wincolor=NnnNormalNC
     augroup END
 endif

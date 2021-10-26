@@ -23,8 +23,6 @@ endif
 highlight default link NnnNormal Normal
 highlight default link NnnNormalNC Normal
 highlight default link NnnVertSplit VertSplit
-highlight default link NnnStatusLine StatusLine
-highlight default link NnnStatusLineNC StatusLineNC
 
 function! nnn#select_action(key) abort
     let s:action = g:nnn#action[a:key]
