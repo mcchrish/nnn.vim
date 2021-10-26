@@ -22,6 +22,7 @@ else
 endif
 highlight default link NnnNormal Normal
 highlight default link NnnNormalNC Normal
+highlight default link NnnNormalFloat Normal
 highlight default link NnnVertSplit VertSplit
 
 function! nnn#select_action(key) abort
@@ -140,7 +141,7 @@ function! s:popup(opts, term_opts)
                     \ 'relative': 'editor',
                     \ 'style': 'minimal'
                     \ })
-        call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormal')
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormalFloat')
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
@@ -152,7 +153,7 @@ function! s:popup(opts, term_opts)
                     \ col: col,
                     \ minwidth: width,
                     \ minheight: height,
-                    \ highlight: 'NnnNormal',
+                    \ highlight: 'NnnNormalFloat',
                     \ border: l:border ==# 'none' ? [0, 0, 0, 0] : [],
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,

@@ -14,9 +14,9 @@ if g:nnn#set_default_mappings
     tnoremap <buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-if has('nvim')
+if has('nvim') && stridx(&winhighlight, 'NnnNormalFloat') == -1
     setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,VertSplit:NnnVertSplit
-else
+elseif !has('nvim') && &wincolor !=# 'NnnNormalFloat'
     setl wincolor=NnnNormal
     augroup NnnSetWincolor
         autocmd!
