@@ -8,10 +8,10 @@ for key in keys(g:nnn#action)
 endfor
 
 if g:nnn#set_default_mappings
-    tnoremap <nowait><buffer><silent> <C-w>l <C-\><C-n><C-w>l
-    tnoremap <nowait><buffer><silent> <C-w>h <C-\><C-n><C-w>h
-    tnoremap <nowait><buffer><silent> <C-w>j <C-\><C-n><C-w>j
-    tnoremap <nowait><buffer><silent> <C-w>k <C-\><C-n><C-w>k
+    tnoremap <buffer><silent> <C-w>l <C-\><C-n><C-w>l
+    tnoremap <buffer><silent> <C-w>h <C-\><C-n><C-w>h
+    tnoremap <buffer><silent> <C-w>j <C-\><C-n><C-w>j
+    tnoremap <buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
 if has('nvim')
@@ -25,9 +25,9 @@ else
 endif
 
 if !exists('g:nnn#statusline') || g:nnn#statusline
-    setlocal statusline=%<%y
+    setl statusline=%<%y
 endif
 
 
-setlocal nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap nocursorline nocursorcolumn
+setl nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap nocursorline nocursorcolumn
 " vim: set sts=4 sw=4 ts=4 et :
