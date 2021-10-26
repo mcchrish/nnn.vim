@@ -142,6 +142,7 @@ function! s:popup(opts, term_opts)
                     \ 'style': 'minimal'
                     \ })
         call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormalFloat')
+        call setwinvar(l:win, 'is_nnn_float', v:true)
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
@@ -158,6 +159,7 @@ function! s:popup(opts, term_opts)
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,
                     \ })
+        call setwinvar(l:win, 'is_nnn_float', v:true)
         return #{ buf: l:buf, winhandle: l:win }
     endif
 endfunction
@@ -357,6 +359,7 @@ function! nnn#pick(...) abort
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
+    let b:is_nnn_picker = v:true
     setfiletype nnn
 endfunction
 

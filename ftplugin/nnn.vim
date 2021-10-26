@@ -14,19 +14,25 @@ if g:nnn#set_default_mappings
     tnoremap <buffer><silent> <C-w>k <C-\><C-n><C-w>k
 endif
 
-if has('nvim') && stridx(&winhighlight, 'NnnNormalFloat') == -1
-    setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,VertSplit:NnnVertSplit
-elseif !has('nvim') && &wincolor !=# 'NnnNormalFloat'
-    setl wincolor=NnnNormal
-    augroup NnnSetWincolor
-        autocmd!
-        autocmd BufEnter <buffer> setl wincolor=NnnNormal
-        autocmd BufLeave <buffer> setl wincolor=NnnNormalNC
-    augroup END
+if !exists('w:is_nnn_float')
+    if has('nvim')
+        setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,VertSplit:NnnVertSplit
+    else
+        setl wincolor=NnnNormal
+        augroup NnnSetWincolor
+            autocmd!
+            autocmd BufEnter <buffer> setl wincolor=NnnNormal
+            autocmd BufLeave <buffer> setl wincolor=NnnNormalNC
+        augroup END
+    endif
 endif
 
 if !exists('g:nnn#statusline') || g:nnn#statusline
-    setl statusline=%<%y
+    if exists('b:is_nnn_picker')
+        setl statusline=\ nnn%=[picker]
+    else
+        setl statusline=\ nnn%=[explorer]
+    endif
 endif
 
 
