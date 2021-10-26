@@ -272,7 +272,10 @@ Highlights                                                             *nnn-hl*
 The following are the highlight groups that are used:
 
 NnnNormal: window hl group. Linked to |hl-Normal|.
+NnnNormalNC: non-current window hl group. Linked to |hl-Normal|.
 NnnBorder: floating window border. Linked to |hl-FloatBorder| or |hl-Comment|.
+NnnVertSplit: explorer window VertSplit. Linked to |hl-VertSplit|. (requires
+|winhighlight| from neovim).
 
 =============================================================================
 Miscellaneous                                                        *nnn-misc*
