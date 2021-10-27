@@ -13,7 +13,7 @@ if !exists('g:nnn#layout')
     endif
 endif
 
-if !(exists("g:nnn#explorer_layout"))
+if !exists('g:nnn#explorer_layout')
     let g:nnn#explorer_layout = { 'left': '20%' }
 endif
 
@@ -23,10 +23,6 @@ endif
 
 if !exists('g:nnn#command')
     let g:nnn#command = 'nnn'
-endif
-
-if !exists('g:nnn#statusline')
-    let g:nnn#statusline = 1
 endif
 
 if !exists('g:nnn#session')

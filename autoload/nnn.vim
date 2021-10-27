@@ -21,10 +21,9 @@ else
     highlight default link NnnBorder Comment
 endif
 highlight default link NnnNormal Normal
-
-function! s:statusline()
-    setlocal statusline=%#StatusLineTerm#\ nnn\ %#StatusLineTermNC#
-endfunction
+highlight default link NnnNormalNC Normal
+highlight default link NnnNormalFloat Normal
+highlight default link NnnVertSplit VertSplit
 
 function! nnn#select_action(key) abort
     let s:action = g:nnn#action[a:key]
@@ -142,7 +141,8 @@ function! s:popup(opts, term_opts)
                     \ 'relative': 'editor',
                     \ 'style': 'minimal'
                     \ })
-        call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormal')
+        call setwinvar(l:win, '&winhighlight', 'NormalFloat:NnnNormalFloat')
+        call setwinvar(l:win, 'is_nnn_float', v:true)
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
         let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
@@ -154,11 +154,12 @@ function! s:popup(opts, term_opts)
                     \ col: col,
                     \ minwidth: width,
                     \ minheight: height,
-                    \ highlight: 'NnnNormal',
+                    \ highlight: 'NnnNormalFloat',
                     \ border: l:border ==# 'none' ? [0, 0, 0, 0] : [],
                     \ borderhighlight: [l:highlight],
                     \ borderchars: l:borderchars,
                     \ })
+        call setwinvar(l:win, 'is_nnn_float', v:true)
         return #{ buf: l:buf, winhandle: l:win }
     endif
 endfunction
@@ -313,7 +314,7 @@ function! s:explorer_create_on_exit_callback(opts)
         let l:term = a:opts.term
         let l:buf = a:opts.ppos.buf
         call delete(fnameescape(s:explorer_fifo))
-	" same code as in the bottom of s:switch_back()
+        " same code as in the bottom of s:switch_back()
         try
             if has('nvim')
                 if nvim_win_is_valid(l:term.winhandle)
@@ -358,10 +359,8 @@ function! nnn#pick(...) abort
 
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': s:create_on_exit_callback(l:opts) })
     let b:tbuf = l:opts.term.buf
+    let b:is_nnn_picker = v:true
     setfiletype nnn
-    if g:nnn#statusline && !s:present(l:layout, 'window')
-        call s:statusline()
-    endif
 endfunction
 
 function! nnn#explorer(...) abort
@@ -382,7 +381,7 @@ function! nnn#explorer(...) abort
     let l:layout = exists('l:opts.layout') ? l:opts.layout : g:nnn#explorer_layout
 
     let l:opts.layout = l:layout
-    let l:opts.ppos = { 'buf': bufnr(''), 'win': winnr(), 'tab': tabpagenr() }
+    let l:opts.ppos = { 'buf': bufnr(''), 'winid': win_getid() }
     let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
 
     " create the fifo ourselves since otherwise nnn might not create it on time
@@ -394,9 +393,6 @@ function! nnn#explorer(...) abort
 
     autocmd BufEnter <buffer> startinsert
     setfiletype nnn
-    if g:nnn#statusline && !s:present(l:layout, 'window')
-        call s:statusline()
-    endif
 endfunction
 
 " vim: set sts=4 sw=4 ts=4 et :

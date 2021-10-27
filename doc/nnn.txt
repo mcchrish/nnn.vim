@@ -110,7 +110,7 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
                   nnoremap <silent> <leader>nn :NnnPicker<CR>
 
                   " Switch away from file-explorer (assuming left sided) via <C-l>
-                  autocmd FileType nnn tnoremap <nowait><buffer><silent> <C-l> <C-\><C-n><C-w>l
+                  autocmd FileType nnn tnoremap <buffer><silent> <C-l> <C-\><C-n><C-w>l
 
                   " Or override
                   " Start n³ in the current file's directory
@@ -271,8 +271,17 @@ Highlights                                                             *nnn-hl*
 
 The following are the highlight groups that are used:
 
-NnnNormal: window hl group. Linked to |hl-Normal|.
-NnnBorder: floating window border. Linked to |hl-FloatBorder| or |hl-Comment|.
+NnnNormal       Window. Linked to |hl-Normal|.
+
+NnnNormalNC     Non-current window. Linked to |hl-Normal|.
+
+NnnNormalFloat  Floating window. Linked to |hl-Normal|.
+
+NnnBorder       Floating window border. Linked to |hl-FloatBorder| or
+                |hl-Comment|.
+
+NnnVertSplit    Explorer window VertSplit. Linked to |hl-VertSplit|. (requires
+                |winhighlight| from neovim).
 
 =============================================================================
 Miscellaneous                                                        *nnn-misc*
