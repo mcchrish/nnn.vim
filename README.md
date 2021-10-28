@@ -52,6 +52,20 @@ accepts optional path similar to `:NnnPicker`. In explorer mode pressing
 NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
 installed.
 
+Autostart explorer when vim opens:
+
+```vim
+" Start NnnExplorer and leave the cursor in it.
+autocmd VimEnter * call nnn#explorer()
+
+" Start NnnExplorer and put the cursor back in the other window.
+autocmd VimEnter * call nnn#explorer() | wincmd p | stopinsert
+
+" If a file is specified, start NnnExplorer and move the cursor to the file window.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | wincmd p | stopinsert | endif
+```
+
 - - -
 
 ***NOTE:*** Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it

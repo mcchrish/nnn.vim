@@ -42,6 +42,7 @@ Requirements                                                          *nnn-req*
 =============================================================================
 Usage                                                               *nnn-usage*
 
+-----------------------------------------------------------------------------
 Picker                                                                 *Picker*
 
 By running |:NnnPicker| or calling the |nnn#pick()| function, a new terminal
@@ -56,14 +57,31 @@ when you reopen it.
 Pressing enter on a file in n³ will pick any earlier selection (or the hovered
 file if no selection exists) and exit n³.
 
+-----------------------------------------------------------------------------
 Explorer                                                             *Explorer*
 
 To open n³ as a file-explorer use the command |:NnnExplorer|. The command
 accepts optional path similar to |:NnnPicker|. In explorer mode pressing
 `Enter` will pick a file but keep the n³ window open.
 
+Autostart explorer when vim opens:
+
+>
+                  " Start NnnExplorer and leave the cursor in it.
+                  autocmd VimEnter * call nnn#explorer()
+
+                  " Start NnnExplorer and put the cursor back in the other window.
+                  autocmd VimEnter * call nnn#explorer() | wincmd p | stopinsert
+
+                  " If a file is specified, start NnnExplorer and move the cursor to the file window.
+                  autocmd StdinReadPre * let s:std_in=1
+                  autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | wincmd p | stopinsert | endif
+<
+
 NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
 installed.
+
+-----------------------------------------------------------------------------
 
 Note that pressing `l` or <Right> on a file would open it instead of picking.
 Use `-o` via |nnn#command| to disable this.
