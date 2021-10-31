@@ -209,10 +209,10 @@ autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | w
 
 ```vim
 " Exit Vim if NnnExplorer is the only window remaining in the only tab.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype ==# 'nnn' | quit | endif
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype ==# 'nnn' | quit! | endif
 
 " Close the tab if NnnExplorer is the only window remaining in it.
-autocmd BufEnter * if winnr('$') == 1 && &filetype ==# 'nnn' | quit | endif
+autocmd BufEnter * if winnr('$') == 1 && &filetype ==# 'nnn' | quit! | endif
 ```
 
 ### Setup for `init.lua`
