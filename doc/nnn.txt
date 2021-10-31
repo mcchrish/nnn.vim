@@ -20,6 +20,7 @@ CONTENTS *nnn-help*
     Functions ............................. |nnn-func|
     Highlights ............................ |nnn-hl|
   Miscellaneous ......................... |nnn-misc|
+  Explorer-FAQ .......................... |nnn-explorer-faq|
   Troubleshooting ....................... |nnn-troubleshooting|
   Credits ............................... |nnn-credits|
 
@@ -63,20 +64,6 @@ Explorer                                                             *Explorer*
 To open n³ as a file-explorer use the command |:NnnExplorer|. The command
 accepts optional path similar to |:NnnPicker|. In explorer mode pressing
 `Enter` will pick a file but keep the n³ window open.
-
-Autostart explorer when vim opens:
-
->
-                  " Start NnnExplorer and leave the cursor in it.
-                  autocmd VimEnter * call nnn#explorer()
-
-                  " Start NnnExplorer and put the cursor back in the other window.
-                  autocmd VimEnter * call nnn#explorer() | wincmd p | stopinsert
-
-                  " If a file is specified, start NnnExplorer and move the cursor to the file window.
-                  autocmd StdinReadPre * let s:std_in=1
-                  autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | wincmd p | stopinsert | endif
-<
 
 NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
 installed.
@@ -307,6 +294,32 @@ Miscellaneous                                                        *nnn-misc*
 You can define env variables in `vimrc` and n³ will detect it.
 >
                   let $NNN_TRASH=1
+<
+=============================================================================
+Explorer FAQ                                                 *nnn-explorer-faq*
+
+* How to auto start explorer when vim opens?
+
+>
+                  " Start NnnExplorer and leave the cursor in it.
+                  autocmd VimEnter * call nnn#explorer()
+
+                  " Start NnnExplorer and put the cursor back in the other window.
+                  autocmd VimEnter * call nnn#explorer() | wincmd p | stopinsert
+
+                  " If a file is specified, start NnnExplorer and move the cursor to the file window.
+                  autocmd StdinReadPre * let s:std_in=1
+                  autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | wincmd p | stopinsert | endif
+<
+
+* How to auto close vim when explorer is the last window remaining?
+
+>
+                  " Exit Vim if NnnExplorer is the only window remaining in the only tab.
+                  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && &filetype ==# 'nnn' | quit | endif
+
+                  " Close the tab if NnnExplorer is the only window remaining in it.
+                  autocmd BufEnter * if winnr('$') == 1 && &filetype ==# 'nnn' | quit | endif
 <
 =============================================================================
 Troubleshooting                                           *nnn-troubleshooting*
