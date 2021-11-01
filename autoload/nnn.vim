@@ -321,7 +321,7 @@ function! s:explorer_create_on_exit_callback(opts)
                     call nvim_win_close(l:term.winhandle, v:false)
                 endif
             else
-                execute win_id2win(l:term.winhandle) . 'close'
+                call win_execute(l:term.winhandle, 'close')
             endif
         catch /E444: Cannot close last window/
             " In case Vim complains it is the last window, fail silently.
