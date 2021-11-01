@@ -3,6 +3,7 @@ let s:action = ''
 let s:nnn_conf_dir = (!empty($XDG_CONFIG_HOME) ? $XDG_CONFIG_HOME : $HOME.'/.config') . '/nnn'
 " The fifo used by the persistent explorer
 let s:explorer_fifo = ""
+let t:explorer_winid = 0
 
 let s:local_ses = 'nnn_vim_'
 " Add timestamp for convenience
@@ -364,6 +365,11 @@ function! nnn#pick(...) abort
 endfunction
 
 function! nnn#explorer(...) abort
+    if exists('t:explorer_winid') && t:explorer_winid > 0
+        call win_execute(t:explorer_winid, 'close!')
+        let t:explorer_winid = 0
+        return
+    endif
     let l:directory = get(a:, 1, '')
     let l:default_opts = { 'edit': 'edit' }
     let l:opts = extend(l:default_opts, get(a:, 2, {}))
@@ -388,6 +394,7 @@ function! nnn#explorer(...) abort
     call system('mkfifo '.shellescape(s:explorer_fifo))
     let l:opts.term = s:build_window(l:layout, { 'cmd': l:cmd, 'on_exit': l:On_exit })
     let b:tbuf = l:opts.term
+    let t:explorer_winid = l:opts.term.winhandle
 
     call s:explorer_job()
 
