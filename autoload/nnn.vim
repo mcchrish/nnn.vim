@@ -329,6 +329,7 @@ function! s:explorer_create_on_exit_callback(opts)
         if bufexists(l:term.buf)
             execute 'bwipeout!' l:term.buf
         endif
+        let t:explorer_winid = 0
     endfunction
     return function('s:explorer_callback')
 endfunction
@@ -366,8 +367,7 @@ endfunction
 function! nnn#explorer(...) abort
     " toggle/close the explorer if it already exists
     if exists('t:explorer_winid') && t:explorer_winid > 0
-        call win_execute(t:explorer_winid, 'close!')
-        let t:explorer_winid = 0
+        execute win_id2win(t:explorer_winid) . 'close!'
         return
     endif
 
