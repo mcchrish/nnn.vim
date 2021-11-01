@@ -263,6 +263,15 @@ before calling `:NnnExplorer`.
 let g:miniBufExplBuffersNeeded = 1
 ```
 
+* Can't execute `wqa`: This issue exists in both vim and neovim. When you try to
+quit using the command `wqa` you see the error: `E948: Job still running`. Crude
+workaround:
+
+```vim
+command Z w | qa
+cabbrev wqa Z
+```
+
 ## Credits
 
 Main [n³ repository](https://github.com/jarun/nnn).
