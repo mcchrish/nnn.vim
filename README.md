@@ -47,7 +47,9 @@ the hovered file if no selection exists) and exit n³.
 
 To open n³ as a file-explorer use the command `:NnnExplorer`. The command
 accepts optional path similar to `:NnnPicker`. In explorer mode pressing
-<kbd>Enter</kbd> will pick a file but keep the n³ window open.
+<kbd>Enter</kbd> will pick a file but keep the n³ window open. Running
+`:NnnExplorer` while an explorer window is active on that tab will toggle/close
+it.
 
 NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
 installed.
