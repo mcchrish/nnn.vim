@@ -7,7 +7,9 @@ for key in keys(g:nnn#action)
     execute 'tnoremap <nowait><buffer><silent>' key '<c-\><c-n>:<c-u>call nnn#select_action("'.substitute(key, '<', '<lt>', 'g').'")<cr>'
 endfor
 
-tnoremap <buffer><silent> <C-w> <C-\><C-n><C-w>
+if g:nnn#set_default_mappings
+    tnoremap <buffer><silent> <C-w> <C-\><C-n><C-w>
+endif
 
 if !exists('w:is_nnn_float')
     if has('nvim')
