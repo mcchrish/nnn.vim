@@ -309,10 +309,10 @@ function! s:explorer_job()
     endif
 endfunction
 
-function! s:explorer_create_on_exit_callback(opts)
+function! s:explorer_create_on_exit_callback()
     function! s:explorer_callback(id, code, ...) closure
-        let l:term = a:opts.term
-        let l:buf = a:opts.ppos.buf
+        let l:term = t:explorer_term
+        let l:buf = t:explorer_ppos.buf
         call delete(fnameescape(s:explorer_fifo))
         " same code as in the bottom of s:switch_back()
         try
@@ -321,7 +321,7 @@ function! s:explorer_create_on_exit_callback(opts)
                     call nvim_win_close(l:term.winhandle, v:false)
                 endif
             else
-                execute win_id2win(l:term.winhandle) . 'close'
+                call win_execute(l:term.winhandle, 'close')
             endif
         catch /E444: Cannot close last window/
             " In case Vim complains it is the last window, fail silently.
@@ -389,7 +389,7 @@ function! nnn#explorer(...) abort
 
     let l:opts.layout = l:layout
     let l:opts.ppos = { 'buf': bufnr(''), 'winid': win_getid() }
-    let l:On_exit = s:explorer_create_on_exit_callback(l:opts)
+    let l:On_exit = s:explorer_create_on_exit_callback()
 
     " create the fifo ourselves since otherwise nnn might not create it on time
     call system('mkfifo '.shellescape(s:explorer_fifo))
@@ -397,6 +397,8 @@ function! nnn#explorer(...) abort
 
     let b:tbuf = l:opts.term
     let t:explorer_winid = l:opts.term.winhandle
+    let t:explorer_term = l:opts.term
+    let t:explorer_ppos = l:opts.ppos
 
     call s:explorer_job()
 
