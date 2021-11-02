@@ -25,6 +25,12 @@ if !exists('w:is_nnn_float')
             autocmd BufLeave <buffer> setl wincolor=NnnNormalNC
         augroup END
     endif
+
+    if has('nvim')
+        autocmd BufEnter <buffer> startinsert
+    else
+        autocmd BufEnter <buffer> if term_getstatus(bufnr()) =~# 'normal' | call feedkeys('i', 't') | endif
+    endif
 endif
 
 if !exists('g:nnn#statusline') || g:nnn#statusline
