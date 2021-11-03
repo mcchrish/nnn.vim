@@ -91,14 +91,13 @@ Commands                                                         *nnn-commands*
 -----------------------------------------------------------------------------
 Mappings                                                         *nnn-mappings*
 
-Defaults mappings. Can be disabled by setting |g:nnn#set_default_mappings| to
-0.
+Default mappings. Can be disabled by setting |g:nnn#set_default_mappings| to 0.
 
 <leader>n
                   Runs |:NnnPicker|.
-<C-w>h/j/k/l
-                  Switches out of the nnn window.
-                  Useful when using explorer mode.
+<C-w>
+                  Window navigation prefix key. Same as <C-\><C-n><C-w> or
+                  <C-w> in normal mode.
 
 
 -----------------------------------------------------------------------------
@@ -114,9 +113,6 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 
                   " Set your own
                   nnoremap <silent> <leader>nn :NnnPicker<CR>
-
-                  " Switch away from file-explorer (assuming left sided) via <C-l>
-                  autocmd FileType nnn tnoremap <buffer><silent> <C-l> <C-\><C-n><C-w>l
 
                   " Or override
                   " Start n³ in the current file's directory
