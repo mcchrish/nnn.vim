@@ -27,6 +27,12 @@ if !exists('w:is_nnn_float')
     endif
 endif
 
+if has('nvim')
+    autocmd BufEnter <buffer> startinsert
+else
+    autocmd BufEnter <buffer> if term_getstatus(bufnr()) =~# 'normal' | call feedkeys('i', 't') | endif
+endif
+
 if !exists('g:nnn#statusline') || g:nnn#statusline
     if exists('b:is_nnn_picker')
         setl statusline=\ nnn%=[picker]

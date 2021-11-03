@@ -396,8 +396,6 @@ function! nnn#explorer(...) abort
     let t:explorer_term = b:tbuf
 
     call s:explorer_job()
-
-    autocmd BufEnter <buffer> startinsert
     setfiletype nnn
 endfunction
 
