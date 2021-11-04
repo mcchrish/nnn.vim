@@ -26,7 +26,7 @@ Vim:
 
 ```bash
 git clone --depth 1 https://github.com/mcchrish/nnn.vim\
-~/.vim/pack/nnn/start/nnn.vim
+ ~/.vim/pack/nnn/start/nnn.vim
 ```
 
 Neovim:
