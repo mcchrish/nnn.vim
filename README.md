@@ -20,7 +20,19 @@ https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b
 n³ must be installed. Instructions
 [here](https://github.com/jarun/nnn/wiki/Usage#installation).
 
-Then install the plugin using your plugin manager:
+Install the plugin using the built-in package manager:
+
+```bash
+# Vim
+git clone --depth 1 https://github.com/mcchrish/nnn.vim\
+~/.vim/pack/nnn/start/nnn.vim
+
+# Neovim
+git clone --depth 1 https://github.com/mcchrish/nnn.vim\
+ "${XDG_DATA_HOME:-~/.local/share}"/nvim/site/pack/nnn/start/nnn.vim
+```
+
+Or install the plugin using other plugin manager:
 
 ```vim
 " using vim-plug
