@@ -17,10 +17,26 @@ https://user-images.githubusercontent.com/7200153/127453278-3e638e33-707a-49c8-b
 
 ## Install
 
-n³ must be installed. Instructions
+Install n³. Instructions
 [here](https://github.com/jarun/nnn/wiki/Usage#installation).
 
-Then install the plugin using your plugin manager:
+Install the plugin using the built-in package manager:
+
+Vim:
+
+```bash
+git clone --depth 1 https://github.com/mcchrish/nnn.vim\
+~/.vim/pack/nnn/start/nnn.vim
+```
+
+Neovim:
+
+```bash
+git clone --depth 1 https://github.com/mcchrish/nnn.vim\
+ "${XDG_DATA_HOME:-~/.local/share}"/nvim/site/pack/nnn/start/nnn.vim
+```
+
+Or install the plugin using other plugin manager:
 
 ```vim
 " using vim-plug
@@ -51,12 +67,12 @@ accepts optional path similar to `:NnnPicker`. In explorer mode pressing
 `:NnnExplorer` while an explorer window is active on that tab will toggle/close
 it.
 
-NOTE: In order to use explorer mode n³ version 4.3 (or above) must be
+**NOTE**: In order to use explorer mode n³ version 4.3 (or above) must be
 installed.
 
-- - -
+---
 
-***NOTE:*** Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
+**NOTE**: Pressing <kbd>l</kbd> or <kbd>Right</kbd> on a file would open it
 instead of picking. Use `-o` via [nnn#command](#command-override) to disable
 this.
 
@@ -65,7 +81,6 @@ To discard selection and/or exit, press <kbd>q</kbd>.
 #### `cd` on quit
 
 Press <kbd>c-g</kbd> to quit n³ and `cd` into the last directory.
-
 
 `set hidden` may be required for the floating windows to work.
 
@@ -132,8 +147,8 @@ endfunction
 let g:nnn#action = { '<c-w>': function('CdSelectedFile') }
 ```
 
-In this example, pressing <kbd>c-w</kbd> will select the file and `cd` into
-its directory.
+In this example, pressing <kbd>c-w</kbd> will select the file and `cd` into its
+directory.
 
 ### Persistent session
 
@@ -147,7 +162,7 @@ let g:nnn#session = 'local'
 let g:nnn#session = 'global'
 ```
 
-Note: If desired, an n³ session can be disabled temporarily by passing
+**NOTE**: If desired, an n³ session can be disabled temporarily by passing
 `session: 0` as an option to `nnn#pick()`.
 
 ### Command override
@@ -177,8 +192,8 @@ call nnn#pick('~/some-directory', { 'edit': 'vertical split' })
 
 `opts` can be:
 
-- `edit` - type of window the select file will be open.
-- `layout` - same as `g:nnn#layout` and overrides it if specified.
+-   `edit` - type of window the select file will be open.
+-   `layout` - same as `g:nnn#layout` and overrides it if specified.
 
 ### Environment variables
 
@@ -190,7 +205,7 @@ let $NNN_TRASH=1
 
 ### Explorer FAQ
 
-* How to auto start explorer when vim opens?
+-   How to auto start explorer when vim opens?
 
 ```vim
 " Start NnnExplorer and leave the cursor in it.
@@ -204,7 +219,7 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() > 0 || exists("s:std_in") | call nnn#explorer() | wincmd p | stopinsert | endif
 ```
 
-* How to auto close vim when explorer is the last window remaining?
+-   How to auto close vim when explorer is the last window remaining?
 
 ```vim
 " Exit Vim if NnnExplorer is the only window remaining in the only tab.
@@ -242,8 +257,8 @@ require("nnn").setup({
 These are some common problems that one might run into. Follow the instruction
 and add relevant code snippet into your `vimrc` or `init.vim` to fix them.
 
-* Files being renamed randomly: This can happen when using `AutoComplPop`
-plugin.
+-   Files being renamed randomly: This can happen when using `AutoComplPop`
+    plugin.
 
 ```vim
 function! AutoCmpNNN()
@@ -254,17 +269,17 @@ endfunction
 autocmd FileType nnn call AutoCmpNNN()
 ```
 
-* Explorer buffer gets wiped when opening a file: This can happen when using
-`miniBufExpl` plugin. The workaround is to make sure `miniBufExpl` is open
-before calling `:NnnExplorer`.
+-   Explorer buffer gets wiped when opening a file: This can happen when using
+    `miniBufExpl` plugin. The workaround is to make sure `miniBufExpl` is open
+    before calling `:NnnExplorer`.
 
 ```vim
 let g:miniBufExplBuffersNeeded = 1
 ```
 
-* Can't execute `wqa`: This issue exists in both vim and neovim. When you try to
-quit using the command `wqa` you see the error: `E948: Job still running`. Crude
-workaround:
+-   Can't execute `wqa`: This issue exists in both vim and neovim. When you try
+    to quit using the command `wqa` you see the error:
+    `E948: Job still running`. Crude workaround:
 
 ```vim
 command Z w | qa
