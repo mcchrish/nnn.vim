@@ -71,7 +71,7 @@ installed.
 
 -----------------------------------------------------------------------------
 
-Note that pressing `l` or <Right> on a file would open it instead of picking.
+NOTE: Pressing `l` or <Right> on a file would open it instead of picking.
 Use `-o` via |nnn#command| to disable this.
 
 You may have to set `set hidden` to make floating window work.
