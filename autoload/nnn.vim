@@ -102,7 +102,6 @@ function! s:eval_temp_file(opts)
     endif
 
     let s:action = '' " reset action
-    redraw!
 endfunction
 
 function! s:popup(opts, term_opts)
