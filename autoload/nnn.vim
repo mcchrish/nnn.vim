@@ -90,22 +90,18 @@ function! s:eval_temp_file(opts)
     if (type(l:Cmd) == v:t_func)
         call l:Cmd(l:names)
     else
-        " Remove directories and missing files
+        " Remove directories and unreadable files
         call filter(l:names, {_, val -> !isdirectory(val) && filereadable(val) })
-        " Consider trimming out current working directory from filename
-        let l:cwd = getcwd()
-        call map(l:names, { _, val -> strcharpart(val, 0, strlen(l:cwd)) ==# l:cwd  ? strcharpart(val, strlen(l:cwd) + 1) : val }) " + 1 is to also remove the trailing slash
         call reverse(l:names)
         " Edit the first item.
-        execute 'silent' l:Cmd fnameescape(l:names[0])
+        execute(join([l:Cmd,fnameescape(fnamemodify(l:names[0], ':.'))], ' '))
         " Add any remaining items to the arg list/buffer list.
         for l:name in l:names[1:]
-            execute 'silent argadd' fnameescape(l:name)
+            execute(join(['argadd', fnameescape(fnamemodify(l:name, ':.'))], ' '))
         endfor
     endif
 
     let s:action = '' " reset action
-    redraw!
 endfunction
 
 function! s:popup(opts, term_opts)
