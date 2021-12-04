@@ -90,14 +90,14 @@ function! s:eval_temp_file(opts)
     if (type(l:Cmd) == v:t_func)
         call l:Cmd(l:names)
     else
-        " Remove directories and missing files
+        " Remove directories and unreadable files
         call filter(l:names, {_, val -> !isdirectory(val) && filereadable(val) })
         call reverse(l:names)
         " Edit the first item.
-        execute 'silent' l:Cmd fnameescape(fnamemodify(l:names[0], ':.'))
+        execute(join([l:Cmd,fnameescape(fnamemodify(l:names[0], ':.'))], ' '))
         " Add any remaining items to the arg list/buffer list.
         for l:name in l:names[1:]
-            execute 'silent argadd' fnameescape(fnamemodify(l:name, ':.'))
+            execute(join(['argadd', fnameescape(fnamemodify(l:name, ':.'))], ' '))
         endfor
     endif
 
