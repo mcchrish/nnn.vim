@@ -39,5 +39,5 @@ if !exists('g:nnn#statusline') || g:nnn#statusline
 endif
 
 
-setl nospell bufhidden=wipe nobuflisted nonumber norelativenumber noshowmode wrap nocursorline nocursorcolumn
+setl nospell bufhidden=wipe nobuflisted nonumber norelativenumber wrap nocursorline nocursorcolumn
 " vim: set sts=4 sw=4 ts=4 et :
