@@ -282,8 +282,10 @@ NnnNormalFloat  Floating window. Linked to |hl-Normal|.
 NnnBorder       Floating window border. Linked to |hl-FloatBorder| or
                 |hl-Comment|.
 
-NnnVertSplit    Explorer window VertSplit. Linked to |hl-VertSplit|. (requires
-                |winhighlight| from neovim).
+NnnVertSplit    (depecated. for < nvim-0.7) Explorer window VertSplit. Linked
+                to |hl-VertSplit|.
+NnnWinSeparator Explorer window WinSeparator. Linked to |hl-WinSeparator|.
+                (requires nvim-0.7 and above).
 
 =============================================================================
 Miscellaneous                                                        *nnn-misc*
