@@ -12,7 +12,9 @@ if g:nnn#set_default_mappings
 endif
 
 if !exists('w:is_nnn_float')
-    if has('nvim')
+    if has('nvim-0.7')
+        setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,WinSeparator:NnnWinSeparator
+    elseif has('nvim')
         setl winhighlight=Normal:NnnNormal,NormalNC:NnnNormalNC,VertSplit:NnnVertSplit
     else
         setl wincolor=NnnNormal
