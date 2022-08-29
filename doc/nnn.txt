@@ -120,13 +120,11 @@ g:nnn#set_default_mappings                         *g:nnn#set_default_mappings*
 <
 
 g:nnn#layout                                                     *g:nnn#layout*
-                  Default:
-                    neovim: { 'window': { 'width': 0.9, 'height': 0.6 } }
-                    vim: 'enew'
-                  Display type for the n³ buffer. Default is a floating window
-                  on neovim and |enew| on vim. |enew| has a special behavior
-                  to act as a "split explorer" reusing the current window and
-                  brings back the last buffer if nothing is selected.
+                  Default: { 'window': { 'width': 0.9, 'height': 0.6 } }
+                  Display type for the n³ buffer. Default is a floating
+                  window. |enew| has a special behavior to act as a
+                  "split explorer" reusing the current window and brings back
+                  the last buffer if nothing is selected.
                   Examples:
 >
                   " Opens the n³ window in a split
