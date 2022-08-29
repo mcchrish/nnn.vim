@@ -141,7 +141,7 @@ function! s:popup(opts, term_opts)
         call setwinvar(l:win, 'is_nnn_float', v:true)
         return { 'buf': s:create_term_buf(a:term_opts), 'winhandle': l:win }
     else
-        let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1 }))
+        let l:buf = s:create_term_buf(extend(a:term_opts, #{ curwin: 0, hidden: 1, term_rows: height, term_cols: width }))
         let l:borderchars = l:border ==# 'rounded'
                     \ ? ['─', '│', '─', '│', '╭', '╮','╯' , '╰']
                     \ : ['─', '│', '─', '│', '┌', '┐', '┘', '└']
@@ -202,13 +202,23 @@ function! s:create_term_buf(opts)
         startinsert
         return bufnr('')
     else
-        return term_start([l:shell, &shellcmdflag, a:opts.cmd], {
+        let l:aux = {
                     \ 'curwin': get(a:opts, 'curwin', 1),
                     \ 'hidden': get(a:opts, 'hidden', 0),
                     \ 'env': { 'NNN_SEL': s:temp_file, 'TERM': $TERM },
                     \ 'exit_cb': a:opts.on_exit,
                     \ 'term_kill': 'term'
-                    \ })
+                    \ }
+        
+        if has_key(a:opts, 'term_rows')
+            call extend(l:aux, #{term_rows: get(a:opts, 'term_rows')})
+        endif
+
+        if has_key(a:opts, 'term_cols')
+            call extend(l:aux, #{term_cols: get(a:opts, 'term_cols')})
+        endif
+
+        return term_start([l:shell, &shellcmdflag, a:opts.cmd], l:aux)
     endif
 endfunction
 
