@@ -3,9 +3,11 @@ if exists('b:nnn_ftplugin')
 endif
 let b:nnn_ftplugin = 1
 
-for key in keys(g:nnn#action)
-    execute 'tnoremap <nowait><buffer><silent>' key '<c-\><c-n>:<c-u>call nnn#select_action("'.substitute(key, '<', '<lt>', 'g').'")<cr>'
-endfor
+if !empty(g:nnn#action)
+    for key in keys(g:nnn#action)
+        execute 'tnoremap <nowait><buffer><silent>' key '<c-\><c-n>:<c-u>call nnn#select_action("'.substitute(key, '<', '<lt>', 'g').'")<cr>'
+    endfor
+endif
 
 if g:nnn#set_default_mappings
     tnoremap <buffer><silent> <C-w> <C-\><C-n><C-w>
